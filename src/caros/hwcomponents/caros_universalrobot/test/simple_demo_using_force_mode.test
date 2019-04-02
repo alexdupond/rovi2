@@ -1,0 +1,6 @@
+<launch>
+  <group>
+    <node pkg="caros_universalrobot" type="simple_caros_universalrobot_demo_using_force_mode" name="simple_caros_universalrobot_demo_using_force_mode" required="true" output="screen">
+    </node>
+  </group>
+</launch>

@@ -1,0 +1,15 @@
+# target joint value
+caros_common_msgs/Q target
+
+# Time
+float64 time
+
+# Lookahead time
+float64 lookahead_time
+
+# Gain
+float64 gain
+
+---
+# If the service request was acknowledged
+bool success

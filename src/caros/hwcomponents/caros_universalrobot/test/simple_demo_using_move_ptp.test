@@ -1,0 +1,7 @@
+<launch>
+  <group>
+    <node pkg="caros_universalrobot" type="simple_caros_universalrobot_demo_using_move_ptp"
+          name="simple_caros_universalrobot_demo_using_move_ptp" required="true" output="screen">
+    </node>
+  </group>
+</launch>

@@ -1,0 +1,12 @@
+<launch>
+    <!-- Define the parameterisation of the ROS parameters -->
+    <arg name="device_ip" default="localhost" />
+
+    <group ns="caros_universalrobot">
+      <!-- Set the ROS parameters -->
+      <param name="device_ip" type="str" value="$(arg device_ip)"/>
+    </group>
+    <!-- The 'name' parameter has to match the 'ns' parameter used in the include tag above -->
+    <node pkg="caros_universalrobot" type="caros_universalrobot_node" name="caros_universalrobot" output="screen">
+    </node>
+</launch>
