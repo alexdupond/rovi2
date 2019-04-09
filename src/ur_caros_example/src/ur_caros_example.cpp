@@ -55,7 +55,8 @@ class URRobot {
 private:
 	ros::NodeHandle nh;
 	WorkCell::Ptr wc;
-	Device::Ptr device;
+	Device::Ptr UR5E1;
+	Device::Ptr UR5E2; 
 	State state;
 	caros::SerialDeviceSIProxy* robot;
 	QPath path; 
@@ -65,12 +66,12 @@ public:
 	URRobot()
 	{
 		auto packagePath = ros::package::getPath("ur_caros_example");
-		wc = WorkCellLoader::Factory::load(packagePath + "/WorkCell/Scene.wc.xml");
-		device = wc->findDevice("UR5");
+		//wc = WorkCellLoader::Factory::load(packagePath + "/WorkCell/Scene.wc.xml");
+		wc = WorkCellLoader::Factory::load(packagePath + "/RoviScene/Scene.xml");
+		UR5E1 = wc->findDevice("UR5e_1");
+		UR5E2 = wc->findDevice("UR5e_2");	
 		state = wc->getDefaultState();
 		robot = new caros::SerialDeviceSIProxy(nh, "caros_universalrobot");
-
-		// Setting up 
 
 		// Wait for first state message, to make sure robot is ready
 		ros::topic::waitForMessage<caros_control_msgs::RobotState>("/caros_universalrobot/caros_serial_device_service_interface/robot_state", nh);
@@ -82,7 +83,8 @@ public:
 		// spinOnce processes one batch of messages, calling all the callbacks
 	    ros::spinOnce();
 	    Q q = robot->getQ();
-		device->setQ(q, state);
+		UR5E1->setQ(q, state);
+		cout << q << endl; 
 	    return q;
 	}
 
@@ -96,21 +98,21 @@ public:
 			return false;
 	}
 
-	bool calculateRRTPath(Q from, Q to){
+	bool calculateRRTPath(Q from, Q to){/*
 		const State state = wc->getDefaultState();
 
 		CollisionDetector detector(wc, ProximityStrategyFactory::makeDefaultCollisionStrategy());
-		PlannerConstraint constraint = PlannerConstraint::make(&detector,device,state);
+		PlannerConstraint constraint = PlannerConstraint::make(&detector,robotTree,state);
 
-		QSampler::Ptr sampler = QSampler::makeConstrained(QSampler::makeUniform(device),constraint.getQConstraintPtr());
+		QSampler::Ptr sampler = QSampler::makeConstrained(QSampler::makeUniform(robotTree),constraint.getQConstraintPtr());
 
 		QMetric::Ptr metric = MetricFactory::makeEuclidean<Q>();
 		double extend = 0.01;
 		QToQPlanner::Ptr planner = RRTPlanner::makeQToQPlanner(constraint, sampler, metric, extend, RRTPlanner::RRTConnect);
 
-		if (!checkCollisions(device, state, detector, from))
+		if (!checkCollisions(robotTree, state, detector, from))
 			return 0;
-		if (!checkCollisions(device, state, detector, to))
+		if (!checkCollisions(robotTree, state, detector, to))
 			return 0;
 
 		cout << "Planning from " << from << " to " << to << endl;
@@ -118,7 +120,7 @@ public:
 
 		Timer t;
 		t.resetAndResume();
-		planner->query(from,to,path,MAXTIME);
+		planner->query(from,to,rrt_path,MAXTIME);
 		t.pause();
 		path = rrt_path; 
 		cout << "Path of length " << path.size() << " found in " << t.getTime() << " seconds." << endl;
@@ -128,25 +130,44 @@ public:
 		}else{
 			return true;
 		}
-		
+	*/	
 	}
 
 	bool calculateSBLPath(Q from, Q to){
 		const State state = wc->getDefaultState();
 
-		QConstraint::Ptr q_constraint = QConstraint::makeFixed(false); 
-		QEdgeConstraintIncremental::Ptr q_edge_constraint = QEdgeConstraintIncremental::makeDefault(q_constraint, device);
-		double expandRadius = 0.0001; 
-		double connectRadius = 0.05; 
-		SBLSetup setup = SBLSetup::make(q_constraint, q_edge_constraint, device, expandRadius, connectRadius);
-		QToQPlanner::Ptr sbl_planner = SBLPlanner::makeQToQPlanner(setup);
+		// Setting up tree device 
+		rw::kinematics::Frame* startFrame = wc->findFrame("WORLD");
 
+		rw::kinematics::Frame* endFrame1 = UR5E1->getEnd();
+		rw::kinematics::Frame* endFrame2 = UR5E2->getEnd();
+		vector<rw::kinematics::Frame *> endFrames;
+		endFrames.push_back(endFrame1);
+		endFrames.push_back(endFrame2);
+		string treeName = "robotTree";
+
+		TreeDevice robotTree(startFrame,endFrames,treeName,state);
+
+		cout <<"str: "<< robotTree.getDOF() << endl;
+
+		// Setting up collision detector
+		
 		CollisionDetector detector(wc, ProximityStrategyFactory::makeDefaultCollisionStrategy());
 
+	//	QConstraint::Ptr q_constraint = QConstraint::makeFixed(false); 
+		QConstraint::Ptr q_constraint = QConstraint::make(&detector, &robotTree, state); 
+		QEdgeConstraintIncremental::Ptr q_edge_constraint = QEdgeConstraintIncremental::makeDefault(q_constraint, &robotTree);
 
-		if (!checkCollisions(device, state, detector, from))
+		double expandRadius = 0.01; 
+		double connectRadius = 0.05; 
+
+		SBLSetup setup = SBLSetup::make(q_constraint, q_edge_constraint, &robotTree, expandRadius, connectRadius);
+		QToQPlanner::Ptr sbl_planner = SBLPlanner::makeQToQPlanner(setup);
+
+
+		if (!checkCollisions(&robotTree, state, detector, from))
 			return 0;
-		if (!checkCollisions(device, state, detector, to))
+		if (!checkCollisions(&robotTree, state, detector, to))
 			return 0;
 
 		cout << "Planning from " << from << " to " << to << endl;
@@ -178,8 +199,12 @@ int main(int argc, char** argv)
 	ros::init(argc, argv, "URRobot");
 	URRobot robot;
 	Q home(6, 0, -1.5707, 0, -1.5707, 0, 0);
-	Q from(6, 0, -1.5707, 0, -1.5707, 0, 0);
-	Q to(6, -0.5, -1.0, 0, -1.5707, 0.1, 0.9);
+
+	vector<double> QvecFrom{2, -0.8, 1.0, -1.5, -1.5, 0, -1.0, -2.2, -1.2, -1.5, 1.5, 0};
+	vector<double> QvecTo{1.2, -0.8, 1.0, -1.5, -1.5, 0, -2.0, -2.2, -1.2, -1.5, 1.5, 0};
+
+	rw::math::Q from(QvecFrom);
+	rw::math::Q to(QvecTo);
 
 	while(true){
 		std::cout << "Current joint config:" << std::endl << robot.getQ() << std::endl << std::endl;
