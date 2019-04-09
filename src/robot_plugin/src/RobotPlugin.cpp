@@ -7,8 +7,8 @@
 #include <rw/loaders.hpp>
 
 
-
-#define deviceName "UR5e_2"
+#define deviceName1 "UR5e_1"
+#define deviceName2 "UR5e_2"
 //#define workcellPath "/home/alexdupond/Documents/rovi2/catkin_ws/src/robot_plugin/WorkCell/Scene.wc.xml"
 #define workcellPath "/home/alexdupond/Documents/rovi2/catkin_ws/src/robot_plugin/RoviScene/Scene.xml"
 
@@ -51,7 +51,9 @@ RobotPlugin::RobotPlugin():
         
         // We need to register the type
         qRegisterMetaType<rw::math::Q>("rw::math::Q");
-        connect(_qtRos, SIGNAL(newState(rw::math::Q)), this, SLOT(newState(rw::math::Q)));
+      //  connect(_qtRos, SIGNAL(newState(rw::math::Q)), this, SLOT(newState(rw::math::Q)));
+        connect(_qtRos, SIGNAL(newMultiState(rw::math::Q)), this, SLOT(newMultiState(rw::math::Q)));
+
                
 }
 
@@ -63,9 +65,18 @@ RobotPlugin::~RobotPlugin()
 void RobotPlugin::newState(rw::math::Q pos)
 {
         // Slot actived each time a new message is received from ros
-        _device->setQ(pos, _state);
+        _device_ur5e2->setQ(pos, _state);
         getRobWorkStudio()->setState(_state);
 
+}
+
+void RobotPlugin::newMultiState(rw::math::Q pos){
+     // Slot actived each time a new message is received from ros
+        rw::math::Q q1(6, pos[0], pos[1], pos[2], pos[3], pos[4], pos[5]); 
+	rw::math::Q q2(6, pos[6], pos[7], pos[8], pos[9], pos[10], pos[11]);
+        _device_ur5e1->setQ(q1, _state);
+        _device_ur5e2->setQ(q2, _state);
+        getRobWorkStudio()->setState(_state);   
 }
 
 
@@ -83,7 +94,8 @@ void RobotPlugin::open(WorkCell* workcell)
         // Default initialization
 	_wc = workcell;
 	_state = _wc->getDefaultState();
-        _device = _wc->findDevice(deviceName);
+        _device_ur5e1 = _wc->findDevice(deviceName1);
+        _device_ur5e2 = _wc->findDevice(deviceName2);
 
 }
 

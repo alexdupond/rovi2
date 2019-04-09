@@ -38,6 +38,7 @@ private slots:
 
 	void stateChangedListener(const rw::kinematics::State& state);
         void newState(rw::math::Q pos);
+	void newMultiState(rw::math::Q pos);
 
 signals:
 	void quitNow();
@@ -50,7 +51,12 @@ private:
 	
 	rw::models::WorkCell::Ptr _wc;
 	rw::kinematics::State _state;
-        rw::models::Device::Ptr _device;
+	rw::models::Device::Ptr _device;
+
+
+        rw::models::Device::Ptr _device_ur5e1;
+	rw::models::Device::Ptr _device_ur5e2;
+	
 
 
 };

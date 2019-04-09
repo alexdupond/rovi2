@@ -40,15 +40,19 @@ class QtROS : public QThread {
 
     /// Signal to emit for new configuration
     void newState(rw::math::Q);
+    void newMultiState(rw::math::Q);
   private:
 
     /// Callback function
     void stateCallback(const caros_control_msgs::RobotState & msg);
+    void stateMultiCallback(const caros_control_msgs::RobotState & msg);
 
     bool quitfromgui;
 
     ros::NodeHandle _nh;
     ros::Subscriber _sub;
+    ros::Subscriber _subMulti;
+
     caros::SerialDeviceSIProxy* _robot;
 
 

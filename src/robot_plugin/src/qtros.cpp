@@ -3,7 +3,10 @@
 #include <caros_common_msgs/Q.h>
 #include <caros/common_robwork.h>
 
-#define SUBSCRIBER "/caros_universalrobot/caros_serial_device_service_interface/robot_state"
+#define SUB_CAROS "/caros_universalrobot/caros_serial_device_service_interface/robot_state"
+
+#define SUB_MULTI_UR5E "/robot_state/multirobot/ur5e"
+
 
 QtROS::QtROS()
 {
@@ -11,7 +14,9 @@ QtROS::QtROS()
   ROS_INFO("Connected to roscore");
 
   // Subscribe to caros robot state
-  _sub = _nh.subscribe(SUBSCRIBER, 1, &QtROS::stateCallback, this);
+  _sub = _nh.subscribe(SUB_CAROS, 1, &QtROS::stateCallback, this);
+  _subMulti = _nh.subscribe(SUB_MULTI_UR5E, 1, &QtROS::stateMultiCallback, this);
+
 
   _robot = new caros::SerialDeviceSIProxy(_nh, "caros_universalrobot");
 
@@ -22,6 +27,18 @@ void QtROS::quitNow()
 {
   quitfromgui = true;
 }
+
+void QtROS::stateMultiCallback(const caros_control_msgs::RobotState & msg){
+    // Extract configuration from RobotState message
+    caros_common_msgs::Q conf = msg.q;
+
+    // Convert from ROS msg to Robwork Q
+    rw::math::Q conf_rw = caros::toRw(conf);
+
+    // Emit the configuration
+    emit newMultiState(conf_rw); 
+}
+
 
 void QtROS::stateCallback(const caros_control_msgs::RobotState & msg)
 {

@@ -14,6 +14,8 @@
 
 #include <rw/pathplanning.hpp>
 
+#include <caros_common_msgs/Q.h>
+#include <caros/common_robwork.h>
 
 using namespace std;
 using namespace rw::common;
@@ -27,7 +29,7 @@ using namespace rw::trajectory;
 using namespace rwlibs::pathplanners;
 using namespace rwlibs::proximitystrategies;
 
-#define MAXTIME 60
+#define MAXTIME 20
 
 bool checkCollisions(Device::Ptr device, const State &state, const CollisionDetector &detector, const Q &q) {
 	State testState;
@@ -61,6 +63,7 @@ private:
 	caros::SerialDeviceSIProxy* robot;
 	QPath path; 
 
+	ros::Publisher pub_multi_ur5e; 
 
 public:
 	URRobot()
@@ -73,6 +76,10 @@ public:
 		state = wc->getDefaultState();
 		robot = new caros::SerialDeviceSIProxy(nh, "caros_universalrobot");
 
+		// Publisher for robwork plugin
+		pub_multi_ur5e = nh.advertise<caros_control_msgs::RobotState>("/robot_state/multirobot/ur5e", 1);
+
+
 		// Wait for first state message, to make sure robot is ready
 		ros::topic::waitForMessage<caros_control_msgs::RobotState>("/caros_universalrobot/caros_serial_device_service_interface/robot_state", nh);
 	    ros::spinOnce();
@@ -84,15 +91,29 @@ public:
 	    ros::spinOnce();
 	    Q q = robot->getQ();
 		UR5E1->setQ(q, state);
-		cout << q << endl; 
 	    return q;
+	}
+
+	bool setDoubleQ(Q q){
+		// Creating  to messages to be send
+
+		caros_common_msgs::Q q_ros = caros::toRos(q);
+		
+		caros_control_msgs::RobotState msg_multi_q;
+
+		msg_multi_q.q = q_ros; 
+
+		pub_multi_ur5e.publish(msg_multi_q); 
+
+		return true; 
 	}
 
 	bool setQ(Q q)
 	{
 		// Tell robot to move to joint config q
         float speed = 0.5;
-		if (robot->movePtp(q, speed)) { 
+		rw::math::Q q1(6, q[0], q[1], q[2], q[3], q[4], q[5]); 
+		if (robot->movePtp(q1, speed) && setDoubleQ(q)) { 
 			return true;
 		} else
 			return false;
@@ -159,7 +180,7 @@ public:
 		QEdgeConstraintIncremental::Ptr q_edge_constraint = QEdgeConstraintIncremental::makeDefault(q_constraint, &robotTree);
 
 		double expandRadius = 0.01; 
-		double connectRadius = 0.05; 
+		double connectRadius = 0.03; //0.01; 
 
 		SBLSetup setup = SBLSetup::make(q_constraint, q_edge_constraint, &robotTree, expandRadius, connectRadius);
 		QToQPlanner::Ptr sbl_planner = SBLPlanner::makeQToQPlanner(setup);
@@ -197,7 +218,9 @@ public:
 int main(int argc, char** argv)
 {
 	ros::init(argc, argv, "URRobot");
+
 	URRobot robot;
+
 	Q home(6, 0, -1.5707, 0, -1.5707, 0, 0);
 
 	vector<double> QvecFrom{2, -0.8, 1.0, -1.5, -1.5, 0, -1.0, -2.2, -1.2, -1.5, 1.5, 0};
