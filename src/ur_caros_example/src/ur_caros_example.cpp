@@ -3,6 +3,10 @@
 #include <rwlibs/pathplanners/rrt/RRTPlanner.hpp>
 #include <rwlibs/pathplanners/rrt/RRTQToQPlanner.hpp>
 #include <rwlibs/proximitystrategies/ProximityStrategyFactory.hpp>
+#include <rwlibs/pathoptimization/pathlength/PathLengthOptimizer.hpp>
+
+
+
 #include "caros/serial_device_si_proxy.h"
 #include "ros/package.h"
 
@@ -175,12 +179,11 @@ public:
 		
 		CollisionDetector detector(wc, ProximityStrategyFactory::makeDefaultCollisionStrategy());
 
-	//	QConstraint::Ptr q_constraint = QConstraint::makeFixed(false); 
 		QConstraint::Ptr q_constraint = QConstraint::make(&detector, &robotTree, state); 
 		QEdgeConstraintIncremental::Ptr q_edge_constraint = QEdgeConstraintIncremental::makeDefault(q_constraint, &robotTree);
 
 		double expandRadius = 0.01; 
-		double connectRadius = 0.03; //0.01; 
+		double connectRadius = 0.03; 
 
 		SBLSetup setup = SBLSetup::make(q_constraint, q_edge_constraint, &robotTree, expandRadius, connectRadius);
 		QToQPlanner::Ptr sbl_planner = SBLPlanner::makeQToQPlanner(setup);
@@ -203,6 +206,11 @@ public:
 			cout << "Notice: max time of " << MAXTIME << " seconds reached." << endl;
 			return false; 
 		}else{
+			rw::pathplanning::PlannerConstraint constraint = rw::pathplanning::PlannerConstraint::make(&detector,&robotTree,state);
+			rw::math::QMetric::Ptr metric = rw::math::MetricFactory::makeInfinity<rw::math::Q>();
+			rwlibs::pathoptimization::PathLengthOptimizer pathOptimizer(constraint,metric);
+			path = pathOptimizer.partialShortCut(path);
+			cout << "optimized path lenght: " << path.size() << endl;
 			return true;
 		}
 		
