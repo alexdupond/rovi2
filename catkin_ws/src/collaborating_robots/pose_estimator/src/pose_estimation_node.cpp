@@ -16,6 +16,7 @@
 #include <sys/ioctl.h>
 #include <termios.h>
 #include <iostream>
+#include "ransac_global_alignment.h"
 
 
 bool new_cloud_from_msg = false;
@@ -23,9 +24,11 @@ bool ready_for_new_cloud = true;
 pcl::PCLPointCloud2* cloud2_from_msg = new pcl::PCLPointCloud2;
 pcl::PCLPointCloud2ConstPtr cloudPtr(cloud2_from_msg);
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_from_msg(new pcl::PointCloud<pcl::PointXYZ>);
+pcl::PointCloud<pcl::PointNormal>::Ptr cloud_from_msg(new pcl::PointCloud<pcl::PointNormal>);
 pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_from_mesh(new pcl::PointCloud<pcl::PointXYZ>);
-const std::string meshFileName = "src/collaborating_robots/joshi.stl";
+pcl::PointCloud<pcl::PointNormal>::Ptr cloud_object_yoshi (new pcl::PointCloud<pcl::PointNormal>);
+
+const std::string path_object_yoshi = "src/collaborating_robots/pose_estimator/object_yoshi.pcd";
 
 bool kbhit()							//used for checking for terminla input, without pausing the loop
 {
@@ -43,7 +46,6 @@ bool kbhit()							//used for checking for terminla input, without pausing the l
 
     return byteswaiting > 0;
 }
-
 
 void point_cloud_callback(const sensor_msgs::PointCloud2ConstPtr& cloud_msg)	//callback function for camera
 {	
@@ -65,6 +67,12 @@ int main(int argc, char** argv)
 	pcl::visualization::PCLVisualizer viewer("Plane segmentation result");
 	pcl::PolygonMesh testMesh;
 
+	if (pcl::io::loadPCDFile<pcl::PointNormal> (path_object_yoshi, *cloud_object_yoshi) == -1) //* load the file
+	{
+    PCL_ERROR ("Couldn't read file object yoshi \n");
+    return (-1);
+	}
+
 	while(ros::ok)
 	{
 		ros::spinOnce();		//update all ROS related stuff
@@ -76,12 +84,12 @@ int main(int argc, char** argv)
 			ROS_INFO("stamp = %"PRIu64, cloud2_from_msg->header.stamp);		//This is just for showing that the pointcloud gets updated this works, the red line under ROS_INFO is a intelisens error, made by vscode
 			
 			//manepulate cloud here
-			
+			get_pose_global_allignment(cloud_from_msg, cloud_object_yoshi);
 
 			// Show result
             viewer.removePointCloud("outliers");
             //viewer.addPointCloud<pcl::PointXYZ>(cloud_from_msg, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_from_msg, 0, 255, 0), "outliers");
-			viewer.addPointCloud<pcl::PointXYZ>(cloud_from_msg, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_from_msg, 0, 255, 0), "outliers");
+			viewer.addPointCloud<pcl::PointNormal>(cloud_from_msg, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointNormal>(cloud_from_msg, 0, 255, 0), "outliers");
 			viewer.spinOnce();	// TODO cahnge to spinonce, when done with testing
 			ready_for_new_cloud = true;		//signal that the function is ready for a new cloud from the camera
 		}
