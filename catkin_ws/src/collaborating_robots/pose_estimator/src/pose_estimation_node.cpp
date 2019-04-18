@@ -110,7 +110,8 @@ int main(int argc, char** argv)
 	pcl::PLYReader ply_reader;
 	ply_reader.read(path_scene_yoshi, *cloud_scene_yoshi);
 
-	float minX = -1, maxX = -0.02, minY = 0.02, maxY = 1, minZ = 0.03, maxZ = 0.2;
+	//float minX = -1, maxX = -0.02, minY = 0.02, maxY = 1, minZ = 0.03, maxZ = 0.2;
+	float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.03, maxZ = 0.5;
 	pcl::visualization::PCLVisualizer viewer("Plane segmentation result");
 	viewer.addCoordinateSystem(0.3); // 0,0,0
 	viewer.addCube(minX, maxX, minY, maxY, minZ, maxZ, 1.0,1.0,0, "filter_box", 0);

@@ -58,7 +58,12 @@ Matrix4f get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, PointCloud<PointXYZ
         ScopeTime t("Shape features");
         
         SpinImageEstimation<PointT,PointT,FeatureT> spin;
-        spin.setRadiusSearch(0.05);
+        //spin.setRadiusSearch(0.05);
+		// spin.setRadiusSearch(0.03);
+		// spin.setMinPointCountInNeighbourhood(8);		//added by us
+
+		spin.setRadiusSearch(0.5);
+		spin.setMinPointCountInNeighbourhood(30);		// 10 before : added by us
         
         spin.setInputCloud(object);
         spin.setInputNormals(object);
