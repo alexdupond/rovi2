@@ -17,14 +17,17 @@
 #include <sys/ioctl.h>
 #include <termios.h>
 #include <iostream>
-#include "ransac_global_alignment.h"
-#include "segment_plane.h"
-
+//#include "ransac_global_alignment.h"
+//#include "segment_plane.h"
+#include <pcl/filters/crop_box.h>
+#include <pcl/PointIndices.h>
+#include "global_alignment.hpp"
+//#include "local_alignment.hpp"
+#include <pcl/filters/extract_indices.h>
 
 bool new_cloud_from_msg = false;
 bool ready_for_new_cloud = true;
 pcl::PCLPointCloud2* cloud2_from_msg = new pcl::PCLPointCloud2;
-pcl::PCLPointCloud2ConstPtr cloudPtr(cloud2_from_msg);
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_from_msg(new pcl::PointCloud<pcl::PointXYZ>);
 pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_from_mesh(new pcl::PointCloud<pcl::PointXYZ>);
@@ -52,20 +55,32 @@ bool kbhit()							//used for checking for terminla input, without pausing the l
 
 void point_cloud_callback(const sensor_msgs::PointCloud2ConstPtr& cloud_msg)	//callback function for camera
 {	
-	Eigen::Matrix4f transformation;
-	transformation << 	1,  0, 	0, 0,
-    					0, -1, 	0, 0,
-    					0,  0, -1, 0,
-						0,  0,  0, 1;
+	Eigen::Matrix4f T_flip;
+	T_flip << 	1,  0, 	0, 0,
+    			0, -1, 	0, 0,
+    			0,  0, -1, 0,
+				0,  0,  0, 1;
+							
 	if(ready_for_new_cloud)											//if the program is ready for a new cloud
 	{
 		ROS_INFO("callback");
-		pcl_conversions::toPCL(*cloud_msg, *cloud2_from_msg);		//convert msg to pcl pointcloud
-		pcl::fromPCLPointCloud2(*cloud2_from_msg, *cloud_from_msg);	//convert pointcloud2 to pointcloud
-		pcl::transformPointCloud(*cloud_from_msg, *cloud_from_msg, transformation);
-		new_cloud_from_msg = true;									//signal new cloud is ready
+		pcl_conversions::toPCL(*cloud_msg, *cloud2_from_msg);				//convert msg to pcl pointcloud
+		pcl::fromPCLPointCloud2(*cloud2_from_msg, *cloud_from_msg);			//convert pointcloud2 to pointcloud
+		pcl::transformPointCloud(*cloud_from_msg, *cloud_from_msg, T_flip);	//flip pointcloud 180 deg around x, to get the right rotation
+		ROS_INFO("new Pointcloud arrived! stamp: %"PRIu64, cloud_from_msg->header.stamp);			//This is just for showing that the pointcloud gets updated
+		new_cloud_from_msg = true;											//signal new cloud is ready
 		ready_for_new_cloud = false;
 	} 
+}
+
+Eigen::Matrix4f RPY2H(float Rz, float Ry, float Rx, float tx, float ty, float tz)
+{
+	Eigen::Matrix4f T_homogenus;
+	T_homogenus << 	( cos(Rz) * cos(Ry) ),	( cos(Rz) * sin(Ry) * sin(Rx) - sin(Rz) * cos(Rx) ),	( cos(Rz) * sin(Ry) * cos(Rx) + sin(Rz) * sin(Rx) ),	tx,
+					( sin(Rz) * cos(Ry) ),	( sin(Rz) * sin(Ry) * sin(Rx) + cos(Rz) * cos(Rx) ),	( sin(Rz) * sin(Ry) * cos(Rx) - cos(Rz) * sin(Rx) ),	ty,
+					( -sin(Ry) ),			( cos(Ry) * sin(Rx) ),									( cos(Ry) * cos(Rx) ),									tz,
+					0,						0,														0,														1;
+	return T_homogenus;
 }
 
 int main(int argc, char** argv)
@@ -75,7 +90,7 @@ int main(int argc, char** argv)
 	ros::Subscriber sub = nh.subscribe("/camera/depth/color/points", 1, point_cloud_callback);
 	ros::Rate loop_rate(10);	//loop rate in Hz
 
-	pcl::visualization::PCLVisualizer viewer("Plane segmentation result");
+	
 	pcl::PolygonMesh testMesh;
 
 	if (pcl::io::loadPCDFile<pcl::PointXYZ> (path_object_yoshi, *cloud_object_yoshi) == -1) //* load the file
@@ -87,9 +102,19 @@ int main(int argc, char** argv)
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_segmentation_scene(new pcl::PointCloud<pcl::PointXYZ>);
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_segmentation_plane(new pcl::PointCloud<pcl::PointXYZ>);
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_scene_yoshi(new pcl::PointCloud<pcl::PointXYZ>);
+	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_scene_rotate(new pcl::PointCloud<pcl::PointXYZ>);
+	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_output (new pcl::PointCloud<pcl::PointXYZ>);
+	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_discarded (new pcl::PointCloud<pcl::PointXYZ>);
+	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_boxFilter_discarded (new pcl::PointCloud<pcl::PointXYZ>);
 
 	pcl::PLYReader ply_reader;
-	
+	ply_reader.read(path_scene_yoshi, *cloud_scene_yoshi);
+
+	float minX = -1, maxX = -0.02, minY = 0.02, maxY = 1, minZ = 0.03, maxZ = 0.2;
+	pcl::visualization::PCLVisualizer viewer("Plane segmentation result");
+	viewer.addCoordinateSystem(0.3); // 0,0,0
+	viewer.addCube(minX, maxX, minY, maxY, minZ, maxZ, 1.0,1.0,0, "filter_box", 0);
+	viewer.setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_WIREFRAME, "filter_box");
 	while(ros::ok)
 	{
 		ros::spinOnce();		//update all ROS related stuff
@@ -97,25 +122,38 @@ int main(int argc, char** argv)
 		{
 			new_cloud_from_msg = false;
 			
-			ROS_INFO("stamp = %"PRIu64, cloud2_from_msg->header.stamp);		//This is just for showing that the pointcloud gets updated this works, the red line under ROS_INFO is a intelisens error, made by vscode
-			
-			ply_reader.read(path_scene_yoshi, *cloud_scene_yoshi);
-			//manepulate cloud hereloading yoshi object as pointcloud
-			removeTable(cloud_from_msg, cloud_segmentation_scene, cloud_segmentation_plane);
-			//removeTable(cloud_scene_yoshi, cloud_segmentation_scene, cloud_segmentation_plane);
-			// get_pose_global_allignment(cloud_from_msg, cloud_object_yoshi);
-			// Show result
-            //viewer.removePointCloud("outliers");
-			//viewer.removePointCloud("cloud_from_msg");
-			//viewer.removePointCloud("cloud_scene_yoshi");
-            viewer.addPointCloud<pcl::PointXYZ>(cloud_from_msg, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_from_msg, 255, 0, 0), "cloud_from_msg");
-			//viewer.addPointCloud<pcl::PointXYZ>(cloud_scene_yoshi, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_scene_yoshi, 0, 255, 255), "cloud_scene_yoshi");
-			
-			viewer.addPointCloud<pcl::PointXYZ>(cloud_segmentation_scene, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_segmentation_scene, 0, 0, 255), "cloud_segmentation_scene");
-			viewer.addPointCloud<pcl::PointXYZ>(cloud_segmentation_plane, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_segmentation_plane, 0, 255, 255), "cloud_segmentation_plane");
-			//viewer.addCoordinateSystem();
-			//viewer.spinOnce();
+			pcl::transformPointCloud(*cloud_from_msg, *cloud_scene_rotate, RPY2H(0.87266, 0.13089, 0.63, 0, 0, 0.33));
+
+
+			pcl::PointIndices::Ptr indices_discarded_points (new PointIndices);
+			pcl::CropBox<pcl::PointXYZ> boxFilter(true);								//fintering pointcloud. remove everything outside the box
+			boxFilter.setMin(Eigen::Vector4f(minX, minY, minZ, 1.0));
+			boxFilter.setMax(Eigen::Vector4f(maxX, maxY, maxZ, 1.0));
+			boxFilter.setInputCloud(cloud_scene_rotate);
+			boxFilter.filter(*cloud_boxFilter_output);
+			boxFilter.getRemovedIndices(*indices_discarded_points);
+
+			pcl::ExtractIndices<pcl::PointXYZ> extract;							//finding the removed points, for visualisation purposes
+			extract.setInputCloud(cloud_scene_rotate);
+			extract.setIndices(indices_discarded_points);
+			extract.setNegative(false);
+			extract.filter(*cloud_boxFilter_discarded);
+
+			boxFilter.setMin(Eigen::Vector4f(-1, -1, -1, 1.0));					//removing points that is fare away, for visualisation purposes
+			boxFilter.setMax(Eigen::Vector4f(1, 1, 1, 1.0));
+			boxFilter.setInputCloud(cloud_boxFilter_discarded);
+			boxFilter.filter(*cloud_boxFilter_boxFilter_discarded);
+
+			get_pose_global(cloud_boxFilter_output, cloud_object_yoshi, 5000);
+            
+			viewer.removePointCloud("cloud_boxFilter_output");
+			viewer.removePointCloud("cloud_boxFilter_boxFilter_discarded");
+			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_output, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_output, 0, 255, 0), "cloud_boxFilter_output");
+			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_boxFilter_discarded, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_boxFilter_discarded, 150, 150, 0), "cloud_boxFilter_boxFilter_discarded");
+			viewer.spinOnce();
 			viewer.spin();
+
+			// TODO set to tru when done with testing
 			ready_for_new_cloud = false;		//signal that the function is ready for a new cloud from the camera
 		}
 		if (kbhit())		//it there is a terminal input
