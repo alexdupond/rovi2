@@ -18,6 +18,15 @@ URRobot::URRobot(ros::NodeHandle* nodehandler):nh(*nodehandler)
 	ros::spinOnce();
 }
 
+bool URRobot::calculatePrioritizedPath(vector<rw::math::Q> from, vector<rw::math::Q> to){
+	PrioritizedPlanner planner(wc, UR5E1, UR5E2); 
+	planner.calculateRRTPath(from[0], to[0]);
+	path = planner.getPath();
+	return true; 
+};
+
+
+
 bool URRobot::checkCollisions(rw::models::Device::Ptr device, const rw::kinematics::State &state, const rw::proximity::CollisionDetector &detector, const rw::math::Q &q) {
 	rw::kinematics::State testState;
 	rw::proximity::CollisionDetector::QueryResult data;
@@ -56,52 +65,26 @@ bool URRobot::setDoubleQ(rw::math::Q q){
 	return true; 
 }
 
-bool URRobot::setQ(rw::math::Q q)
+bool URRobot::setQ(rw::math::Q q){
 	// Setting robot speed
     float speed = 0.5;
     // Setting a configuration to send to the URSIM 
 	rw::math::Q q1(6, q[0], q[1], q[2], q[3], q[4], q[5]); 
     // Setting both the robot in URSIM and the two robots in RobWorkStudio. This will return true, when the robot in URSIM is close to its goal position.
-	if (robot->movePtp(q1, speed) && setDoubleQ(q)) { 
-		return true;
-	} else
-		return false;
-}
-
-bool URRobot::calculateRRTPath(rw::math::Q from, rw::math::Q to){/*
-	const State state = wc->getDefaultState();
-
-	CollisionDetector detector(wc, ProximityStrategyFactory::makeDefaultCollisionStrategy());
-	PlannerConstraint constraint = PlannerConstraint::make(&detector,robotTree,state);
-
-	QSampler::Ptr sampler = QSampler::makeConstrained(QSampler::makeUniform(robotTree),constraint.getQConstraintPtr());
-
-	QMetric::Ptr metric = MetricFactory::makeEuclidean<Q>();
-	double extend = 0.01;
-	QToQPlanner::Ptr planner = RRTPlanner::makeQToQPlanner(constraint, sampler, metric, extend, RRTPlanner::RRTConnect);
-
-	if (!checkCollisions(robotTree, state, detector, from))
-		return 0;
-	if (!checkCollisions(robotTree, state, detector, to))
-		return 0;
-
-	cout << "Planning from " << from << " to " << to << endl;
-	QPath rrt_path;
-
-	Timer t;
-	t.resetAndResume();
-	planner->query(from,to,rrt_path,MAXTIME);
-	t.pause();
-	path = rrt_path; 
-	cout << "Path of length " << path.size() << " found in " << t.getTime() << " seconds." << endl;
-	if (t.getTime() >= MAXTIME) {
-		cout << "Notice: max time of " << MAXTIME << " seconds reached." << endl;
-		return false; 
+	if(q.size() == 12){
+		if (robot->movePtp(q1, speed) && setDoubleQ(q)) { 
+			return true;
+		} else
+			return false;
 	}else{
-		return true;
+		if (robot->movePtp(q1, speed)) { 
+			return true;
+		} else
+			return false;
 	}
-*/	
+
 }
+
 
 bool URRobot::calculateSBLPath(rw::math::Q from, rw::math::Q to){
 	//| ----------------- Setting up tree device ----------------------| 

@@ -47,6 +47,6 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(ur_caros_example src/ur_caros_example.cpp src/urRobot.cpp)
+add_executable(ur_caros_example src/ur_caros_example.cpp src/urRobot.cpp src/prioritizedPlanner.cpp)
 target_link_libraries(ur_caros_example ${catkin_LIBRARIES} ${ROBWORK_LIBRARIES} ${ROS_LIBRARIES})
 add_dependencies(ur_caros_example caros_common_msgs caros_control_msgs caros_control)

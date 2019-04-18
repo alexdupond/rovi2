@@ -74,6 +74,6 @@
 
 	<ProximitySetup file="ProximitySetup.xml" />
 
-	<Q name="Home">1.57 -2.4 2.4 -1.57 -1.57 0</Q>
+	<Q name="Home">1.57 -1.6 1.6 -1.57 -1.57 0</Q>
 
 </SerialDevice>

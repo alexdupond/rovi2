@@ -51,7 +51,7 @@ RobotPlugin::RobotPlugin():
         
         // We need to register the type
         qRegisterMetaType<rw::math::Q>("rw::math::Q");
-      //  connect(_qtRos, SIGNAL(newState(rw::math::Q)), this, SLOT(newState(rw::math::Q)));
+        connect(_qtRos, SIGNAL(newState(rw::math::Q)), this, SLOT(newState(rw::math::Q)));
         connect(_qtRos, SIGNAL(newMultiState(rw::math::Q)), this, SLOT(newMultiState(rw::math::Q)));
 
                

@@ -22,10 +22,13 @@
 #include <caros_common_msgs/Q.h>
 #include <caros/common_robwork.h>
 
+#include "prioritizedPlanner.h"
+
+
 using namespace std;
 
 
-#define MAXTIME 20
+#define MAXTIME 60
 
 
 class URRobot {
@@ -34,8 +37,8 @@ public:
 	rw::math::Q getQ(); 
 	bool setDoubleQ(rw::math::Q q);
 	bool setQ(rw::math::Q q);
-	bool calculateRRTPath(rw::math::Q from, rw::math::Q to);
 	bool calculateSBLPath(rw::math::Q from, rw::math::Q to);
+	bool calculatePrioritizedPath(vector<rw::math::Q> from, vector<rw::math::Q> to); 
 	rw::trajectory::QPath getPath();
     bool checkCollisions(rw::models::Device::Ptr device, const rw::kinematics::State &state, const rw::proximity::CollisionDetector &detector, const rw::math::Q &q);
     ~URRobot();
@@ -49,6 +52,7 @@ private:
 	rw::kinematics::State state;
 	caros::SerialDeviceSIProxy* robot;
 	rw::trajectory::QPath path; 
+	vector<double> timesteps; 
 
 	ros::Publisher pub_multi_ur5e; 
 };
