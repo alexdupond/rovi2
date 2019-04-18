@@ -41,8 +41,13 @@ void nearest_feature(const FeatureT& query, const PointCloud<FeatureT>& target, 
     }
 }
 
-Matrix4f get_pose_global_allignment(PointCloud<PointNormal>::Ptr scene, PointCloud<PointNormal>::Ptr object)
+Matrix4f get_pose_global_allignment(PointCloud<PointXYZ>::Ptr scene_in, PointCloud<PointXYZ>::Ptr object_in)
 {
+
+	pcl::PointCloud<pcl::PointNormal>::Ptr scene (new pcl::PointCloud<pcl::PointNormal>);
+	pcl::PointCloud<pcl::PointNormal>::Ptr object (new pcl::PointCloud<pcl::PointNormal>);
+	copyPointCloud(*scene_in, *scene);
+	copyPointCloud(*object_in, *object);
 	PCLVisualizer viewer("Before global alignment");
 	viewer.addPointCloud<PointNormal>(object, PointCloudColorHandlerCustom<PointNormal>(object, 0, 255, 0), "object");
 	viewer.addPointCloud<PointNormal>(scene, PointCloudColorHandlerCustom<PointNormal>(scene, 255, 0, 0),"scene");

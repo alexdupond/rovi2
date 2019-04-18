@@ -1,1 +1,3 @@
 roslaunch realsense2_camera rs_camera.launch filters:=pointcloud
+
+rosrun collaborating_robots pose_estimation_node
