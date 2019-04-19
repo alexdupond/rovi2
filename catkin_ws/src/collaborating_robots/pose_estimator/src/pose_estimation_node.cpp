@@ -22,7 +22,7 @@
 #include <pcl/filters/crop_box.h>
 #include <pcl/PointIndices.h>
 #include "global_alignment.hpp"
-//#include "local_alignment.hpp"
+#include "local_alignment.hpp"
 #include <pcl/filters/extract_indices.h>
 
 bool new_cloud_from_msg = false;
@@ -54,13 +54,13 @@ bool kbhit()							//used for checking for terminla input, without pausing the l
 }
 
 void point_cloud_callback(const sensor_msgs::PointCloud2ConstPtr& cloud_msg)	//callback function for camera
-{	
+{
 	Eigen::Matrix4f T_flip;
 	T_flip << 	1,  0, 	0, 0,
     			0, -1, 	0, 0,
     			0,  0, -1, 0,
 				0,  0,  0, 1;
-							
+
 	if(ready_for_new_cloud)											//if the program is ready for a new cloud
 	{
 		ROS_INFO("callback");
@@ -70,7 +70,7 @@ void point_cloud_callback(const sensor_msgs::PointCloud2ConstPtr& cloud_msg)	//c
 		ROS_INFO("new Pointcloud arrived! stamp: %"PRIu64, cloud_from_msg->header.stamp);			//This is just for showing that the pointcloud gets updated
 		new_cloud_from_msg = true;											//signal new cloud is ready
 		ready_for_new_cloud = false;
-	} 
+	}
 }
 
 Eigen::Matrix4f RPY2H(float Rz, float Ry, float Rx, float tx, float ty, float tz)
@@ -90,7 +90,7 @@ int main(int argc, char** argv)
 	ros::Subscriber sub = nh.subscribe("/camera/depth/color/points", 1, point_cloud_callback);
 	ros::Rate loop_rate(10);	//loop rate in Hz
 
-	
+
 	pcl::PolygonMesh testMesh;
 
 	if (pcl::io::loadPCDFile<pcl::PointXYZ> (path_object_yoshi, *cloud_object_yoshi) == -1) //* load the file
@@ -116,15 +116,50 @@ int main(int argc, char** argv)
 	viewer.addCoordinateSystem(0.3); // 0,0,0
 	viewer.addCube(minX, maxX, minY, maxY, minZ, maxZ, 1.0,1.0,0, "filter_box", 0);
 	viewer.setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_WIREFRAME, "filter_box");
+	
+	bool global_pose_calculated = false;
+	bool local_pose_calculated = true;		// TODO set to false after test
+	bool first_run = true;
 	while(ros::ok)
 	{
+
 		ros::spinOnce();		//update all ROS related stuff
 		if(new_cloud_from_msg)
 		{
 			new_cloud_from_msg = false;
-			
+
 			pcl::transformPointCloud(*cloud_from_msg, *cloud_scene_rotate, RPY2H(0.87266, 0.13089, 0.63, 0, 0, 0.33));
 
+			// if(first_run)			//only run once
+			// {
+			// 	ROS_INFO("got here");
+			// 	pcl::PointIndices::Ptr indices_discarded_points (new PointIndices);
+			// 	pcl::CropBox<pcl::PointXYZ> boxFilter(true);								//fintering pointcloud. remove everything outside the box
+			// 	boxFilter.setMin(Eigen::Vector4f(minX, minY, minZ, 1.0));
+			// 	boxFilter.setMax(Eigen::Vector4f(maxX, maxY, maxZ, 1.0));
+			// 	boxFilter.setInputCloud(cloud_scene_rotate);
+			// 	boxFilter.filter(*cloud_boxFilter_output);
+			// 	boxFilter.getRemovedIndices(*indices_discarded_points);
+
+			// 	pcl::ExtractIndices<pcl::PointXYZ> extract;							//finding the removed points, for visualisation purposes
+			// 	extract.setInputCloud(cloud_scene_rotate);
+			// 	extract.setIndices(indices_discarded_points);
+			// 	extract.setNegative(false);
+			// 	extract.filter(*cloud_boxFilter_discarded);
+
+			// 	boxFilter.setMin(Eigen::Vector4f(-1, -1, -1, 1.0));					//removing points that is fare away, for visualisation purposes
+			// 	boxFilter.setMax(Eigen::Vector4f(1, 1, 1, 1.0));
+			// 	boxFilter.setInputCloud(cloud_boxFilter_discarded);
+			// 	boxFilter.filter(*cloud_boxFilter_boxFilter_discarded);
+			// 	// 
+			// 	// viewer.spinOnce();
+			// 	viewer->addPointCloud<pcl::PointXYZ>(cloud_boxFilter_output, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_output, 0, 255, 0), "cloud_boxFilter_output");
+			// 	viewer->addPointCloud<pcl::PointXYZ>(cloud_boxFilter_boxFilter_discarded, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_object_yoshi, 255, 255, 0), "cloud_boxFilter_boxFilter_discarded");
+			// 	viewer->addPointCloud<pcl::PointXYZ>(cloud_object_yoshi, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_output, 0, 0 , 255), "cloud_object_yoshi");
+			// 	viewer->spinOnce();
+			// 	ROS_INFO("exit scope");
+			// 	first_run = false;
+			// }
 
 			pcl::PointIndices::Ptr indices_discarded_points (new PointIndices);
 			pcl::CropBox<pcl::PointXYZ> boxFilter(true);								//fintering pointcloud. remove everything outside the box
@@ -145,17 +180,34 @@ int main(int argc, char** argv)
 			boxFilter.setInputCloud(cloud_boxFilter_discarded);
 			boxFilter.filter(*cloud_boxFilter_boxFilter_discarded);
 
-			get_pose_global(cloud_boxFilter_output, cloud_object_yoshi, 5000);
-            
+			// if(global_pose_calculated == false)									//only calculate gloabal pose once
+			// {
+
+			// 	//Eigen::Matrix4f T_object = get_pose_global(cloud_boxFilter_output, cloud_object_yoshi, "cloud_object_yoshi", &viewer , 5000);
+			// 	//pcl::transformPointCloud(*cloud_object_yoshi, *cloud_object_yoshi, T_object);
+			// 	global_pose_calculated = true;
+            // }
+
+			// if(local_pose_calculated == false)
+			// {
+			// 	//Eigen::Matrix4f T_object = get_pose_local(cloud_boxFilter_output, cloud_object_yoshi);
+			// 	//pcl::transformPointCloud(*cloud_object_yoshi, *cloud_object_yoshi, T_object);
+			// 	local_pose_calculated = true;
+			// }
+
+			//viewer.removeAllPointClouds();
 			viewer.removePointCloud("cloud_boxFilter_output");
-			viewer.removePointCloud("cloud_boxFilter_boxFilter_discarded");
+-			viewer.removePointCloud("cloud_boxFilter_boxFilter_discarded");
 			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_output, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_output, 0, 255, 0), "cloud_boxFilter_output");
-			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_boxFilter_discarded, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_boxFilter_discarded, 150, 150, 0), "cloud_boxFilter_boxFilter_discarded");
+			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_boxFilter_discarded, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_object_yoshi, 255, 255, 0), "cloud_boxFilter_boxFilter_discarded");
+			//viewer.addPointCloud<pcl::PointXYZ>(cloud_object_yoshi, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_output, 0, 0 , 255), "cloud_object_yoshi");
+			
 			viewer.spinOnce();
-			viewer.spin();
+			
 
 			// TODO set to tru when done with testing
-			ready_for_new_cloud = false;		//signal that the function is ready for a new cloud from the camera
+			first_run = false;
+			ready_for_new_cloud = true;		//signal that the function is ready for a new cloud from the camera
 		}
 		if (kbhit())		//it there is a terminal input
 		{
