@@ -116,6 +116,25 @@ int main(int argc, char** argv)
 	viewer.addCube(minX, maxX, minY, maxY, minZ, maxZ, 1.0,1.0,0, "filter_box", 0);
 	viewer.setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_WIREFRAME, "filter_box");
 	bool first_run = true;
+	bool enable_pose_estimation = false;
+
+	char user_input;
+	cout << "You have the following options:" << endl << "p  : Pose estimation" << endl << "f  : Free view" << endl;
+	cin >> user_input;
+	if(user_input == 'p')
+	{
+		enable_pose_estimation = true;
+	}
+	else if(user_input == 'f')
+	{
+		enable_pose_estimation = false;
+	}
+	else
+	{
+		cout << endl << endl << "    Huu.. You can't even type one letter. SHAME ON YOU!" << endl << endl;
+	}
+	
+
 	while(ros::ok)
 	{
 		ros::spinOnce();		//update all ROS related stuff
@@ -145,9 +164,8 @@ int main(int argc, char** argv)
 			boxFilter.setInputCloud(cloud_boxFilter_discarded);
 			boxFilter.filter(*cloud_boxFilter_boxFilter_discarded);
 
-			if(first_run)
+			if(first_run && enable_pose_estimation)
 			{
-				//pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_pose_estimation (new pcl::PointCloud<pcl::PointXYZ>);
 				Eigen::Matrix4f T_pose_estimation;
 				T_pose_estimation = get_pose_global(cloud_boxFilter_output, cloud_object_yoshi, 5000);
 				pcl::transformPointCloud(*cloud_object_yoshi, *cloud_object_yoshi, T_pose_estimation);
