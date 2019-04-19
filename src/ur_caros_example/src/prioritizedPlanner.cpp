@@ -54,7 +54,7 @@ Node* nearestNeighbor(const RRTStruct& rrt,const Tree& tree,const Q& q);
 ExtendResult extend(const RRTStruct& rrt,Tree& tree,const Q& q,Node* qNearNode);
 ExtendResult connect(const RRTStruct& rrt,Tree& tree,const Q& q);
 ExtendResult growTree(const RRTStruct& rrt,Tree& tree,const Q& q);
-void getPath(const Tree& startTree, const Tree& goalTree, rw::trajectory::QPath& result);
+void getPathFromTree(const Tree& startTree, const Tree& goalTree, rw::trajectory::QPath& result);
 
 
 PrioritizedPlanner::PrioritizedPlanner(rw::models::WorkCell::Ptr wc, rw::models::Device::Ptr device1, rw::models::Device::Ptr device2){
@@ -83,7 +83,7 @@ bool PrioritizedPlanner::calculateRRTPath(rw::math::Q from, rw::math::Q to){
 	rw::pathplanning::QSampler::Ptr sampler = rw::pathplanning::QSampler::makeConstrained(rw::pathplanning::QSampler::makeUniform(_device1),constraint.getQConstraintPtr());
 
 	rw::math::QMetric::Ptr metric = rw::math::MetricFactory::makeEuclidean<rw::math::Q>();
-	double extend = 0.005;
+	double extend = 0.1;
 	rw::pathplanning::QToQPlanner::Ptr planner = rwlibs::pathplanners::RRTPlanner::makeQToQPlanner(constraint, sampler, metric, extend, rwlibs::pathplanners::RRTPlanner::RRTConnect);
 
 	if (!checkCollisions(_device1, detector, from))
@@ -148,12 +148,17 @@ vector<double> PrioritizedPlanner::calculateTimesteps(rw::trajectory::QPath path
 	return time; 
 }
 
-rw::trajectory::QPath PrioritizedPlanner::getPath(){
-    return _path_1; 
+rw::trajectory::QPath PrioritizedPlanner::getPath(int ID){
+    if(ID == 1)
+        return _path_1;
+    if(ID == 2)
+        return _path_2;
+
+    return 0;
 }
 
 
-bool PrioritizedPlanner::prioritizedPlanning(vector<rw::math::Q> from, vector<rw::math::Q> to){
+bool PrioritizedPlanner::prioritizedPlanning(rw::math::Q start, rw::math::Q goal, rw::trajectory::QPath &result){
     // SETTING UP RRT STRUCT FOR PLANNER
 	rw::proximity::CollisionDetector detector(_wc, rwlibs::proximitystrategies::ProximityStrategyFactory::makeDefaultCollisionStrategy());
 	rw::pathplanning::PlannerConstraint constraint = rw::pathplanning::PlannerConstraint::make(&detector,_device2,_state);
@@ -161,13 +166,14 @@ bool PrioritizedPlanner::prioritizedPlanning(vector<rw::math::Q> from, vector<rw
 	rw::pathplanning::QSampler::Ptr sampler = rw::pathplanning::QSampler::makeConstrained(rw::pathplanning::QSampler::makeUniform(_device2),constraint.getQConstraintPtr());
 
 	rw::math::QMetric::Ptr metric = rw::math::MetricFactory::makeEuclidean<rw::math::Q>();
-	double extend = 0.001;
+	double extend = 0.1;
 
     RRTStruct _rrt(constraint, sampler, metric, extend); 
 
     // STARTING TO PLAN ROUTE
-/*
+
     // Checking start and end configuration 
+    cout << "Calculation path from: " << start << ", to: " << goal << endl; 
     if (inCollision(_rrt, start)) {
         std::cout<<"Start is in collision"<<std::endl;
         return false;
@@ -178,28 +184,39 @@ bool PrioritizedPlanner::prioritizedPlanning(vector<rw::math::Q> from, vector<rw
         return false;
     }
 
-    if (!_rrt.constraint.getQEdgeConstraint().inCollision(start, goal)) {
+  /*  if (!_rrt.constraint.getQEdgeConstraint().inCollision(start, goal)) {
         result.push_back(start);
         result.push_back(goal);
+        cout << "Path found - Size = " << result.size() << endl;
         return true;
     }
-
+*/
+   
     Tree startTree(start);
     Tree goalTree(goal);
+    Tree* treeA = &startTree;
+    Tree* treeB = &goalTree;
 
-    while (!stop.stop()) {
+    rw::common::Timer t;
+	t.resetAndResume();
+    while (t.getTime() < 30 ) {
+
         const Q qAttr = _rrt.sampler->sample();
         if (qAttr.empty()) RW_THROW("Sampler must always succeed.");
 
-        // If both trees manage to connect, then return the resulting
-        // path.
-        if (growTree(_rrt, startTree, qAttr) == Reached)
+        if (growTree(_rrt, *treeA, qAttr) != Trapped &&
+            connect(_rrt, *treeB, getQVal(&treeA->getLast())) == Reached)
         {
-            getPath(startTree, goalTree, result);
+            getPathFromTree(startTree, goalTree, result);
+            cout << "Path found - Size = " << result.size() << endl;
             return true;
         }
+
+        std::swap(treeA, treeB);
     }
-*/
+    
+    cout << "TIMEOUT!" << endl; 
+
     return false;
 }
 
@@ -254,7 +271,7 @@ ExtendResult extend(const RRTStruct& rrt,Tree& tree,const Q& q,Node* qNearNode)
     const Q& qNear = getQVal(qNearNode);
     const Q delta = q - qNear;
     const double dist = rrt.metric->distance(delta);
-
+    cout << "Distance = " << dist << endl; 
     if (dist <= rrt.extend) {
         if (!inCollision(rrt, qNearNode, q)) {                
             tree.add(q, qNearNode);
@@ -301,7 +318,7 @@ ExtendResult growTree(const RRTStruct& rrt,Tree& tree,const Q& q)
 
 // Assuming that both trees have just been extended, retrieve the resulting
 // path.
-void getPath(const Tree& startTree, const Tree& goalTree, rw::trajectory::QPath& result)
+void getPathFromTree(const Tree& startTree, const Tree& goalTree, rw::trajectory::QPath& result)
 {
     rw::trajectory::QPath revPart;
     Tree::getRootPath(*startTree.getLast().getParent(), revPart);

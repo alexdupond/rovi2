@@ -22,9 +22,9 @@ class PrioritizedPlanner{
 public:
 	PrioritizedPlanner(rw::models::WorkCell::Ptr wc, rw::models::Device::Ptr device1, rw::models::Device::Ptr device2); 
     vector<double> calculateTimesteps(rw::trajectory::QPath path);
-    rw::trajectory::QPath getPath(); 
+    rw::trajectory::QPath getPath(int ID); 
     bool calculateRRTPath(rw::math::Q from, rw::math::Q to);
-    bool prioritizedPlanning(vector<rw::math::Q> from, vector<rw::math::Q> to);
+    bool prioritizedPlanning(rw::math::Q from, rw::math::Q to, rw::trajectory::QPath &result);
     rw::trajectory::QPath optimizePath(rw::trajectory::QPath path, rw::models::Device::Ptr device);  
     bool checkCollisions(rw::models::Device::Ptr device, const rw::proximity::CollisionDetector &detector, const rw::math::Q &q);
     ~PrioritizedPlanner(); 

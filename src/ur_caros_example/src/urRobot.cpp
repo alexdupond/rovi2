@@ -28,9 +28,9 @@ bool URRobot::calculatePrioritizedPath(vector<rw::math::Q> robot1, vector<rw::ma
 		for(size_t i = 0; i < robot1.size() - 1; i++)
 		{
 			if(planner.calculateRRTPath(robot1[i], robot1 [i+1])){
-				for(size_t i = 0; i < planner.getPath().size(); i++)
+				for(size_t i = 0; i < planner.getPath(1).size(); i++)
 				{
-					path_UR5E1.push_back(planner.getPath()[i]);
+					path_UR5E1.push_back(planner.getPath(1)[i]);
 				}
 			}else{
 				return false;
@@ -39,6 +39,20 @@ bool URRobot::calculatePrioritizedPath(vector<rw::math::Q> robot1, vector<rw::ma
 		
 		path_UR5E1 = planner.optimizePath(path_UR5E1, UR5E1); 
 		path = path_UR5E1;
+		
+		for(size_t i = 0; i < robot2.size() -1 ; i++)
+		{
+			if(planner.prioritizedPlanning(robot2[0], robot2[1], path_UR5E2)){
+				for(size_t i = 0; i < planner.getPath(2).size(); i++)
+				{
+					path_UR5E2.push_back(planner.getPath(2)[i]);
+				}
+				
+			}
+		}
+		
+	
+
 		return true; 
 	}
 	return false; 
