@@ -98,8 +98,8 @@ bool PrioritizedPlanner::calculateRRTPath(rw::math::Q from, rw::math::Q to){
 	t.resetAndResume();
 	planner->query(from,to,rrt_path,MAXTIME);
 	t.pause();
-	_path = rrt_path; 
-	cout << "Path of length " << _path.size() << " found in " << t.getTime() << " seconds." << endl;
+	_path_1 = rrt_path; 
+	cout << "Path of length " << _path_1.size() << " found in " << t.getTime() << " seconds." << endl;
 	if (t.getTime() >= MAXTIME) {
 		cout << "Notice: max time of " << MAXTIME << " seconds reached." << endl;
 		return false; 
@@ -109,13 +109,14 @@ bool PrioritizedPlanner::calculateRRTPath(rw::math::Q from, rw::math::Q to){
 	
 }
 
-bool PrioritizedPlanner::optimizePath(rw::trajectory::QPath path){
+rw::trajectory::QPath PrioritizedPlanner::optimizePath(rw::trajectory::QPath path, rw::models::Device::Ptr device){
     rw::proximity::CollisionDetector detector(_wc, rwlibs::proximitystrategies::ProximityStrategyFactory::makeDefaultCollisionStrategy());
-	rw::pathplanning::PlannerConstraint constraint = rw::pathplanning::PlannerConstraint::make(&detector,_device1,_state);
+	rw::pathplanning::PlannerConstraint constraint = rw::pathplanning::PlannerConstraint::make(&detector,device,_state);
     rw::math::QMetric::Ptr metric = rw::math::MetricFactory::makeEuclidean<rw::math::Q>();
     rwlibs::pathoptimization::PathLengthOptimizer pathOptimizer(constraint,metric);
-    _path = pathOptimizer.partialShortCut(_path);
-	cout << "Optimized path lenght: " << _path.size() << endl;
+    path = pathOptimizer.partialShortCut(path);
+	cout << "Optimized path lenght: " << path.size() << endl;
+    return path; 
 }
 
 
@@ -148,11 +149,11 @@ vector<double> PrioritizedPlanner::calculateTimesteps(rw::trajectory::QPath path
 }
 
 rw::trajectory::QPath PrioritizedPlanner::getPath(){
-    return _path; 
+    return _path_1; 
 }
 
 
-bool PrioritizedPlanner::prioritizedPlanning(vector<rw::math::Q> from, vector<rw::math::Q> to, rw::trajectory::QPath robotPath, vector<double> steplist){
+bool PrioritizedPlanner::prioritizedPlanning(vector<rw::math::Q> from, vector<rw::math::Q> to){
     // SETTING UP RRT STRUCT FOR PLANNER
 	rw::proximity::CollisionDetector detector(_wc, rwlibs::proximitystrategies::ProximityStrategyFactory::makeDefaultCollisionStrategy());
 	rw::pathplanning::PlannerConstraint constraint = rw::pathplanning::PlannerConstraint::make(&detector,_device2,_state);

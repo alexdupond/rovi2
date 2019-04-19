@@ -32,19 +32,16 @@ int main(int argc, char** argv)
 	vector<double> QvecTo = QrobotTo1;
 	QvecTo.insert(QvecTo.end(), QrobotTo2.begin(), QrobotTo2.end());
 
-	rw::math::Q from_sbl(QvecFrom);
-	rw::math::Q to_sbl(QvecTo);
+	rw::math::Q from(QvecFrom);
+	rw::math::Q to(QvecTo);
 
-	rw::math::Q from_1(QrobotFrom1);
-	rw::math::Q from_2(QrobotFrom2); 
-	rw::math::Q to_1(QrobotTo1);
-	rw::math::Q to_2(QrobotTo2);
+	vector<rw::math::Q> robot1Path;
+	vector<rw::math::Q> robot2Path; 
 
-	vector<rw::math::Q> fromVec; 
-	vector<rw::math::Q> toVec; 
-	fromVec.push_back(from_1);
-	toVec.push_back(to_1); 
-
+	robot1Path.push_back(QrobotFrom1);
+	robot1Path.push_back(QrobotTo1); 
+	robot2Path.push_back(QrobotFrom2);
+	robot2Path.push_back(QrobotTo2); 
 
 	while(true){
 		std::cout << "Current joint config:" << std::endl << robot.getQ() << std::endl << std::endl;
@@ -52,13 +49,13 @@ int main(int argc, char** argv)
 		string input; 
 		cin >> input;
 		if(input == "sbl"){
-			if(robot.calculateSBLPath(from_sbl, to_sbl)){
+			if(robot.calculateSBLPath(from, to)){
 				cout << "Calculated SBL path!" << endl; 
 			}else{
 				cout << "Could not calculate SBL path!" << endl; 
 			}
 		}else if(input == "rrt"){
-			if(robot.calculatePrioritizedPath(fromVec, toVec)){
+			if(robot.calculatePrioritizedPath(robot1Path, robot2Path)){
 				cout << "Calculated RRT path!" << endl; 
 			}else{
 				cout << "Could not calculate RRT path!" << endl; 

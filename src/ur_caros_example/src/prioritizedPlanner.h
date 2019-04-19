@@ -24,8 +24,8 @@ public:
     vector<double> calculateTimesteps(rw::trajectory::QPath path);
     rw::trajectory::QPath getPath(); 
     bool calculateRRTPath(rw::math::Q from, rw::math::Q to);
-    bool prioritizedPlanning(vector<rw::math::Q> from, vector<rw::math::Q> to, rw::trajectory::QPath robotPath, vector<double> steplist);
-    bool optimizePath(rw::trajectory::QPath path);  
+    bool prioritizedPlanning(vector<rw::math::Q> from, vector<rw::math::Q> to);
+    rw::trajectory::QPath optimizePath(rw::trajectory::QPath path, rw::models::Device::Ptr device);  
     bool checkCollisions(rw::models::Device::Ptr device, const rw::proximity::CollisionDetector &detector, const rw::math::Q &q);
     ~PrioritizedPlanner(); 
 
@@ -35,7 +35,8 @@ private:
 	rw::models::Device::Ptr _device1;
 	rw::models::Device::Ptr _device2; 
 	rw::kinematics::State _state;
-	rw::trajectory::QPath _path; 
+	rw::trajectory::QPath _path_1;
+    rw::trajectory::QPath _path_2; 
 	vector<double> _timesteps; 
 
 };

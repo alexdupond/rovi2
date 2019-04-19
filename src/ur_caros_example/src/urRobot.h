@@ -38,7 +38,7 @@ public:
 	bool setDoubleQ(rw::math::Q q);
 	bool setQ(rw::math::Q q);
 	bool calculateSBLPath(rw::math::Q from, rw::math::Q to);
-	bool calculatePrioritizedPath(vector<rw::math::Q> from, vector<rw::math::Q> to); 
+	bool calculatePrioritizedPath(vector<rw::math::Q> robot1, vector<rw::math::Q> robo2); 
 	rw::trajectory::QPath getPath();
     bool checkCollisions(rw::models::Device::Ptr device, const rw::kinematics::State &state, const rw::proximity::CollisionDetector &detector, const rw::math::Q &q);
     ~URRobot();

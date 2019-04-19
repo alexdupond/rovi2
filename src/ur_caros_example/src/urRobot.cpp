@@ -18,11 +18,30 @@ URRobot::URRobot(ros::NodeHandle* nodehandler):nh(*nodehandler)
 	ros::spinOnce();
 }
 
-bool URRobot::calculatePrioritizedPath(vector<rw::math::Q> from, vector<rw::math::Q> to){
+bool URRobot::calculatePrioritizedPath(vector<rw::math::Q> robot1, vector<rw::math::Q> robot2){
 	PrioritizedPlanner planner(wc, UR5E1, UR5E2); 
-	planner.calculateRRTPath(from[0], to[0]);
-	path = planner.getPath();
-	return true; 
+
+	if(robot1.size() && robot2.size()){
+
+		rw::trajectory::QPath path_UR5E1;
+		rw::trajectory::QPath path_UR5E2; 
+		for(size_t i = 0; i < robot1.size() - 1; i++)
+		{
+			if(planner.calculateRRTPath(robot1[i], robot1 [i+1])){
+				for(size_t i = 0; i < planner.getPath().size(); i++)
+				{
+					path_UR5E1.push_back(planner.getPath()[i]);
+				}
+			}else{
+				return false;
+			}
+		}
+		
+		path_UR5E1 = planner.optimizePath(path_UR5E1, UR5E1); 
+		path = path_UR5E1;
+		return true; 
+	}
+	return false; 
 };
 
 
