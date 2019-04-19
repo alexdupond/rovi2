@@ -169,7 +169,7 @@ int main(int argc, char** argv)
 				Eigen::Matrix4f T_pose_estimation;
 				T_pose_estimation = get_pose_global(cloud_boxFilter_output, cloud_object_yoshi, 5000);
 				pcl::transformPointCloud(*cloud_object_yoshi, *cloud_object_yoshi, T_pose_estimation);
-				T_pose_estimation += get_pose_local(cloud_boxFilter_output, cloud_object_yoshi);
+				T_pose_estimation = T_pose_estimation * get_pose_local(cloud_boxFilter_output, cloud_object_yoshi);
 				cout << "Final pose:" << endl << T_pose_estimation << endl;
 			}
             
