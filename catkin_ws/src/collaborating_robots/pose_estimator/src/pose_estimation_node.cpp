@@ -22,7 +22,7 @@
 #include <pcl/filters/crop_box.h>
 #include <pcl/PointIndices.h>
 #include "global_alignment.hpp"
-//#include "local_alignment.hpp"
+#include "local_alignment.hpp"
 #include <pcl/filters/extract_indices.h>
 
 bool new_cloud_from_msg = false;
@@ -63,7 +63,6 @@ void point_cloud_callback(const sensor_msgs::PointCloud2ConstPtr& cloud_msg)	//c
 							
 	if(ready_for_new_cloud)											//if the program is ready for a new cloud
 	{
-		ROS_INFO("callback");
 		pcl_conversions::toPCL(*cloud_msg, *cloud2_from_msg);				//convert msg to pcl pointcloud
 		pcl::fromPCLPointCloud2(*cloud2_from_msg, *cloud_from_msg);			//convert pointcloud2 to pointcloud
 		pcl::transformPointCloud(*cloud_from_msg, *cloud_from_msg, T_flip);	//flip pointcloud 180 deg around x, to get the right rotation
@@ -116,6 +115,7 @@ int main(int argc, char** argv)
 	viewer.addCoordinateSystem(0.3); // 0,0,0
 	viewer.addCube(minX, maxX, minY, maxY, minZ, maxZ, 1.0,1.0,0, "filter_box", 0);
 	viewer.setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_WIREFRAME, "filter_box");
+	bool first_run = true;
 	while(ros::ok)
 	{
 		ros::spinOnce();		//update all ROS related stuff
@@ -145,17 +145,25 @@ int main(int argc, char** argv)
 			boxFilter.setInputCloud(cloud_boxFilter_discarded);
 			boxFilter.filter(*cloud_boxFilter_boxFilter_discarded);
 
-			get_pose_global(cloud_boxFilter_output, cloud_object_yoshi, 5000);
+			if(first_run)
+			{
+				//pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_pose_estimation (new pcl::PointCloud<pcl::PointXYZ>);
+				Eigen::Matrix4f T_pose_estimation;
+				T_pose_estimation = get_pose_global(cloud_boxFilter_output, cloud_object_yoshi, 5000);
+				pcl::transformPointCloud(*cloud_object_yoshi, *cloud_object_yoshi, T_pose_estimation);
+				T_pose_estimation += get_pose_local(cloud_boxFilter_output, cloud_object_yoshi);
+				cout << "Final pose:" << endl << T_pose_estimation << endl;
+			}
             
 			viewer.removePointCloud("cloud_boxFilter_output");
 			viewer.removePointCloud("cloud_boxFilter_boxFilter_discarded");
 			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_output, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_output, 0, 255, 0), "cloud_boxFilter_output");
 			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_boxFilter_discarded, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_boxFilter_discarded, 150, 150, 0), "cloud_boxFilter_boxFilter_discarded");
 			viewer.spinOnce();
-			viewer.spin();
+			//viewer.spin();
 
-			// TODO set to tru when done with testing
-			ready_for_new_cloud = false;		//signal that the function is ready for a new cloud from the camera
+			ready_for_new_cloud = true;		//signal that the function is ready for a new cloud from the camera
+			first_run = false;
 		}
 		if (kbhit())		//it there is a terminal input
 		{
