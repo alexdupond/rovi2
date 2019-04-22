@@ -37,7 +37,8 @@ private slots:
 	void timer();
 
 	void stateChangedListener(const rw::kinematics::State& state);
-        void newState(rw::math::Q pos);
+        void newStateUR51(rw::math::Q pos);
+	void newStateUR52(rw::math::Q pos);
 	void newMultiState(rw::math::Q pos);
 
 signals:

@@ -1,5 +1,8 @@
 #include "urRobot.h"
 
+#define PUB_UR5E_1 "/robot_state/ur5e1"
+#define PUB_UR5E_2 "/robot_state/ur5e2"
+
 URRobot::URRobot(ros::NodeHandle* nodehandler):nh(*nodehandler)
 {
 	auto packagePath = ros::package::getPath("ur_caros_example");
@@ -10,7 +13,9 @@ URRobot::URRobot(ros::NodeHandle* nodehandler):nh(*nodehandler)
 	robot = new caros::SerialDeviceSIProxy(nh, "caros_universalrobot");
 
 	// Publisher for robwork plugin
-	pub_multi_ur5e = nh.advertise<caros_control_msgs::RobotState>("/robot_state/multirobot/ur5e", 1);
+	pub_ur5e1 = nh.advertise<caros_control_msgs::RobotState>(PUB_UR5E_1, 1);
+	pub_ur5e2 = nh.advertise<caros_control_msgs::RobotState>(PUB_UR5E_2, 1);
+
 
 
 	// Wait for first state message, to make sure robot is ready
@@ -21,37 +26,44 @@ URRobot::URRobot(ros::NodeHandle* nodehandler):nh(*nodehandler)
 bool URRobot::calculatePrioritizedPath(vector<rw::math::Q> robot1, vector<rw::math::Q> robot2){
 	PrioritizedPlanner planner(wc, UR5E1, UR5E2); 
 
+	rw::trajectory::QPath path_1;
+	rw::trajectory::QPath path_2; 
+
 	if(robot1.size() && robot2.size()){
 
-		rw::trajectory::QPath path_UR5E1;
-		rw::trajectory::QPath path_UR5E2; 
 		for(size_t i = 0; i < robot1.size() - 1; i++)
 		{
-			if(planner.calculateRRTPath(robot1[i], robot1 [i+1])){
+			if(planner.calculateRRTPath(robot1[i], robot1[i+1])){
 				for(size_t i = 0; i < planner.getPath(1).size(); i++)
 				{
-					path_UR5E1.push_back(planner.getPath(1)[i]);
+					path_1.push_back(planner.getPath(1)[i]);
 				}
 			}else{
 				return false;
 			}
 		}
 		
-		path_UR5E1 = planner.optimizePath(path_UR5E1, UR5E1); 
-		path = path_UR5E1;
-		
-		for(size_t i = 0; i < robot2.size() -1 ; i++)
-		{
-			if(planner.prioritizedPlanning(robot2[0], robot2[1], path_UR5E2)){
-				for(size_t i = 0; i < planner.getPath(2).size(); i++)
-				{
-					path_UR5E2.push_back(planner.getPath(2)[i]);
+		planner.optimizePath(path_1, UR5E1);
+		planner.setPath(path_1);
+		path_UR5E1 = path_1;
+
+
+		if(planner.calculateTimesteps(path_UR5E1)){
+			for(size_t i = 0; i < robot2.size() -1 ; i++)
+			{
+				if(planner.calculateDynamicRRTPath(robot2[0], robot2[1])){
+					for(size_t i = 0; i < planner.getPath(2).size(); i++)
+					{
+						path_2.push_back(planner.getPath(2)[i]);
+					}
+					
+				}else{
+					return false; 
 				}
-				
 			}
 		}
 		
-	
+		path_UR5E2 = path_2; 	
 
 		return true; 
 	}
@@ -89,32 +101,33 @@ rw::math::Q URRobot::getQ()
     return q;
 }
 
-bool URRobot::setDoubleQ(rw::math::Q q){
+bool URRobot::setQRobot1(rw::math::Q q){
 	// Creating  the message to be send to the robots
 	caros_common_msgs::Q q_ros = caros::toRos(q);
-	caros_control_msgs::RobotState msg_multi_q;
-	msg_multi_q.q = q_ros; 
-	pub_multi_ur5e.publish(msg_multi_q); 
+	caros_control_msgs::RobotState msg_q;
+	msg_q.q = q_ros; 
+	pub_ur5e1.publish(msg_q); 
 	return true; 
 }
 
-bool URRobot::setQ(rw::math::Q q){
+bool URRobot::setQRobot2(rw::math::Q q){
+	// Creating  the message to be send to the robots
+	caros_common_msgs::Q q_ros = caros::toRos(q);
+	caros_control_msgs::RobotState msg_q;
+	msg_q.q = q_ros; 
+	pub_ur5e2.publish(msg_q); 
+	return true; 
+}
+
+bool URRobot::setQ(rw::math::Q q1, rw::math::Q q2){
 	// Setting robot speed
     float speed = 0.5;
     // Setting a configuration to send to the URSIM 
-	rw::math::Q q1(6, q[0], q[1], q[2], q[3], q[4], q[5]); 
-    // Setting both the robot in URSIM and the two robots in RobWorkStudio. This will return true, when the robot in URSIM is close to its goal position.
-	if(q.size() == 12){
-		if (robot->movePtp(q1, speed) && setDoubleQ(q)) { 
-			return true;
-		} else
-			return false;
-	}else{
-		if (robot->movePtp(q1, speed)) { 
-			return true;
-		} else
-			return false;
-	}
+
+	if (robot->movePtp(q1, speed) && setQRobot1(q1) && setQRobot2(q2)) { 
+		return true;
+	} else
+		return false;
 
 }
 
@@ -160,13 +173,11 @@ bool URRobot::calculateSBLPath(rw::math::Q from, rw::math::Q to){
 
 	cout << "Planning from " << from << " to " << to << endl;
 	rw::common::Timer t;                                        // Timer to stop when planning takes too long
-	t.resetAndResume();                                         // Starting timer
-	rw::trajectory::QPath sbl_path;                             
+	t.resetAndResume();                                         // Starting timer                           
 	sbl_planner->query(from,to,sbl_path,MAXTIME);               // Start planing
-	t.pause();                                                  // Stopping timer 
-	path = sbl_path;                                            // Save path in class
-	cout << "Path of length " << path.size() << " found in " << t.getTime() << " seconds." << endl;
-	if (t.getTime() >= MAXTIME or !path.size()) {
+	t.pause();                                                  // Stopping timer                                          // Save path in class
+	cout << "Path of length " << sbl_path.size() << " found in " << t.getTime() << " seconds." << endl;
+	if (t.getTime() >= MAXTIME or !sbl_path.size()) {
 		cout << "Notice: max time of " << MAXTIME << " seconds reached." << endl;
 		return false; 
 	}else{
@@ -175,15 +186,20 @@ bool URRobot::calculateSBLPath(rw::math::Q from, rw::math::Q to){
 		rw::pathplanning::PlannerConstraint constraint = rw::pathplanning::PlannerConstraint::make(&detector,&robotTree,state);
 		rw::math::QMetric::Ptr metric = rw::math::MetricFactory::makeInfinity<rw::math::Q>();
 		rwlibs::pathoptimization::PathLengthOptimizer pathOptimizer(constraint,metric);
-		path = pathOptimizer.partialShortCut(path);
-		cout << "optimized path lenght: " << path.size() << endl;
+		sbl_path = pathOptimizer.partialShortCut(sbl_path);
+		cout << "optimized path lenght: " << sbl_path.size() << endl;
 		return true;
 	}
 		
 }
 
-rw::trajectory::QPath URRobot::getPath(){
-	return path;
+rw::trajectory::QPath URRobot::getPath(int ID){
+	if(ID == 1){
+		return path_UR5E1; 
+	}else if(ID == 2){
+		return path_UR5E2; 
+	}
+	return -1;
 }
 
 URRobot::~URRobot(){

@@ -50,7 +50,7 @@ namespace rwlibs { namespace pathplanners {
          */
         RRTTree(const value_type& value)
         {
-            add(value, 0);
+            add(value, 0, 1);
         }
 
         /**
@@ -70,9 +70,9 @@ namespace rwlibs { namespace pathplanners {
          * @param value [in] value of the node.
          * @param parent [in] the parent of the node.
          */
-        void add(const value_type& value, node_type* parent)
+        void add(const value_type& value, node_type* parent, double distance)
         {
-            _nodes.push_back(new node_type(value, parent));
+            _nodes.push_back(new node_type(value, parent, distance));
         }
 
         //! @brief Type of an iterator for iterating though the nodes in the tree.

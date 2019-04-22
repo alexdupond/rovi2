@@ -51,7 +51,8 @@ RobotPlugin::RobotPlugin():
         
         // We need to register the type
         qRegisterMetaType<rw::math::Q>("rw::math::Q");
-        connect(_qtRos, SIGNAL(newState(rw::math::Q)), this, SLOT(newState(rw::math::Q)));
+        connect(_qtRos, SIGNAL(newStateUR51(rw::math::Q)), this, SLOT(newStateUR51(rw::math::Q)));
+        connect(_qtRos, SIGNAL(newStateUR52(rw::math::Q)), this, SLOT(newStateUR52(rw::math::Q)));
         connect(_qtRos, SIGNAL(newMultiState(rw::math::Q)), this, SLOT(newMultiState(rw::math::Q)));
 
                
@@ -62,7 +63,15 @@ RobotPlugin::~RobotPlugin()
 }
 
 
-void RobotPlugin::newState(rw::math::Q pos)
+void RobotPlugin::newStateUR51(rw::math::Q pos)
+{
+        // Slot actived each time a new message is received from ros
+        _device_ur5e1->setQ(pos, _state);
+        getRobWorkStudio()->setState(_state);
+
+}
+
+void RobotPlugin::newStateUR52(rw::math::Q pos)
 {
         // Slot actived each time a new message is received from ros
         _device_ur5e2->setQ(pos, _state);

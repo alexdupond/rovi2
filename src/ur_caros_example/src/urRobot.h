@@ -27,19 +27,16 @@
 
 using namespace std;
 
-
-#define MAXTIME 60
-
-
 class URRobot {
 public:
 	URRobot(ros::NodeHandle* nodehandler); 
 	rw::math::Q getQ(); 
-	bool setDoubleQ(rw::math::Q q);
-	bool setQ(rw::math::Q q);
+	bool setQRobot1(rw::math::Q q);
+	bool setQRobot2(rw::math::Q q);
+	bool setQ(rw::math::Q q1, rw::math::Q q2);
 	bool calculateSBLPath(rw::math::Q from, rw::math::Q to);
 	bool calculatePrioritizedPath(vector<rw::math::Q> robot1, vector<rw::math::Q> robo2); 
-	rw::trajectory::QPath getPath();
+	rw::trajectory::QPath getPath(int ID);
     bool checkCollisions(rw::models::Device::Ptr device, const rw::kinematics::State &state, const rw::proximity::CollisionDetector &detector, const rw::math::Q &q);
     ~URRobot();
 
@@ -51,10 +48,13 @@ private:
 	rw::models::Device::Ptr UR5E2; 
 	rw::kinematics::State state;
 	caros::SerialDeviceSIProxy* robot;
-	rw::trajectory::QPath path; 
+	rw::trajectory::QPath sbl_path; 
+	rw::trajectory::QPath path_UR5E1;
+	rw::trajectory::QPath path_UR5E2;
 	vector<double> timesteps; 
 
-	ros::Publisher pub_multi_ur5e; 
+	ros::Publisher pub_ur5e1; 
+	ros::Publisher pub_ur5e2;
 };
 
 #endif

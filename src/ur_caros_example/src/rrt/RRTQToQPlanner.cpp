@@ -267,8 +267,7 @@ namespace
                 const Q qAttr = _rrt.sampler->sample();
                 if (qAttr.empty()) RW_THROW("Sampler must always succeed.");
 
-                if (growTree(_rrt, *treeA, qAttr) != Trapped &&
-                    connect(_rrt, *treeB, getQ(&treeA->getLast())) == Reached)
+                if (growTree(_rrt, *treeA, qAttr) == Reached)//!= Trapped && connect(_rrt, *treeB, getQ(&treeA->getLast())) == Reached)
                 {
                     getPath(startTree, goalTree, result);
                     return true;
