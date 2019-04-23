@@ -143,7 +143,7 @@ add_definitions(${PCL_DEFINITIONS})
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/collaborating_robots_node.cpp)
 add_executable(cam2tcp_node src/cam2tcp_node.cpp)
-add_executable(pose_estimation_node src/pose_estimation_node.cpp)
+add_executable(pose_estimation_node src/pose_estimation_node.cpp src/poseEstimator.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the

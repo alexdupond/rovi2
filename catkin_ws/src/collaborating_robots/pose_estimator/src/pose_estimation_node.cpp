@@ -21,9 +21,8 @@
 //#include "segment_plane.h"
 #include <pcl/filters/crop_box.h>
 #include <pcl/PointIndices.h>
-#include "global_alignment.hpp"
-#include "local_alignment.hpp"
 #include <pcl/filters/extract_indices.h>
+#include "poseEstimator.hpp"
 
 bool new_cloud_from_msg = false;
 bool ready_for_new_cloud = true;
@@ -115,6 +114,9 @@ int main(int argc, char** argv)
 	viewer.addCoordinateSystem(0.3); // 0,0,0
 	viewer.addCube(minX, maxX, minY, maxY, minZ, maxZ, 1.0,1.0,0, "filter_box", 0);
 	viewer.setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_WIREFRAME, "filter_box");
+	
+	poseEstimator PE;
+	
 	bool first_run = true;
 	bool enable_pose_estimation = false;
 
@@ -139,7 +141,10 @@ int main(int argc, char** argv)
 	{
 		ros::spinOnce();		//update all ROS related stuff
 		if(new_cloud_from_msg)
-		{
+		{	
+			PE.printObjectCloudsNames();
+			PE.getObjectCloud("cloud_object_yoshi");
+			PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi");
 			new_cloud_from_msg = false;
 			
 			pcl::transformPointCloud(*cloud_from_msg, *cloud_scene_rotate, RPY2H(0.87266, 0.13089, 0.63, 0, 0, 0.33));
@@ -167,9 +172,10 @@ int main(int argc, char** argv)
 			if(first_run && enable_pose_estimation)
 			{
 				Eigen::Matrix4f T_pose_estimation;
-				T_pose_estimation = get_pose_global(cloud_boxFilter_output, cloud_object_yoshi, 5000);
+				//T_pose_estimation = PE.get_pose_global(cloud_boxFilter_output, cloud_object_yoshi, 5000);
+				T_pose_estimation = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 5000);
 				pcl::transformPointCloud(*cloud_object_yoshi, *cloud_object_yoshi, T_pose_estimation);
-				T_pose_estimation = T_pose_estimation * get_pose_local(cloud_boxFilter_output, cloud_object_yoshi);
+				T_pose_estimation = PE.get_pose_local(cloud_boxFilter_output, cloud_object_yoshi);
 				cout << "Final pose:" << endl << T_pose_estimation << endl;
 			}
             
