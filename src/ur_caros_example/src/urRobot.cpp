@@ -24,7 +24,8 @@ URRobot::URRobot(ros::NodeHandle* nodehandler):nh(*nodehandler)
 }
 
 bool URRobot::calculatePrioritizedPath(vector<rw::math::Q> robot1, vector<rw::math::Q> robot2){
-	PrioritizedPlanner planner(wc, UR5E1, UR5E2); 
+	double extend = 0.1; 
+	PrioritizedPlanner planner(wc, UR5E1, UR5E2, extend); 
 
 	rw::trajectory::QPath path_1;
 	rw::trajectory::QPath path_2; 
@@ -43,7 +44,6 @@ bool URRobot::calculatePrioritizedPath(vector<rw::math::Q> robot1, vector<rw::ma
 			}
 		}
 		
-		planner.optimizePath(path_1, UR5E1);
 		planner.setPath(path_1);
 		path_UR5E1 = path_1;
 

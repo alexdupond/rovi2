@@ -69,26 +69,28 @@ public:
 class PrioritizedPlanner{
 
 public:
-	PrioritizedPlanner(rw::models::WorkCell::Ptr wc, rw::models::Device::Ptr device1, rw::models::Device::Ptr device2); 
+	PrioritizedPlanner(rw::models::WorkCell::Ptr wc, rw::models::Device::Ptr device1, rw::models::Device::Ptr device2, double extend); 
     bool calculateTimesteps(rw::trajectory::QPath path);
     rw::trajectory::QPath getPath(int ID); 
     void setPath(rw::trajectory::QPath);
     bool calculateRRTPath(rw::math::Q from, rw::math::Q to);
     bool calculateDynamicRRTPath(rw::math::Q &from, rw::math::Q &to);
-    rw::trajectory::QPath optimizePath(rw::trajectory::QPath& path, rw::models::Device::Ptr device);  
+    void optimizePath(rw::trajectory::QPath& path, rw::models::Device::Ptr device);  
     bool checkCollisions(rw::models::Device::Ptr device, const rw::proximity::CollisionDetector &detector, const rw::math::Q &q);
     ~PrioritizedPlanner(); 
 
-    bool inCollision(const RRTStruct& rrt, const Q& q);
-    bool inCollision(const RRTStruct& rrt, Node* a, const Q& b);
-    Node* nearestNeighbor(const RRTStruct& rrt,const Tree& tree,const Q& q);
-    ExtendResult extend(const RRTStruct& rrt,Tree& tree,const Q& q,Node* qNearNode);
-    ExtendResult connect(const RRTStruct& rrt,Tree& tree,const Q& q);
-    ExtendResult growTree(const RRTStruct& rrt,Tree& tree,const Q& q_rand, const Q& q_goal);
+    Node* nearestNeighbor(const Tree& tree,const Q& q);
+    ExtendResult extend(Tree& tree,const Q& q,Node* qNearNode, const Q& qGoal, const rw::proximity::CollisionDetector &detector);
+    ExtendResult connect(Tree& tree,const Q& q);
+    ExtendResult growTree(Tree& tree,const Q& q_rand, const Q& qGoal, const rw::proximity::CollisionDetector &detector);
     void getPathFromTree(const Tree& startTree, const Tree& goalTree, rw::trajectory::QPath& result);
+
     void updateDevice(rw::math::Q q); 
+    bool inCollision(const rw::proximity::CollisionDetector &detector, const rw::math::Q &q_new, const rw::math::Q &q_robot_1); 
 
     double multiplier(rw::math::Q q, int d); 
+
+    double distance(const rw::math::Q& q); 
 
 
 private:
@@ -99,7 +101,8 @@ private:
 	rw::trajectory::QPath _path_1;
     rw::trajectory::QPath _path_2; 
 	vector<double> _timesteps; 
-    double currentTimestep = 0; 
+    double currentTimestep = 0;
+    double _extend = 0; 
 
 };
 

@@ -7,13 +7,14 @@
 //typedef rw::trajectory::QPath Path;
 
 const Q& getQVal(Node* node) { return node->getValue();}
-double getDistanceVal(Node* node){ return node->getDistance(); }
+double getDepth(Node* node){ return node->getDepth(); }
 
 
 
-PrioritizedPlanner::PrioritizedPlanner(rw::models::WorkCell::Ptr wc, rw::models::Device::Ptr device1, rw::models::Device::Ptr device2){
+PrioritizedPlanner::PrioritizedPlanner(rw::models::WorkCell::Ptr wc, rw::models::Device::Ptr device1, rw::models::Device::Ptr device2, double extend){
     _wc = wc;
     _state = wc->getDefaultState();
+    _extend = extend; 
     _device1 = device1; 
     _device2 = device2;
 }
@@ -39,8 +40,7 @@ bool PrioritizedPlanner::calculateRRTPath(rw::math::Q from, rw::math::Q to){
 	rw::pathplanning::QSampler::Ptr sampler = rw::pathplanning::QSampler::makeConstrained(rw::pathplanning::QSampler::makeUniform(_device1),constraint.getQConstraintPtr());
 
 	rw::math::QMetric::Ptr metric = rw::math::MetricFactory::makeEuclidean<rw::math::Q>();
-	double extend = 0.1;
-	rw::pathplanning::QToQPlanner::Ptr planner = rwlibs::pathplanners::RRTPlanner::makeQToQPlanner(constraint, sampler, metric, extend, rwlibs::pathplanners::RRTPlanner::RRTConnect);
+	rw::pathplanning::QToQPlanner::Ptr planner = rwlibs::pathplanners::RRTPlanner::makeQToQPlanner(constraint, sampler, metric, _extend, rwlibs::pathplanners::RRTPlanner::RRTConnect);
 
 	if (!checkCollisions(_device1, detector, from))
 		return 0;
@@ -59,7 +59,8 @@ bool PrioritizedPlanner::calculateRRTPath(rw::math::Q from, rw::math::Q to){
 	if (t.getTime() >= MAXTIME) {
 		cout << "Notice: max time of " << MAXTIME << " seconds reached." << endl;
 		return false; 
-	}else{	
+	}else{
+        optimizePath(_path_1, _device1);
 		return true;
 	}
 	
@@ -69,14 +70,13 @@ void PrioritizedPlanner::setPath(rw::trajectory::QPath path){
     _path_1 = path; 
 }
 
-rw::trajectory::QPath PrioritizedPlanner::optimizePath(rw::trajectory::QPath& path, rw::models::Device::Ptr device){
+void PrioritizedPlanner::optimizePath(rw::trajectory::QPath& path, rw::models::Device::Ptr device){
     rw::proximity::CollisionDetector detector(_wc, rwlibs::proximitystrategies::ProximityStrategyFactory::makeDefaultCollisionStrategy());
 	rw::pathplanning::PlannerConstraint constraint = rw::pathplanning::PlannerConstraint::make(&detector,device,_state);
     rw::math::QMetric::Ptr metric = rw::math::MetricFactory::makeEuclidean<rw::math::Q>();
     rwlibs::pathoptimization::PathLengthOptimizer pathOptimizer(constraint,metric);
     path = pathOptimizer.partialShortCut(path);
-	cout << "Optimized path lenght: " << path.size() << endl;
-    return path; 
+	cout << "Optimized path lenght: " << path.size() << endl; 
 }
 
 
@@ -125,32 +125,12 @@ bool PrioritizedPlanner::calculateDynamicRRTPath(rw::math::Q &start, rw::math::Q
 
 	rw::pathplanning::QSampler::Ptr sampler = rw::pathplanning::QSampler::makeConstrained(rw::pathplanning::QSampler::makeUniform(_device2),constraint.getQConstraintPtr());
 
-	rw::math::QMetric::Ptr metric = rw::math::MetricFactory::makeEuclidean<rw::math::Q>();
-	double extend = 0.05;
-
-    RRTStruct _rrt(constraint, sampler, metric, extend); 
-
-    // STARTING TO PLAN ROUTE
-
     // Checking start and end configuration 
     cout << "Calculation path from: " << start << ", to: " << goal << endl; 
-    if (inCollision(_rrt, start)) {
+    if (inCollision(detector, start, _path_1[0])) {
         std::cout<<"Start is in collision"<<std::endl;
         return false;
     }
-
-    if (inCollision(_rrt, goal)) {
-        std::cout<<"Goal is in collision"<<std::endl;
-        return false;
-    }
-
-  /*  if (!_rrt.constraint.getQEdgeConstraint().inCollision(start, goal)) {
-        result.push_back(start);
-        result.push_back(goal);
-        cout << "Path found - Size = " << result.size() << endl;
-        return true;
-    }
-*/
    
     Tree startTree(start);
     Tree goalTree(goal);
@@ -160,20 +140,18 @@ bool PrioritizedPlanner::calculateDynamicRRTPath(rw::math::Q &start, rw::math::Q
     rw::common::Timer t;
 	t.resetAndResume();
     srand (time(NULL)); 
-    while (t.getTime() < 400 ) {
+    while (t.getTime() < 15 ) {
 
-        const Q qAttr = _rrt.sampler->sample();
+        const Q qAttr = sampler->sample();
         if (qAttr.empty()) RW_THROW("Sampler must always succeed.");
 
-        if (growTree(_rrt, *treeA, qAttr, goal) == Reached )// != Trapped && connect(_rrt, *treeB, getQVal(&treeA->getLast())) == Reached)
+        if (growTree(*treeA, qAttr, goal, detector) == Reached )// != Trapped && connect(_rrt, *treeB, getQVal(&treeA->getLast())) == Reached)
         {
             getPathFromTree(startTree, goalTree, _path_2);
             cout << "Path found - Size = " << _path_2.size() << endl;
+            cout << "Time to calculate path = " << t.getTime() << endl; 
             return true;
         }
-
-       // cout << "Tree A size = " << getDistanceVal(&treeA->getLast()) << ", Tree B size = " << getDistanceVal(&treeB->getLast()) << endl; 
-        //std::swap(treeA, treeB);
     }
     
     cout << "TIMEOUT!" << endl; 
@@ -181,36 +159,30 @@ bool PrioritizedPlanner::calculateDynamicRRTPath(rw::math::Q &start, rw::math::Q
     return false;
 }
 
-
-
-bool PrioritizedPlanner::inCollision(const RRTStruct& rrt, const Q& q)
+bool PrioritizedPlanner::inCollision(const rw::proximity::CollisionDetector &detector, const rw::math::Q &q_new, const rw::math::Q &q_robot_1)
 {
-    return rrt.constraint.getQConstraint().inCollision(q);
+	rw::proximity::CollisionDetector::QueryResult data;
+	bool colFrom;
+    
+	_device1->setQ(q_robot_1,_state);
+    _device2->setQ(q_new, _state);
+	if (detector.inCollision(_state,&data)) {
+		cout << "Configuration between " << q_new << ", and " << q_robot_1 << endl;
+		return true;
+	}
+	return false;
 }
 
-// 'node' is known to be collision free, but 'b' is not.
-bool PrioritizedPlanner::inCollision(const RRTStruct& rrt,
-                    Node* a,
-                    const Q& b)
-{
 
-    return
-        rrt.constraint.getQConstraint().inCollision(b) ||
-        rrt.constraint.getQEdgeConstraint().inCollision(getQVal(a), b);
-}
 
 // Brute-force nearest neighbor search.
-Node* PrioritizedPlanner::nearestNeighbor(
-    const RRTStruct& rrt,
-    const Tree& tree,
-    const Q& q)
+Node* PrioritizedPlanner::nearestNeighbor(const Tree& tree, const Q& q)
 {
-    const QMetric& metric = *rrt.metric;
     double minLength = DBL_MAX;
     Node* minNode = NULL;
 
     BOOST_FOREACH(Node* node, tree.getNodes()) {
-        const double length = metric.distance(q, getQVal(node));
+        const double length = distance(q - getQVal(node)); 
         if (length < minLength) {
             minLength = length;
             minNode = node;
@@ -221,27 +193,62 @@ Node* PrioritizedPlanner::nearestNeighbor(
     return minNode;
 }
 
-void PrioritizedPlanner::updateDevice(rw::math::Q q){
-    _device1->setQ(q, _state);
-}
+double PrioritizedPlanner::distance(const rw::math::Q& q){
+    double sum = 0; 
+    for(size_t i = 0; i < q.size(); i++)
+    {
+        sum += pow(q[i],2); 
+    }
+    return sqrt(sum); 
+} 
 
-ExtendResult PrioritizedPlanner::extend(const RRTStruct& rrt,Tree& tree,const rw::math::Q& q,Node* qNearNode)
-{
-    int depth = getDistanceVal(qNearNode); 
+
+ExtendResult PrioritizedPlanner::extend(Tree& tree,const rw::math::Q& q,Node* qNearNode, const Q& qGoal, const rw::proximity::CollisionDetector &detector)
+{   
+    // Init data needed
+    int depth = getDepth(qNearNode); 
     double multi = 0;
+    Q qNew;
     cout << "Depth = " << depth << endl; 
     const rw::math::Q& qNear = getQVal(qNearNode);
-    const rw::math::Q delta = q - qNear;
+
+    // Calculate the difference between random q and the near node
+    int val = rand()%100; 
+    rw::math::Q delta; 
+    if(val > 90){
+        cout << "Moving towards random" << endl; 
+        delta = q - qNear; 
+    }else{
+        delta = qGoal - qNear;
+        cout << "Moving towards goal" << endl; 
+    }
+    
+
+    // Convert to distance - This is calculated to estimate the step size
+    const double dist = distance(delta);
+    cout << "Distance = " << dist << endl;
   
     if(depth < _path_1.size()-1){
-        updateDevice(_path_1[depth]);
-        multi = multiplier(delta, depth); 
+        multi = multiplier(delta, depth);
+        qNew = qNear + multi * delta;
+        cout << "Distance to goal before = " << distance(qNear-qGoal) << endl;
+        cout << "Distance to goal after = " << distance(qNew-qGoal) << endl; 
+
+    }else{
+        depth = _path_1.size() - 1; 
+        qNew = qNear + (_extend/dist) * delta;
+        cout << "Distance to goal before = " << distance(qNear-qGoal) << endl;
+        cout << "Distance to goal after = " << distance(qNew-qGoal) << endl; 
     }
-   
-    const double dist = rrt.metric->distance(delta);
-    cout << "Distance = " << dist << endl; 
-    if (dist <= rrt.extend) {
-        if (!inCollision(rrt, qNearNode, q)) {                
+    cout << "Configuration device 1 = " << _device1->getQ(_state) << endl; 
+    cout << "Configuration device 2 = " << qNew << endl; 
+
+    // Calculating the distance to the goal configuration 
+    double distGoal = distance(qNew - qGoal);
+    cout << "Distance to goal = " << distGoal << endl;
+
+    if (distGoal <= _extend) {
+        if (!inCollision(detector, qNew, _path_1[depth])){//!inCollision(rrt, qNearNode, q)) {                
             tree.add(q, qNearNode, 1);
             return Reached;
         } else {
@@ -249,28 +256,7 @@ ExtendResult PrioritizedPlanner::extend(const RRTStruct& rrt,Tree& tree,const rw
             return Trapped;
         }
     } else {
-        Q qNew; 
-        if(depth < _path_1.size()-1){
-            qNew = qNear + multi * delta;
-        }else{
-            qNew = qNear + (rrt.extend/dist) * delta;
-        }
-        cout << "Configuration device 1 = " << _device1->getQ(_state) << endl; 
-        cout << "Configuration device 2 = " << qNew << endl; 
-
-        // SETTING UP RRT STRUCT FOR PLANNER
-        rw::proximity::CollisionDetector detector(_wc, rwlibs::proximitystrategies::ProximityStrategyFactory::makeDefaultCollisionStrategy());
-        rw::pathplanning::PlannerConstraint constraint = rw::pathplanning::PlannerConstraint::make(&detector,_device2,_state);
-
-        rw::pathplanning::QSampler::Ptr sampler = rw::pathplanning::QSampler::makeConstrained(rw::pathplanning::QSampler::makeUniform(_device2),constraint.getQConstraintPtr());
-
-        rw::math::QMetric::Ptr metric = rw::math::MetricFactory::makeEuclidean<rw::math::Q>();
-        double extend = 0.05;
-
-        RRTStruct _rrt(constraint, sampler, metric, extend); 
-
-
-        if (!inCollision(_rrt, qNearNode, qNew)) {
+        if (!inCollision(detector, qNew, _path_1[depth])){//!inCollision(rrt, qNearNode, qNew)) {
             tree.add(qNew, qNearNode, 1);
             return Advanced;
         } else {
@@ -295,41 +281,12 @@ double PrioritizedPlanner::multiplier(rw::math::Q q, int d)
     cout << "Timestep / largest value = multiplier " << abs(_timesteps[d]) << ", " << value << " = " << abs(_timesteps[d])/value << endl;
     return abs(_timesteps[d])/value; 
 }
-/*
-ExtendResult PrioritizedPlanner::connect(const RRTStruct& rrt,Tree& tree,const Q& q)
+
+ExtendResult PrioritizedPlanner::growTree(Tree& tree,const Q& q_rand, const Q& q_goal, const rw::proximity::CollisionDetector &detector)
 {
-    Node* qNearNode = nearestNeighbor(rrt, tree, q);
+    Node* qNearNode = nearestNeighbor(tree, q_rand);
+    return extend(tree, q_rand, qNearNode, q_goal, detector);
 
-    ExtendResult s = Advanced;
-    bool hasAdvanced = false;
-    while (s == Advanced) {
-        s = extend(rrt, tree, q, qNearNode);
-        if (s == Advanced) {
-            qNearNode = &tree.getLast();
-            hasAdvanced = true;
-        }
-    } 
-
-    if (s == Trapped && hasAdvanced)
-        return Advanced;
-    else
-        return s;
-}
-*/
-
-
-ExtendResult PrioritizedPlanner::growTree(const RRTStruct& rrt,Tree& tree,const Q& q_rand, const Q& q_goal)
-{
-    int val = rand()%100; 
-    if(val > 40){
-        cout << "Chose random!" << endl << endl; 
-        Node* qNearNode = nearestNeighbor(rrt, tree, q_rand);
-        return extend(rrt, tree, q_rand, qNearNode);
-    }else{
-        cout << "Chose goal!" << endl << endl; 
-        Node* qNearNode = nearestNeighbor(rrt, tree, q_rand);
-        return extend(rrt, tree, q_goal, qNearNode);
-    }
 }
 
 // Assuming that both trees have just been extended, retrieve the resulting

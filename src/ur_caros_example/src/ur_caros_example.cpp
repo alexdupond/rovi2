@@ -21,16 +21,19 @@ int main(int argc, char** argv)
 
 	URRobot robot(&nodehandler);
 
-	vector<double> QrobotFrom1{2, -0.8, 1.0, -1.5, -1.5, 0};
-	vector<double> QrobotFrom2{-1.0, -2.2, -1.2, -1.5, 1.5, 0};
-	vector<double> QrobotTo1{0.5, -0.95, 0.95, -1.45, -1.0, 0};
-	vector<double> QrobotTo2{-2.0, -2.2, -1.2, -1.5, 1.5, 0}; 
+	vector<double> QrobotFrom11{2, -0.8, 1.0, -1.5, -1.5, 0};
+	vector<double> QrobotFrom21{-1.0, -2.2, -1.2, -1.5, 1.5, 0};
 
-	vector<double> QvecFrom = QrobotFrom1; 
-	QvecFrom.insert(QvecFrom.end(), QrobotFrom2.begin(), QrobotFrom2.end()); 
+	vector<double> QrobotTo11{0.5, -0.95, 0.95, -1.45, -1.0, 0};
+	vector<double> QrobotTo21{-2.0, -2.2, -1.2, -1.5, 1.5, 0};
 
-	vector<double> QvecTo = QrobotTo1;
-	QvecTo.insert(QvecTo.end(), QrobotTo2.begin(), QrobotTo2.end());
+	vector<double> QrobotTo12{1, -1.5, 1.9, -1.6, -1.8, 0}; 
+
+	vector<double> QvecFrom = QrobotFrom11; 
+	QvecFrom.insert(QvecFrom.end(), QrobotFrom21.begin(), QrobotFrom21.end()); 
+
+	vector<double> QvecTo = QrobotTo11;
+	QvecTo.insert(QvecTo.end(), QrobotTo21.begin(), QrobotTo21.end());
 
 	rw::math::Q from(QvecFrom);
 	rw::math::Q to(QvecTo);
@@ -38,10 +41,11 @@ int main(int argc, char** argv)
 	vector<rw::math::Q> robot1Path;
 	vector<rw::math::Q> robot2Path; 
 
-	robot1Path.push_back(QrobotFrom1);
-	robot1Path.push_back(QrobotTo1); 
-	robot2Path.push_back(QrobotFrom2);
-	robot2Path.push_back(QrobotTo2); 
+	robot1Path.push_back(QrobotFrom11);
+	robot1Path.push_back(QrobotTo11);
+	robot1Path.push_back(QrobotTo12);
+	robot2Path.push_back(QrobotFrom21);
+	robot2Path.push_back(QrobotTo21); 
 
 	while(true){
 		std::cout << "Current joint config:" << std::endl << robot.getQ() << std::endl << std::endl;
@@ -57,8 +61,6 @@ int main(int argc, char** argv)
 		}else if(input == "rrt"){
 			if(robot.calculatePrioritizedPath(robot1Path, robot2Path)){
 				cout << "Calculated RRT path!" << endl; 
-				string hej; 
-				cin >> hej;
 				rw::trajectory::QPath path1;
 				rw::trajectory::QPath path2;
 

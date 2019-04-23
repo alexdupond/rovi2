@@ -56,7 +56,7 @@ namespace rwlibs { namespace pathplanners {
          */
         const value_type& getValue() const { return _value; }
 
-        double getDistance() { return _distance; }
+        double getDepth() { return _distance; }
 
     private:
         friend class RRTTree<X>;
@@ -65,8 +65,8 @@ namespace rwlibs { namespace pathplanners {
             _value(value),
             _parent(parent)
         {
-            if(parent != 0 && parent->getDistance() != 0){
-                _distance = distance + parent->getDistance();
+            if(parent != 0 && parent->getDepth() != 0){
+                _distance = distance + parent->getDepth();
             }else{
                 _distance = distance; 
             }
