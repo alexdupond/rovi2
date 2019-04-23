@@ -70,7 +70,7 @@ void poseEstimator::printObjectCloudsNames()
 	ROS_INFO_STREAM("Object cloud names:\n\t" << names);
 }
 
-Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter)
+Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter, bool show_matches)
 {
 	// Load
     PointCloud<PointT>::Ptr object(new PointCloud<PointT>);
@@ -81,12 +81,12 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
 	copyPointCloud(*(this->getObjectCloud(object_name)), *object);
     
     // Show
-    {
-        PCLVisualizer v("Before global alignment");
-        v.addPointCloud<PointT>(object, PointCloudColorHandlerCustom<PointT>(object, 0, 255, 0), "object");
-        v.addPointCloud<PointT>(scene, PointCloudColorHandlerCustom<PointT>(scene, 255, 0, 0),"scene");
-        v.spin();
-    }
+    // {
+    //     PCLVisualizer v("Before global alignment");
+    //     v.addPointCloud<PointT>(object, PointCloudColorHandlerCustom<PointT>(object, 0, 255, 0), "object");
+    //     v.addPointCloud<PointT>(scene, PointCloudColorHandlerCustom<PointT>(scene, 255, 0, 0),"scene");
+    //     v.spin();
+    // }
     
     // Compute surface normals
     {
@@ -135,13 +135,17 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
     }
     
     // Show matches
-    {
+	if(show_matches == true)
+	{
+		{
         PCLVisualizer v("Matches");
         v.addPointCloud<PointT>(object, PointCloudColorHandlerCustom<PointT>(object, 0, 255, 0), "object");
         v.addPointCloud<PointT>(scene, PointCloudColorHandlerCustom<PointT>(scene, 255, 0, 0),"scene");
         v.addCorrespondences<PointT>(object, scene, corr, 1);
         v.spin();
-    }
+    	}
+	}
+
     
     // Create a k-d tree for scene
     search::KdTree<PointNormal> tree;
@@ -226,12 +230,12 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
     } // End timing
     
     // Show result
-    {
-        PCLVisualizer v("After global alignment");
-        v.addPointCloud<PointT>(object_aligned, PointCloudColorHandlerCustom<PointT>(object_aligned, 0, 255, 0), "object_aligned");
-        v.addPointCloud<PointT>(scene, PointCloudColorHandlerCustom<PointT>(scene, 255, 0, 0),"scene");
-        v.spin();
-    }
+    // {
+    //     PCLVisualizer v("After global alignment");
+    //     v.addPointCloud<PointT>(object_aligned, PointCloudColorHandlerCustom<PointT>(object_aligned, 0, 255, 0), "object_aligned");
+    //     v.addPointCloud<PointT>(scene, PointCloudColorHandlerCustom<PointT>(scene, 255, 0, 0),"scene");
+    //     v.spin();
+    // }
     
     return pose;
 }
@@ -247,12 +251,12 @@ Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, strin
 	copyPointCloud(*(this->getObjectCloud(object_name)), *object);
     
     // Show
-    {
-        PCLVisualizer v("Before local alignment");
-        v.addPointCloud<PointNormal>(object, PointCloudColorHandlerCustom<PointNormal>(object, 0, 255, 0), "object");
-        v.addPointCloud<PointNormal>(scene, PointCloudColorHandlerCustom<PointNormal>(scene, 255, 0, 0),"scene");
-        v.spin();
-    }
+    // {
+    //     PCLVisualizer v("Before local alignment");
+    //     v.addPointCloud<PointNormal>(object, PointCloudColorHandlerCustom<PointNormal>(object, 0, 255, 0), "object");
+    //     v.addPointCloud<PointNormal>(scene, PointCloudColorHandlerCustom<PointNormal>(scene, 255, 0, 0),"scene");
+    //     v.spin();
+    // }
     
     // Create a k-d tree for scene
     search::KdTree<PointNormal> tree;
@@ -318,6 +322,7 @@ Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, strin
         PCLVisualizer v("After local alignment");
         v.addPointCloud<PointNormal>(object_aligned, PointCloudColorHandlerCustom<PointNormal>(object_aligned, 0, 255, 0), "object_aligned");
         v.addPointCloud<PointNormal>(scene, PointCloudColorHandlerCustom<PointNormal>(scene, 255, 0, 0),"scene");
+		v.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "scene");
         v.spin();
     }
     
