@@ -1,5 +1,6 @@
 #include "poseEstimator.hpp"
 #include <ros/console.h>
+#include <pcl/filters/crop_box.h>
 
 typedef PointNormal PointT;
 typedef Histogram<153> FeatureT;
@@ -14,7 +15,23 @@ poseEstimator::~poseEstimator()
 
 }
 
-bool poseEstimator::addObjectCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr object, string object_name)
+void poseEstimator::cropCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in, float minZ, float maxZ)
+{
+	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_temp(new pcl::PointCloud<pcl::PointXYZ>);
+	Eigen::Vector4f centroidObject;									//move object to centroid
+	pcl::compute3DCentroid(*cloud_in, centroidObject);
+	pcl::demeanPointCloud(*cloud_in, centroidObject, *cloud_temp);
+	*cloud_in = *cloud_temp;
+
+	pcl::CropBox<pcl::PointXYZ> boxFilter1(true);					//fintering yoshi pointcloud. remove the bottom of the figure
+	boxFilter1.setMin(Eigen::Vector4f(-1, -1, minZ, 1.0));
+	boxFilter1.setMax(Eigen::Vector4f(1, 1, maxZ, 1.0));
+	boxFilter1.setInputCloud(cloud_in);
+	boxFilter1.filter(*cloud_temp);
+	*cloud_in = *cloud_temp;
+}
+
+bool poseEstimator::addObjectCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr object, string object_name, float crop_minZ, float crop_maxZ)
 {
 	for (int i = 0; i < vec_objects_names.size(); i++)
 	{
@@ -24,6 +41,7 @@ bool poseEstimator::addObjectCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr object, s
 			return false;
 		}
 	}
+	cropCloud(object, crop_minZ, crop_maxZ);
 	vec_objects_ptr.push_back(object);
 	vec_objects_names.push_back(object_name);
 	return true;

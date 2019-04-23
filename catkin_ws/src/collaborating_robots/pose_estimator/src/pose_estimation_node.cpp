@@ -96,7 +96,8 @@ int main(int argc, char** argv)
     PCL_ERROR ("Couldn't read file object yoshi \n");
     return (-1);
 	}
-	pcl::transformPointCloud(*cloud_object_yoshi, *cloud_object_yoshi, Eigen::Matrix4f::Identity()*0.001);
+	pcl::transformPointCloud(*cloud_object_yoshi, *cloud_object_yoshi, Eigen::Matrix4f::Identity()*0.001);	//scale down yoshi
+
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_segmentation_scene(new pcl::PointCloud<pcl::PointXYZ>);
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_segmentation_plane(new pcl::PointCloud<pcl::PointXYZ>);
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_scene_yoshi(new pcl::PointCloud<pcl::PointXYZ>);
@@ -106,7 +107,7 @@ int main(int argc, char** argv)
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_boxFilter_discarded (new pcl::PointCloud<pcl::PointXYZ>);
 
 	pcl::PLYReader ply_reader;
-	ply_reader.read(path_scene_yoshi, *cloud_scene_yoshi);
+	ply_reader.read(path_scene_yoshi, *cloud_scene_yoshi);			//load yoshi scene point cloud, used for testing.. can probably be deletet
 
 	//float minX = -1, maxX = -0.02, minY = 0.02, maxY = 1, minZ = 0.03, maxZ = 0.2;
 	float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.03, maxZ = 0.5;
@@ -114,7 +115,6 @@ int main(int argc, char** argv)
 	viewer.addCoordinateSystem(0.3); // 0,0,0
 	viewer.addCube(minX, maxX, minY, maxY, minZ, maxZ, 1.0,1.0,0, "filter_box", 0);
 	viewer.setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_WIREFRAME, "filter_box");
-	
 	poseEstimator PE;
 	
 	bool first_run = true;
@@ -136,7 +136,7 @@ int main(int argc, char** argv)
 		cout << endl << endl << "    Huu.. You can't even type one letter. SHAME ON YOU!" << endl << endl;
 	}
 	
-	PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi");
+	PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", -0.05, 1.0);
 	while(ros::ok)
 	{
 		ros::spinOnce();		//update all ROS related stuff
