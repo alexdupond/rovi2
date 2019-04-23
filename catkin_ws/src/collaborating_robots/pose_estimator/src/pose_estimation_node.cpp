@@ -136,15 +136,14 @@ int main(int argc, char** argv)
 		cout << endl << endl << "    Huu.. You can't even type one letter. SHAME ON YOU!" << endl << endl;
 	}
 	
-
+	PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi");
 	while(ros::ok)
 	{
 		ros::spinOnce();		//update all ROS related stuff
 		if(new_cloud_from_msg)
 		{	
 			PE.printObjectCloudsNames();
-			PE.getObjectCloud("cloud_object_yoshi");
-			PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi");
+			
 			new_cloud_from_msg = false;
 			
 			pcl::transformPointCloud(*cloud_from_msg, *cloud_scene_rotate, RPY2H(0.87266, 0.13089, 0.63, 0, 0, 0.33));
@@ -172,10 +171,8 @@ int main(int argc, char** argv)
 			if(first_run && enable_pose_estimation)
 			{
 				Eigen::Matrix4f T_pose_estimation;
-				//T_pose_estimation = PE.get_pose_global(cloud_boxFilter_output, cloud_object_yoshi, 5000);
 				T_pose_estimation = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 5000);
 				pcl::transformPointCloud(*cloud_object_yoshi, *cloud_object_yoshi, T_pose_estimation);
-				//T_pose_estimation = PE.get_pose_local(cloud_boxFilter_output, cloud_object_yoshi) * T_pose_estimation;
 				T_pose_estimation = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi") * T_pose_estimation;
 				cout << "Final pose:" << endl << T_pose_estimation << endl;
 			}
