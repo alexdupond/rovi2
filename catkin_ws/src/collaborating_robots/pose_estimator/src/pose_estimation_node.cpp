@@ -79,7 +79,7 @@ void point_cloud_callback(const sensor_msgs::PointCloud2ConstPtr& cloud_msg)	//c
                 pcl::fromPCLPointCloud2(*cloud2_from_msg, *cloud_from_msg);			//convert pointcloud2 to pointcloud
 
                 pcl::transformPointCloud(*cloud_from_msg, *cloud_from_msg, T_flip);	//flip pointcloud 180 deg around x, to get the right rotation
-                ROS_INFO("new Pointcloud arrived! stamp: %"PRIu64, cloud_from_msg->header.stamp);			//This is just for showing that the pointcloud gets updated
+                ROS_INFO("new Pointcloud arrived! stamp: %PRIu64", cloud_from_msg->header.stamp);			//This is just for showing that the pointcloud gets updated
                 new_cloud_from_msg = true;											//signal new cloud is ready
 		ready_for_new_cloud = false;
 	} 
@@ -102,9 +102,6 @@ int main(int argc, char** argv)
         ros::Subscriber sub = nh.subscribe("/camera/depth/color/points", 1, point_cloud_callback);
 	ros::Rate loop_rate(10);	//loop rate in Hz
 
-	
-	pcl::PolygonMesh testMesh;
-
 	if (pcl::io::loadPCDFile<pcl::PointXYZ> (path_object_yoshi, *cloud_object_yoshi) == -1) //* load the file
 	{
     PCL_ERROR ("Couldn't read file object yoshi \n");
@@ -117,32 +114,33 @@ int main(int argc, char** argv)
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_output (new pcl::PointCloud<pcl::PointXYZ>);
         pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_discarded (new pcl::PointCloud<pcl::PointXYZ>);
 
-    float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.01, maxZ = 0.3;
+        float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.01, maxZ = 0.3;
 
 	pcl::visualization::PCLVisualizer viewer("Plane segmentation result");
 	viewer.addCoordinateSystem(0.3); // 0,0,0
 	viewer.addCube(minX, maxX, minY, maxY, minZ, maxZ, 1.0,1.0,0, "filter_box", 0);
 	viewer.setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_WIREFRAME, "filter_box");
 	poseEstimator PE;
+        cloudManipulator CM;
 	
 	bool first_run = true;
-	bool enable_pose_estimation = false;
+        bool enable_pose_estimation = false;
 
-	char user_input;
-	cout << "You have the following options:" << endl << "p  : Pose estimation" << endl << "f  : Free view" << endl;
-	cin >> user_input;
-	if(user_input == 'p')
-	{
-		enable_pose_estimation = true;
-	}
-	else if(user_input == 'f')
-	{
-		enable_pose_estimation = false;
-	}
-	else
-	{
-		cout << endl << endl << "    Huu.. You can't even type one letter. SHAME ON YOU!" << endl << endl;
-	}
+        char user_input;
+        cout << "You have the following options:" << endl << "p  : Pose estimation" << endl << "f  : Free view" << endl;
+        cin >> user_input;
+        if(user_input == 'p')
+        {
+                enable_pose_estimation = true;
+        }
+        else if(user_input == 'f')
+        {
+                enable_pose_estimation = false;
+        }
+        else
+        {
+                cout << endl << endl << "    Huu.. You can't even type one letter. SHAME ON YOU!" << endl << endl;
+        }
 	
         PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", -0.05, 1.0);
 	while(ros::ok)
@@ -154,12 +152,12 @@ int main(int argc, char** argv)
 			
 			new_cloud_from_msg = false;
 
-                        cloudManipulator CM;
-                        CM.segmentPlane(cloud_from_msg);
+                        if (first_run)
+                            CM.segmentPlane(cloud_from_msg);
                         CM.alignWithPlane(cloud_from_msg, cloud_aligned);
-                        CM.removePlane(cloud_aligned, cloud_segmented_scene);
-                        CM.cropCloud(cloud_segmented_scene, cloud_boxFilter_output, minX, maxX, minY, maxY, minZ, maxZ);
-                        CM.getDiscardedPoints(cloud_segmented_scene, cloud_boxFilter_discarded);
+                        //CM.removePlane(cloud_aligned, cloud_segmented_scene);
+                        CM.cropCloud(cloud_aligned, cloud_boxFilter_output, minX, maxX, minY, maxY, minZ, maxZ);
+                        CM.getDiscardedPoints(cloud_aligned, cloud_boxFilter_discarded);
 
                         //ROS_INFO_STREAM("Plane coefficients: 0:" << coefficients->values[0] << " 1:" << coefficients->values[1]<< " 2:" << coefficients->values[2]<< " 3:" << coefficients->values[3]);
 
@@ -176,15 +174,14 @@ int main(int argc, char** argv)
 				pcl::transformPointCloud(*cloud_object_yoshi, *cloud_object_yoshi, T_pose_estimation);
 				T_pose_estimation = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200) * T_pose_estimation;
 				cout << "Final pose:" << endl << T_pose_estimation << endl;
-			}
-            
-			viewer.removePointCloud("cloud_boxFilter_output");
+                        }
+                        viewer.removePointCloud("cloud_boxFilter_output");
                         viewer.removePointCloud("cloud_boxFilter_discarded");
-			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_output, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_output, 0, 255, 0), "cloud_boxFilter_output");
+                        viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_output, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_output, 0, 255, 0), "cloud_boxFilter_output");
                         viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_discarded, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_discarded, 150, 150, 0), "cloud_boxFilter_discarded");
-			//viewer.addPointCloud<pcl::PointXYZ>(cloud_from_msg_plane, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_from_msg_plane, 255, 0, 0), "segmented plane");
-			viewer.spinOnce();
-			//viewer.spin();
+                        //viewer.addPointCloud<pcl::PointXYZ>(cloud_from_msg_plane, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_from_msg_plane, 255, 0, 0), "segmented plane");
+                        viewer.spinOnce();
+                        //viewer.spin();
 
 			ready_for_new_cloud = true;		//signal that the function is ready for a new cloud from the camera
 			first_run = false;
