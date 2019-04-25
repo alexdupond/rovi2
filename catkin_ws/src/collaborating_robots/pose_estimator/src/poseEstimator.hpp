@@ -24,6 +24,11 @@ using namespace pcl::search;
 using namespace pcl::visualization;
 using namespace Eigen;
 
+#define maxPoseAngle 0.10			//the maximum amount of rotation (rad) the estimatet pose is alowed to have around rx and ry
+#define maxPoseTranslationX 1		//the maximum amound of translation (meter) in x;
+#define maxPoseTranslationY 1		//the maximum amound of translation (meter) in x;
+#define maxPoseTranslationZ 1		//the maximum amound of translation (meter) in x;
+
 typedef PointNormal PointT;
 typedef Histogram<153> FeatureT;
 
@@ -43,6 +48,7 @@ private:
 	void nearest_feature(const FeatureT& query, const PointCloud<FeatureT>& target, int &idx, float &distsq);
 	inline float dist_sq(const FeatureT& query, const FeatureT& target);
 	void cropCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in, float minZ = 1, float maxZ = 1);
+	bool valid_output_pose(Matrix4f H);
 
 	vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> vec_objects_ptr;
 	vector<string> vec_objects_names;

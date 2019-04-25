@@ -20,6 +20,8 @@
 #include <pcl/filters/voxel_grid.h>
 #include "poseEstimator.hpp"
 #include "cloudManipulator.hpp"
+//#include "std_msgs/Float64MultiArray.h"
+#include <eigen_conversions/eigen_msg.h>
 
 bool new_cloud_from_msg = false;
 bool ready_for_new_cloud = true;
@@ -95,54 +97,56 @@ Eigen::Matrix4f RPY2H(float Rz, float Ry, float Rx, float tx, float ty, float tz
 	return T_homogenus;
 }
 
+
 int main(int argc, char** argv)
 {
 	ros::init(argc, argv, "pose_estimation_node");
 	ros::NodeHandle nh;
-        ros::Subscriber sub = nh.subscribe("/camera/depth/color/points", 1, point_cloud_callback);
+    ros::Subscriber sub = nh.subscribe("/camera/depth/color/points", 1, point_cloud_callback);
+	ros::Publisher pose_pub = nh.advertise<std_msgs::Float64MultiArray>("objects_pose", 1);
 	ros::Rate loop_rate(10);	//loop rate in Hz
 
 	if (pcl::io::loadPCDFile<pcl::PointXYZ> (path_object_yoshi, *cloud_object_yoshi) == -1) //* load the file
 	{
-    PCL_ERROR ("Couldn't read file object yoshi \n");
-    return (-1);
+    	PCL_ERROR ("Couldn't read file object yoshi \n");
+    	return (-1);
 	}
 	pcl::transformPointCloud(*cloud_object_yoshi, *cloud_object_yoshi, Eigen::Matrix4f::Identity()*0.001);	//scale down yoshi
 
-        pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_segmented_scene(new pcl::PointCloud<pcl::PointXYZ>);
-        pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_aligned(new pcl::PointCloud<pcl::PointXYZ>);
+	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_segmented_scene(new pcl::PointCloud<pcl::PointXYZ>);
+	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_aligned(new pcl::PointCloud<pcl::PointXYZ>);
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_output (new pcl::PointCloud<pcl::PointXYZ>);
-        pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_discarded (new pcl::PointCloud<pcl::PointXYZ>);
+	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_discarded (new pcl::PointCloud<pcl::PointXYZ>);
 
-        float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.01, maxZ = 0.3;
+	float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.01, maxZ = 0.3;
 
 	pcl::visualization::PCLVisualizer viewer("Plane segmentation result");
 	viewer.addCoordinateSystem(0.3); // 0,0,0
 	viewer.addCube(minX, maxX, minY, maxY, minZ, maxZ, 1.0,1.0,0, "filter_box", 0);
 	viewer.setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_WIREFRAME, "filter_box");
 	poseEstimator PE;
-        cloudManipulator CM;
+	cloudManipulator CM;
 	
 	bool first_run = true;
-        bool enable_pose_estimation = false;
+	bool enable_pose_estimation = false;
 
-        char user_input;
-        cout << "You have the following options:" << endl << "p  : Pose estimation" << endl << "f  : Free view" << endl;
-        cin >> user_input;
-        if(user_input == 'p')
-        {
-                enable_pose_estimation = true;
-        }
-        else if(user_input == 'f')
-        {
-                enable_pose_estimation = false;
-        }
-        else
-        {
-                cout << endl << endl << "    Huu.. You can't even type one letter. SHAME ON YOU!" << endl << endl;
-        }
-	
-        PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", -0.05, 1.0);
+	char user_input;
+	cout << "You have the following options:" << endl << "p  : Pose estimation" << endl << "f  : Free view" << endl;
+	cin >> user_input;
+	if(user_input == 'p')
+	{
+		enable_pose_estimation = true;
+	}
+	else if(user_input == 'f')
+	{
+		enable_pose_estimation = false;
+	}
+	else
+	{
+		cout << endl << endl << "    Huu.. You can't even type one letter. SHAME ON YOU!" << endl << endl;
+	}
+
+	PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", -0.05, 1.0);
 	while(ros::ok)
 	{
 		ros::spinOnce();		//update all ROS related stuff
@@ -152,19 +156,19 @@ int main(int argc, char** argv)
 			
 			new_cloud_from_msg = false;
 
-                        if (first_run)
-                            CM.segmentPlane(cloud_from_msg);
-                        CM.alignWithPlane(cloud_from_msg, cloud_aligned);
-                        //CM.removePlane(cloud_aligned, cloud_segmented_scene);
-                        CM.cropCloud(cloud_aligned, cloud_boxFilter_output, minX, maxX, minY, maxY, minZ, maxZ);
-                        CM.getDiscardedPoints(cloud_aligned, cloud_boxFilter_discarded);
+			if (first_run)
+				CM.segmentPlane(cloud_from_msg);
+			CM.alignWithPlane(cloud_from_msg, cloud_aligned);
+			//CM.removePlane(cloud_aligned, cloud_segmented_scene);
+			CM.cropCloud(cloud_aligned, cloud_boxFilter_output, minX, maxX, minY, maxY, minZ, maxZ);
+			CM.getDiscardedPoints(cloud_aligned, cloud_boxFilter_discarded);
 
-                        //ROS_INFO_STREAM("Plane coefficients: 0:" << coefficients->values[0] << " 1:" << coefficients->values[1]<< " 2:" << coefficients->values[2]<< " 3:" << coefficients->values[3]);
+			//ROS_INFO_STREAM("Plane coefficients: 0:" << coefficients->values[0] << " 1:" << coefficients->values[1]<< " 2:" << coefficients->values[2]<< " 3:" << coefficients->values[3]);
 
-                        //pcl::transformPointCloud(*cloud_from_msg, *cloud_scene_rotate, RPY2H(0.87266, 0.13089, 0.63, 0, 0, 0.33));
+			//pcl::transformPointCloud(*cloud_from_msg, *cloud_scene_rotate, RPY2H(0.87266, 0.13089, 0.63, 0, 0, 0.33));
 
-                        //ROS_INFO_STREAM("PointCloud after segmentation+clipping: " << cloud2_from_msg->width * cloud2_from_msg->height
-                        //                       << " data points (" << pcl::getFieldsList (*cloud2_from_msg) << ").");
+			//ROS_INFO_STREAM("PointCloud after segmentation+clipping: " << cloud2_from_msg->width * cloud2_from_msg->height
+			//                       << " data points (" << pcl::getFieldsList (*cloud2_from_msg) << ").");
 
 
 			if(first_run && enable_pose_estimation)
@@ -174,14 +178,18 @@ int main(int argc, char** argv)
 				pcl::transformPointCloud(*cloud_object_yoshi, *cloud_object_yoshi, T_pose_estimation);
 				T_pose_estimation = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200) * T_pose_estimation;
 				cout << "Final pose:" << endl << T_pose_estimation << endl;
-                        }
-                        viewer.removePointCloud("cloud_boxFilter_output");
-                        viewer.removePointCloud("cloud_boxFilter_discarded");
-                        viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_output, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_output, 0, 255, 0), "cloud_boxFilter_output");
-                        viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_discarded, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_discarded, 150, 150, 0), "cloud_boxFilter_discarded");
-                        //viewer.addPointCloud<pcl::PointXYZ>(cloud_from_msg_plane, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_from_msg_plane, 255, 0, 0), "segmented plane");
-                        viewer.spinOnce();
-                        //viewer.spin();
+				
+				std_msgs::Float64MultiArray pose_msg;				//convert eigen matrix to ros msg and publish it
+				tf::matrixEigenToMsg(T_pose_estimation, pose_msg);
+				pose_pub.publish(pose_msg);
+            }
+			viewer.removePointCloud("cloud_boxFilter_output");
+			viewer.removePointCloud("cloud_boxFilter_discarded");
+			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_output, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_output, 0, 255, 0), "cloud_boxFilter_output");
+			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_discarded, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_discarded, 150, 150, 0), "cloud_boxFilter_discarded");
+			//viewer.addPointCloud<pcl::PointXYZ>(cloud_from_msg_plane, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_from_msg_plane, 255, 0, 0), "segmented plane");
+			viewer.spinOnce();
+			//viewer.spin();
 
 			ready_for_new_cloud = true;		//signal that the function is ready for a new cloud from the camera
 			first_run = false;

@@ -236,7 +236,7 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
     //     v.addPointCloud<PointT>(scene, PointCloudColorHandlerCustom<PointT>(scene, 255, 0, 0),"scene");
     //     v.spin();
     // }
-    
+    //valid_output_pose(pose);
     return pose;
 }
 // (this->getObjectCloud(object_name)
@@ -325,7 +325,7 @@ Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, strin
 		v.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "scene");
         v.spin();
     }
-    
+    //valid_output_pose(pose);
     return pose;
 }
 
@@ -352,4 +352,32 @@ inline float poseEstimator::dist_sq(const FeatureT& query, const FeatureT& targe
     }
     
     return result;
+}
+
+bool poseEstimator::valid_output_pose(Matrix4f H)
+{
+	//we know that the object will stand on the table, so if the pose is rotatet around x or y, it is not corretc.
+	Matrix3f R = H.block<3,3>(0,0);
+	Vector3f T = H.block<3,1>(0,3);
+	Vector3f ea = R.eulerAngles(0, 1, 2);				// x y z
+	ROS_ERROR_STREAM("Rotation:" << endl << R);
+	ROS_ERROR_STREAM("Translation:" << endl << T);
+	ROS_ERROR_STREAM( "ea:" << endl << ea );
+	bool pose_error = false;
+	if(ea(0) > maxPoseAngle || ea(1) > maxPoseAngle)
+	{
+		ROS_WARN_STREAM("Pose is rotatet too mutch.. Dam it! it's not trustworthy");
+		pose_error = true;
+	}
+	if(T(0,0) > maxPoseTranslationX || T(1,0) > maxPoseTranslationY || T(2,0) > maxPoseTranslationZ)
+	{
+		ROS_WARN_STREAM("Pose is translated too mutch.. Dam it! it's not trustworthy");
+		pose_error = true;
+	}
+	if(pose_error)
+	{
+		return false;
+	}
+	ROS_WARN_STREAM("Pose good!");
+	return true;
 }
