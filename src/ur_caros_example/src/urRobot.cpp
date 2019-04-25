@@ -30,8 +30,9 @@ bool URRobot::calculatePrioritizedPath(vector<rw::math::Q> robot1, vector<rw::ma
 	rw::trajectory::QPath path_1;
 	rw::trajectory::QPath path_2; 
 
+	cout << "Robot 1 size = " << robot1.size() << ", and Robot 2 size = " << robot2.size() << endl; 
 	if(robot1.size() && robot2.size()){
-
+	
 		for(size_t i = 0; i < robot1.size() - 1; i++)
 		{
 			if(planner.calculateRRTPath(robot1[i], robot1[i+1])){
@@ -45,9 +46,10 @@ bool URRobot::calculatePrioritizedPath(vector<rw::math::Q> robot1, vector<rw::ma
 		}
 		
 		planner.setPath(path_1);
+		path_UR5E1 = path_1; 
 
 
-		if(planner.calculateTimesteps(path_1)){
+		if(planner.calculateTimesteps(path_UR5E1)){
 			for(size_t i = 0; i < robot2.size() -1 ; i++)
 			{
 				if(planner.calculateDynamicRRTPath(robot2[0], robot2[1])){
@@ -123,7 +125,8 @@ bool URRobot::setQ(rw::math::Q q1, rw::math::Q q2){
     float speed = 0.5;
     // Setting a configuration to send to the URSIM 
 
-	if (robot->movePtp(q1, speed) && setQRobot1(q1) && setQRobot2(q2)) { 
+	if (robot->moveServoQ(q1, 0.18, 0.04, 100)/*movePtp(q1, speed)*/ && setQRobot1(q1) && setQRobot2(q2)) 
+	{ 
 		return true;
 	} else
 		return false;

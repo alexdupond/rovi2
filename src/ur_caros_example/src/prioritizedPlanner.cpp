@@ -25,7 +25,7 @@ bool PrioritizedPlanner::checkCollisions(rw::models::Device::Ptr device, const r
 
 	device->setQ(q,_state);
 	if (detector.inCollision(_state,&data)) {
-		cerr << "Configuration in collision: " << q << endl;
+		cout << "Configuration in collision: " << q << endl;
 		return false;
 	}
 	return true;
@@ -49,19 +49,20 @@ bool PrioritizedPlanner::calculateRRTPath(const rw::math::Q& from, const rw::mat
 		return 0;
 
 	cout << "Planning from " << from << " to " << to << endl;
-	rw::trajectory::QPath rrt_path;
-
+    rw::trajectory::QPath rrt_path; 
 	rw::common::Timer t;
 	t.resetAndResume();
 	planner->query(from,to,rrt_path,MAXTIME);
-	t.pause();
-	_path_1 = rrt_path; 
+	t.pause(); 
+    _path_1 = rrt_path; 
 	cout << "Path of length " << _path_1.size() << " found in " << t.getTime() << " seconds." << endl;
 	if (t.getTime() >= MAXTIME) {
 		cout << "Notice: max time of " << MAXTIME << " seconds reached." << endl;
 		return false; 
 	}else{
-        optimizePath(_path_1, _device1);
+        rwlibs::pathoptimization::PathLengthOptimizer pathOptimizer(constraint,metric);
+        _path_1 = pathOptimizer.partialShortCut(_path_1);
+        cout << "Optimized path lenght: " << _path_1.size() << endl; 
 		return true;
 	}
 	
@@ -97,10 +98,10 @@ bool PrioritizedPlanner::calculateTimesteps(rw::trajectory::QPath& path){
 				}
 			}
 			currentTime = stepsize; 
-			cout << "Largest stepsize = " << stepsize << endl; 
-			cout << "Current time = " << currentTime << endl; 
 			_timesteps.push_back(currentTime); 
 		}
+    	cout << "Largest stepsize = " << currentTime << endl; 
+
         return true; 
 	}else{
 		cout << "The path has no size!" << endl; 
@@ -145,7 +146,7 @@ bool PrioritizedPlanner::calculateDynamicRRTPath(const rw::math::Q &start, const
         const Q qAttr = sampler->sample();
         if (qAttr.empty()) RW_THROW("Sampler must always succeed.");
 
-        if (growTree(*treeA, qAttr, goal, detector) == Reached )// != Trapped && connect(_rrt, *treeB, getQVal(&treeA->getLast())) == Reached)
+        if (growTree(*treeA, qAttr, goal, detector) == Reached )
         {
             getPathFromTree(startTree, goalTree, _path_2);
             cout << "Path found - Size = " << _path_2.size() << endl;
@@ -208,39 +209,34 @@ ExtendResult PrioritizedPlanner::extend(Tree& tree,const rw::math::Q& q,Node* qN
     int depth = getDepth(qNearNode); 
     double multi = 0;
     Q qNew;
-    cout << "Depth = " << depth << endl; 
     const rw::math::Q& qNear = getQVal(qNearNode);
 
     // Calculate the difference between random q and the near node
     int val = rand()%100; 
     rw::math::Q delta; 
-    if(val > 90){
-        cout << "Moving towards random" << endl; 
+    if(val > 80){
         delta = q - qNear; 
     }else{
         delta = qGoal - qNear;
-        cout << "Moving towards goal" << endl; 
     }
     
 
     // Convert to distance - This is calculated to estimate the step size
     const double dist = distance(delta);
-    cout << "Distance = " << dist << endl;
   
     if(depth < int(_path_1.size()-1)){
         multi = multiplier(delta, depth);
         qNew = qNear + multi * delta;
-        cout << "Distance to goal before = " << distance(qNear-qGoal) << endl;
-        cout << "Distance to goal after = " << distance(qNew-qGoal) << endl; 
 
     }else{
         depth = _path_1.size() - 1; 
         qNew = qNear + (_extend/dist) * delta;
-        cout << "Distance to goal before = " << distance(qNear-qGoal) << endl;
-        cout << "Distance to goal after = " << distance(qNew-qGoal) << endl; 
     }
-    cout << "Configuration device 1 = " << _device1->getQ(_state) << endl; 
-    cout << "Configuration device 2 = " << qNew << endl; 
+    
+    cout << "Depth = " << depth << endl; 
+
+//  cout << "Configuration device 1 = " << _device1->getQ(_state) << endl; 
+ //   cout << "Configuration device 2 = " << qNew << endl; 
 
     // Calculating the distance to the goal configuration 
     double distGoal = distance(qNew - qGoal);
@@ -268,14 +264,12 @@ ExtendResult PrioritizedPlanner::extend(Tree& tree,const rw::math::Q& q,Node* qN
 double PrioritizedPlanner::multiplier(const rw::math::Q& q, int d)
 {
     double value = 0; 
-    cout << "Q for largest value test = " << q << endl; 
     for(size_t i = 0; i < q.size(); i++)
     {
         if(abs(q[i]) > value){
             value = abs(q[i]);
         }
     }
-    cout << "Timestep / largest value = multiplier " << abs(_timesteps[d]) << ", " << value << " = " << abs(_timesteps[d])/value << endl;
     return abs(_timesteps[d])/value; 
 }
 

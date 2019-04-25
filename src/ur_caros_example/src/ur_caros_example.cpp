@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 	vector<double> QrobotTo11{0.5, -0.95, 0.95, -1.45, -1.0, 0};
 	vector<double> QrobotTo21{-2.0, -2.2, -1.2, -1.5, 1.5, 0};
 
-	vector<double> QrobotTo12{1, -1.5, 1.9, -1.6, -1.8, 0}; 
+	vector<double> QrobotTo12{0.0, -1.2, 1.0, -1.6, -1.0, 0}; 
 
 	vector<double> QvecFrom = QrobotFrom11; 
 	QvecFrom.insert(QvecFrom.end(), QrobotFrom21.begin(), QrobotFrom21.end()); 
@@ -61,24 +61,23 @@ int main(int argc, char** argv)
 		}else if(input == "rrt"){
 			if(robot.calculatePrioritizedPath(robot1Path, robot2Path)){
 				cout << "Calculated RRT path!" << endl; 
-				rw::trajectory::QPath path1;
-				rw::trajectory::QPath path2;
+				rw::trajectory::QPath path1 = robot.getPath(1);
+				rw::trajectory::QPath path2 = robot.getPath(2);
 
+				int it = robot.getPath(2).size(); 
 				if(robot.getPath(1).size() > robot.getPath(2).size()){
-					path1 = robot.getPath(1);
-					path2 = robot.getPath(2); 
-				}else{
-					path2 = robot.getPath(1);
-					path1 = robot.getPath(2); 
+					it =  robot.getPath(1).size();
 				}
+				cout << "Size of path 1 =" << path1.size() << ", and size of path 2 = " << path2.size() << endl; 
 
 				rw::trajectory::QPath::iterator it1; 
 				rw::trajectory::QPath::iterator it2;
 
 				if(path1.size() && path2.size()){
 					cout << "Itteration through path" << endl; 
+					it1 = path1.begin();
 					it2 = path2.begin(); 
-					for (it1 = path1.begin(); it1 < path1.end(); it1++) {
+					for (int i = 0 ; i < it; i++) {
 						
 						cout << *it1 << " && " << *it2 << endl;
 						if(robot.setQ(*it1, *it2))
@@ -88,8 +87,10 @@ int main(int argc, char** argv)
 
 						if(it2 < path2.end()-1){
 							it2++; 
-							cout << "Incrementing itterator" << endl; 
-						}		
+						}
+						if(it1 < path1.end()-1){
+							it1++; 
+						}			
 					}
 				}else{
 					cout << "The path has no size!" << endl; 
