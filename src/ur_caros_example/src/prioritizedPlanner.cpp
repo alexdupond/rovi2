@@ -31,7 +31,8 @@ bool PrioritizedPlanner::checkCollisions(rw::models::Device::Ptr device, const r
 	return true;
 }
 
-bool PrioritizedPlanner::calculateRRTPath(rw::math::Q from, rw::math::Q to){
+bool PrioritizedPlanner::calculateRRTPath(const rw::math::Q& from, const rw::math::Q& to){
+    // Setting device 2 to be as far from device 1 as possible - Hack to remove device 2 when planning for device 1
     rw::math::Q q(6, 2, -2, -1.2, -1.5, 1.5, 0);
     _device2->setQ(q, _state);
 	rw::proximity::CollisionDetector detector(_wc, rwlibs::proximitystrategies::ProximityStrategyFactory::makeDefaultCollisionStrategy());
@@ -66,7 +67,7 @@ bool PrioritizedPlanner::calculateRRTPath(rw::math::Q from, rw::math::Q to){
 	
 }
 
-void PrioritizedPlanner::setPath(rw::trajectory::QPath path){
+void PrioritizedPlanner::setPath(rw::trajectory::QPath& path){
     _path_1 = path; 
 }
 
@@ -80,7 +81,7 @@ void PrioritizedPlanner::optimizePath(rw::trajectory::QPath& path, rw::models::D
 }
 
 
-bool PrioritizedPlanner::calculateTimesteps(rw::trajectory::QPath path){ 
+bool PrioritizedPlanner::calculateTimesteps(rw::trajectory::QPath& path){ 
 	if(path.size()){
 		double currentTime = 0;
 		_timesteps.push_back(currentTime);
@@ -90,7 +91,7 @@ bool PrioritizedPlanner::calculateTimesteps(rw::trajectory::QPath path){
 			rw::math::Q q_next = *it;
 			it--;
 			double stepsize = 0; 
-			for (int i = 0; i < q_now.size(); i++){
+			for (size_t i = 0; i < q_now.size(); i++){
 				if(stepsize < abs(q_now[i]-q_next[i])){
 					stepsize = abs(q_now[i]-q_next[i]);	
 				}
@@ -118,7 +119,7 @@ rw::trajectory::QPath PrioritizedPlanner::getPath(int ID){
 }
 
 
-bool PrioritizedPlanner::calculateDynamicRRTPath(rw::math::Q &start, rw::math::Q &goal){
+bool PrioritizedPlanner::calculateDynamicRRTPath(const rw::math::Q &start, const rw::math::Q &goal){
     // SETTING UP RRT STRUCT FOR PLANNER
 	rw::proximity::CollisionDetector detector(_wc, rwlibs::proximitystrategies::ProximityStrategyFactory::makeDefaultCollisionStrategy());
 	rw::pathplanning::PlannerConstraint constraint = rw::pathplanning::PlannerConstraint::make(&detector,_device2,_state);
@@ -135,7 +136,6 @@ bool PrioritizedPlanner::calculateDynamicRRTPath(rw::math::Q &start, rw::math::Q
     Tree startTree(start);
     Tree goalTree(goal);
     Tree* treeA = &startTree;
-    Tree* treeB = &goalTree;
 
     rw::common::Timer t;
 	t.resetAndResume();
@@ -162,7 +162,6 @@ bool PrioritizedPlanner::calculateDynamicRRTPath(rw::math::Q &start, rw::math::Q
 bool PrioritizedPlanner::inCollision(const rw::proximity::CollisionDetector &detector, const rw::math::Q &q_new, const rw::math::Q &q_robot_1)
 {
 	rw::proximity::CollisionDetector::QueryResult data;
-	bool colFrom;
     
 	_device1->setQ(q_robot_1,_state);
     _device2->setQ(q_new, _state);
@@ -228,7 +227,7 @@ ExtendResult PrioritizedPlanner::extend(Tree& tree,const rw::math::Q& q,Node* qN
     const double dist = distance(delta);
     cout << "Distance = " << dist << endl;
   
-    if(depth < _path_1.size()-1){
+    if(depth < int(_path_1.size()-1)){
         multi = multiplier(delta, depth);
         qNew = qNear + multi * delta;
         cout << "Distance to goal before = " << distance(qNear-qGoal) << endl;
@@ -266,15 +265,13 @@ ExtendResult PrioritizedPlanner::extend(Tree& tree,const rw::math::Q& q,Node* qN
     }
 }
 
-double PrioritizedPlanner::multiplier(rw::math::Q q, int d)
+double PrioritizedPlanner::multiplier(const rw::math::Q& q, int d)
 {
-    int id = -1; 
     double value = 0; 
     cout << "Q for largest value test = " << q << endl; 
     for(size_t i = 0; i < q.size(); i++)
     {
         if(abs(q[i]) > value){
-            id = i; 
             value = abs(q[i]);
         }
     }

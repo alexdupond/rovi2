@@ -45,10 +45,9 @@ bool URRobot::calculatePrioritizedPath(vector<rw::math::Q> robot1, vector<rw::ma
 		}
 		
 		planner.setPath(path_1);
-		path_UR5E1 = path_1;
 
 
-		if(planner.calculateTimesteps(path_UR5E1)){
+		if(planner.calculateTimesteps(path_1)){
 			for(size_t i = 0; i < robot2.size() -1 ; i++)
 			{
 				if(planner.calculateDynamicRRTPath(robot2[0], robot2[1])){

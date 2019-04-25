@@ -35,61 +35,31 @@ using namespace rwlibs::pathplanners;
 
 #define MAXTIME 50
 
-    typedef RRTNode<rw::math::Q> Node;
-    typedef RRTTree<rw::math::Q> Tree;
+typedef RRTNode<rw::math::Q> Node;
+typedef RRTTree<rw::math::Q> Tree;
 
 enum ExtendResult { Trapped, Reached, Advanced };
-
-class RRTStruct
-{
-public:
-    RRTStruct(PlannerConstraint& constraint,
-        QSampler::Ptr sampler,
-        QMetric::Ptr metric,
-        double extend)
-        :
-        constraint(constraint),
-        sampler(sampler),
-        metric(metric),
-        extend(extend)
-    {
-        RW_ASSERT(sampler);
-        RW_ASSERT(metric);
-    }
-
-    void updateConstraint(PlannerConstraint q_constraint){ constraint = q_constraint;} 
-
-    PlannerConstraint constraint;
-    QSampler::Ptr sampler;
-    QMetric::Ptr metric;
-    double extend;
-};
-
 
 class PrioritizedPlanner{
 
 public:
 	PrioritizedPlanner(rw::models::WorkCell::Ptr wc, rw::models::Device::Ptr device1, rw::models::Device::Ptr device2, double extend); 
-    bool calculateTimesteps(rw::trajectory::QPath path);
+    bool calculateTimesteps(rw::trajectory::QPath& path);
     rw::trajectory::QPath getPath(int ID); 
-    void setPath(rw::trajectory::QPath);
-    bool calculateRRTPath(rw::math::Q from, rw::math::Q to);
-    bool calculateDynamicRRTPath(rw::math::Q &from, rw::math::Q &to);
+    void setPath(rw::trajectory::QPath& path);
+    bool calculateRRTPath(const rw::math::Q& from, const rw::math::Q& to);
+    bool calculateDynamicRRTPath(const rw::math::Q &from, const rw::math::Q &to);
     void optimizePath(rw::trajectory::QPath& path, rw::models::Device::Ptr device);  
     bool checkCollisions(rw::models::Device::Ptr device, const rw::proximity::CollisionDetector &detector, const rw::math::Q &q);
     ~PrioritizedPlanner(); 
 
+    // For custom RRT planner with dynamic model
     Node* nearestNeighbor(const Tree& tree,const Q& q);
     ExtendResult extend(Tree& tree,const Q& q,Node* qNearNode, const Q& qGoal, const rw::proximity::CollisionDetector &detector);
-    ExtendResult connect(Tree& tree,const Q& q);
     ExtendResult growTree(Tree& tree,const Q& q_rand, const Q& qGoal, const rw::proximity::CollisionDetector &detector);
     void getPathFromTree(const Tree& startTree, const Tree& goalTree, rw::trajectory::QPath& result);
-
-    void updateDevice(rw::math::Q q); 
     bool inCollision(const rw::proximity::CollisionDetector &detector, const rw::math::Q &q_new, const rw::math::Q &q_robot_1); 
-
-    double multiplier(rw::math::Q q, int d); 
-
+    double multiplier(const rw::math::Q& q, int d); 
     double distance(const rw::math::Q& q); 
 
 
