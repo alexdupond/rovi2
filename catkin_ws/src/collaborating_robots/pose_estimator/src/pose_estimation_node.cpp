@@ -17,17 +17,9 @@
 #include <sys/ioctl.h>
 #include <termios.h>
 #include <iostream>
-//#include "ransac_global_alignment.h"
-//#include "segment_plane.h"
-#include <pcl/filters/crop_box.h>
-#include <pcl/PointIndices.h>
-#include <pcl/filters/extract_indices.h>
 #include <pcl/filters/voxel_grid.h>
 #include "poseEstimator.hpp"
-
-#include <pcl/sample_consensus/model_types.h>
-#include <pcl/sample_consensus/method_types.h>
-#include <pcl/segmentation/sac_segmentation.h>
+#include "cloudManipulator.hpp"
 
 bool new_cloud_from_msg = false;
 bool ready_for_new_cloud = true;
@@ -90,23 +82,6 @@ void point_cloud_callback(const sensor_msgs::PointCloud2ConstPtr& cloud_msg)	//c
                 ROS_INFO("new Pointcloud arrived! stamp: %"PRIu64, cloud_from_msg->header.stamp);			//This is just for showing that the pointcloud gets updated
                 new_cloud_from_msg = true;											//signal new cloud is ready
 		ready_for_new_cloud = false;
-
-                // pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);		//segmentation based on plane
-                // pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
-                // // Create the segmentation object
-                // pcl::SACSegmentation<pcl::PointXYZ> seg;
-                // // Optional
-                // seg.setOptimizeCoefficients (true);
-                // // Mandatory
-                // seg.setModelType (pcl::SACMODEL_PLANE);
-                // seg.setMethodType (pcl::SAC_RANSAC);
-                // seg.setDistanceThreshold (0.01);
-                // seg.setInputCloud (cloud_from_msg);
-                // seg.segment (*inliers, *coefficients);
-                // pcl::ExtractIndices<pcl::PointXYZ> extract;
-                // extract.setInputCloud(cloud_from_msg);
-                // extract.setIndices(inliers);
-                // extract.filter(*cloud_from_msg_plane);
 	} 
 }
 
@@ -137,18 +112,12 @@ int main(int argc, char** argv)
 	}
 	pcl::transformPointCloud(*cloud_object_yoshi, *cloud_object_yoshi, Eigen::Matrix4f::Identity()*0.001);	//scale down yoshi
 
-	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_segmentation_scene(new pcl::PointCloud<pcl::PointXYZ>);
-	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_segmentation_plane(new pcl::PointCloud<pcl::PointXYZ>);
-	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_scene_yoshi(new pcl::PointCloud<pcl::PointXYZ>);
-	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_scene_rotate(new pcl::PointCloud<pcl::PointXYZ>);
+        pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_segmented_scene(new pcl::PointCloud<pcl::PointXYZ>);
+        pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_aligned(new pcl::PointCloud<pcl::PointXYZ>);
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_output (new pcl::PointCloud<pcl::PointXYZ>);
-	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_discarded (new pcl::PointCloud<pcl::PointXYZ>);
-	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_boxFilter_discarded (new pcl::PointCloud<pcl::PointXYZ>);
+        pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_discarded (new pcl::PointCloud<pcl::PointXYZ>);
 
-	pcl::PLYReader ply_reader;
-	ply_reader.read(path_scene_yoshi, *cloud_scene_yoshi);			//load yoshi scene point cloud, used for testing.. can probably be deletet
-
-    float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.03, maxZ = 0.5;
+    float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.01, maxZ = 0.3;
 
 	pcl::visualization::PCLVisualizer viewer("Plane segmentation result");
 	viewer.addCoordinateSystem(0.3); // 0,0,0
@@ -175,7 +144,7 @@ int main(int argc, char** argv)
 		cout << endl << endl << "    Huu.. You can't even type one letter. SHAME ON YOU!" << endl << endl;
 	}
 	
-	PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", -0.05, 1.0);
+        PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", -0.05, 1.0);
 	while(ros::ok)
 	{
 		ros::spinOnce();		//update all ROS related stuff
@@ -184,29 +153,21 @@ int main(int argc, char** argv)
 			PE.printObjectCloudsNames();
 			
 			new_cloud_from_msg = false;
-			
-			pcl::transformPointCloud(*cloud_from_msg, *cloud_scene_rotate, RPY2H(0.87266, 0.13089, 0.63, 0, 0, 0.33));
-                        pcl::transformPointCloud(*cloud_from_msg_plane, *cloud_from_msg_plane, RPY2H(0.87266, 0.13089, 0.63, 0, 0, 0.33));
 
+                        cloudManipulator CM;
+                        CM.segmentPlane(cloud_from_msg);
+                        CM.alignWithPlane(cloud_from_msg, cloud_aligned);
+                        CM.removePlane(cloud_aligned, cloud_segmented_scene);
+                        CM.cropCloud(cloud_segmented_scene, cloud_boxFilter_output, minX, maxX, minY, maxY, minZ, maxZ);
+                        CM.getDiscardedPoints(cloud_segmented_scene, cloud_boxFilter_discarded);
 
-			pcl::PointIndices::Ptr indices_discarded_points (new PointIndices);
-			pcl::CropBox<pcl::PointXYZ> boxFilter(true);								//fintering pointcloud. remove everything outside the box
-			boxFilter.setMin(Eigen::Vector4f(minX, minY, minZ, 1.0));
-			boxFilter.setMax(Eigen::Vector4f(maxX, maxY, maxZ, 1.0));
-			boxFilter.setInputCloud(cloud_scene_rotate);
-			boxFilter.filter(*cloud_boxFilter_output);
-			boxFilter.getRemovedIndices(*indices_discarded_points);
+                        //ROS_INFO_STREAM("Plane coefficients: 0:" << coefficients->values[0] << " 1:" << coefficients->values[1]<< " 2:" << coefficients->values[2]<< " 3:" << coefficients->values[3]);
 
-			pcl::ExtractIndices<pcl::PointXYZ> extract;							//finding the removed points, for visualisation purposes
-			extract.setInputCloud(cloud_scene_rotate);
-			extract.setIndices(indices_discarded_points);
-			extract.setNegative(false);
-			extract.filter(*cloud_boxFilter_discarded);
+                        //pcl::transformPointCloud(*cloud_from_msg, *cloud_scene_rotate, RPY2H(0.87266, 0.13089, 0.63, 0, 0, 0.33));
 
-			boxFilter.setMin(Eigen::Vector4f(-1, -1, -1, 1.0));					//removing points that is fare away, for visualisation purposes
-			boxFilter.setMax(Eigen::Vector4f(1, 1, 1, 1.0));
-			boxFilter.setInputCloud(cloud_boxFilter_discarded);
-			boxFilter.filter(*cloud_boxFilter_boxFilter_discarded);
+                        //ROS_INFO_STREAM("PointCloud after segmentation+clipping: " << cloud2_from_msg->width * cloud2_from_msg->height
+                        //                       << " data points (" << pcl::getFieldsList (*cloud2_from_msg) << ").");
+
 
 			if(first_run && enable_pose_estimation)
 			{
@@ -218,15 +179,16 @@ int main(int argc, char** argv)
 			}
             
 			viewer.removePointCloud("cloud_boxFilter_output");
-			viewer.removePointCloud("cloud_boxFilter_boxFilter_discarded");
+                        viewer.removePointCloud("cloud_boxFilter_discarded");
 			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_output, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_output, 0, 255, 0), "cloud_boxFilter_output");
-			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_boxFilter_discarded, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_boxFilter_discarded, 150, 150, 0), "cloud_boxFilter_boxFilter_discarded");
+                        viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_discarded, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_discarded, 150, 150, 0), "cloud_boxFilter_discarded");
 			//viewer.addPointCloud<pcl::PointXYZ>(cloud_from_msg_plane, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_from_msg_plane, 255, 0, 0), "segmented plane");
 			viewer.spinOnce();
 			//viewer.spin();
 
 			ready_for_new_cloud = true;		//signal that the function is ready for a new cloud from the camera
 			first_run = false;
+
 		}
 		if (kbhit())		//it there is a terminal input
 		{
