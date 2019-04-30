@@ -49,6 +49,7 @@ private:
 	inline float dist_sq(const FeatureT& query, const FeatureT& target);
 	void cropCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in, float minZ = 1, float maxZ = 1);
 	bool valid_output_pose(Matrix4f H);
+	vector<float> R2RPY(Matrix3f R);
 
 	vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> vec_objects_ptr;
 	vector<string> vec_objects_names;

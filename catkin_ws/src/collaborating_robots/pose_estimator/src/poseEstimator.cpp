@@ -1,6 +1,7 @@
 #include "poseEstimator.hpp"
 #include <ros/console.h>
 #include <pcl/filters/crop_box.h>
+#include <math.h>
 
 typedef PointNormal PointT;
 typedef Histogram<153> FeatureT;
@@ -325,7 +326,7 @@ Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, strin
 		v.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "scene");
         v.spin();
     }
-    //valid_output_pose(pose);
+    valid_output_pose(pose);
     return pose;
 }
 
@@ -359,25 +360,43 @@ bool poseEstimator::valid_output_pose(Matrix4f H)
 	//we know that the object will stand on the table, so if the pose is rotatet around x or y, it is not corretc.
 	Matrix3f R = H.block<3,3>(0,0);
 	Vector3f T = H.block<3,1>(0,3);
-	Vector3f ea = R.eulerAngles(0, 1, 2);				// x y z
+	//Vector3f ea = R.eulerAngles(0, 1, 2);				// x y z
+	vector<float> rpy = R2RPY(R);
 	ROS_ERROR_STREAM("Rotation:" << endl << R);
 	ROS_ERROR_STREAM("Translation:" << endl << T);
-	ROS_ERROR_STREAM( "ea:" << endl << ea );
+	//ROS_ERROR_STREAM( "ea:" << endl << ea );
+	ROS_ERROR_STREAM("rpy: " << rpy[2] << " " << rpy[1] << " " << rpy[0]);
+
 	bool pose_error = false;
-	if(ea(0) > maxPoseAngle || ea(1) > maxPoseAngle)
-	{
-		ROS_WARN_STREAM("Pose is rotatet too mutch.. Dam it! it's not trustworthy");
-		pose_error = true;
-	}
-	if(T(0,0) > maxPoseTranslationX || T(1,0) > maxPoseTranslationY || T(2,0) > maxPoseTranslationZ)
-	{
-		ROS_WARN_STREAM("Pose is translated too mutch.. Dam it! it's not trustworthy");
-		pose_error = true;
-	}
-	if(pose_error)
-	{
-		return false;
-	}
+	// if(ea(0) > maxPoseAngle || ea(1) > maxPoseAngle)
+	// {
+	// 	ROS_WARN_STREAM("Pose is rotatet too mutch.. Dam it! it's not trustworthy");
+	// 	pose_error = true;
+	// }
+	// if(T(0,0) > maxPoseTranslationX || T(1,0) > maxPoseTranslationY || T(2,0) > maxPoseTranslationZ)
+	// {
+	// 	ROS_WARN_STREAM("Pose is translated too mutch.. Dam it! it's not trustworthy");
+	// 	pose_error = true;
+	// }
+	// if(pose_error)
+	// {
+	// 	return false;
+	// }
 	ROS_WARN_STREAM("Pose good!");
 	return true;
+}
+
+vector<float> R2RPY(Matrix3f R)
+{
+	float r11 = R(0,0), r21 = R(1,0), r31 = R(2,0), r32 = R(2,1), r33 = R(2,2); 
+	printf("r11 = %f   r21 = %f   r31 = %f   r32 = %f   r33 = %f", r11,r21,r31,r32,r33);
+	float yaw = atan2(r21,r11);
+	float pitch = atan2( -r31, sqrt( pow(32,2) + pow(33,2) ) );
+	float roll = atan2(r32, r33);
+	vector<float> rpy;
+	rpy.reserve(3);
+	rpy.push_back(yaw);
+	rpy.push_back(pitch);
+	rpy.push_back(roll);
+	return rpy;
 }
