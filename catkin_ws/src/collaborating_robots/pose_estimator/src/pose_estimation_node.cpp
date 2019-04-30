@@ -138,7 +138,7 @@ int main(int argc, char** argv)
         grid.setInputCloud (cloud_object_yoda);
         grid.filter (*cloud_object_yoda);
 
-        float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.01, maxZ = 0.3;
+        float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.05, maxZ = 0.3;
 
 	pcl::visualization::PCLVisualizer viewer("Plane segmentation result");
 	viewer.addCoordinateSystem(0.3); // 0,0,0
@@ -166,8 +166,8 @@ int main(int argc, char** argv)
 		cout << endl << endl << "    Huu.. You can't even type one letter. SHAME ON YOU!" << endl << endl;
 	}
 
-        PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", -0.05, 1.0);
-        PE.addObjectCloud(cloud_object_yoda,"cloud_object_yoda", -0.05, 1.0);
+        PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", -0.025, 1.0);
+        PE.addObjectCloud(cloud_object_yoda,"cloud_object_yoda", 0, 1.0);
 	while(ros::ok)
 	{
 		ros::spinOnce();		//update all ROS related stuff
@@ -194,15 +194,17 @@ int main(int argc, char** argv)
 
 			if(first_run && enable_pose_estimation)
 			{
-				Eigen::Matrix4f T_pose_estimation;
-                                T_pose_estimation = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, true);
-                                pcl::transformPointCloud(*cloud_object_yoshi, *cloud_object_yoshi, T_pose_estimation);
-                                T_pose_estimation = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200) * T_pose_estimation;
+                                Eigen::Matrix4f T_pose_global;
+                                Eigen::Matrix4f T_pose_local;
+                                Eigen::Matrix4f T_pose_estimation;
+                                T_pose_global = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, 0.000025, true);
+                                T_pose_local = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200, 0.0001, T_pose_global);
                                 //T_pose_estimation = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoda", 3500, 0.000025, true);
                                 //pcl::transformPointCloud(*cloud_object_yoda, *cloud_object_yoda, T_pose_estimation);
                                 //T_pose_estimation = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoda", 200, 0.0001) * T_pose_estimation;
-
-				cout << "Final pose:" << endl << T_pose_estimation << endl;
+                                T_pose_estimation = T_pose_local*T_pose_global;
+                                cout << "Final pose:" << endl << T_pose_estimation << endl;
+                                PE.valid_output_pose(T_pose_estimation);
 				
 				std_msgs::Float64MultiArray pose_msg;				//convert eigen matrix to ros msg and publish it
 				tf::matrixEigenToMsg(T_pose_estimation, pose_msg);

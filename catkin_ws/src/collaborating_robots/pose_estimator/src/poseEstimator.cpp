@@ -113,7 +113,7 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
 		// spin.setRadiusSearch(0.03);
 		// spin.setMinPointCountInNeighbourhood(8);		//added by us
         spin.setRadiusSearch(0.05);
-        //spin.setMinPointCountInNeighbourhood(30);		// 10 before : added by us
+        //spin.setMinPointCountInNeighbourhood(10);		// 10 before : added by us
         spin.setInputCloud(object);
         spin.setInputNormals(object);
         spin.compute(*object_features);
@@ -240,15 +240,16 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
     return pose;
 }
 // (this->getObjectCloud(object_name)
-Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter, float thressq)
+Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter, float thressq, Eigen::Matrix4f T_pose)
 {
 
     
     // Load
     PointCloud<PointT>::Ptr object(new PointCloud<PointT>);
     PointCloud<PointT>::Ptr scene(new PointCloud<PointT>);
-	copyPointCloud(*scene_in, *scene);
-	copyPointCloud(*(this->getObjectCloud(object_name)), *object);
+    copyPointCloud(*scene_in, *scene);
+    copyPointCloud(*(this->getObjectCloud(object_name)), *object);
+    pcl::transformPointCloud(*object, *object, T_pose);
     
     // Show
     // {
@@ -325,7 +326,6 @@ Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, strin
 		v.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "scene");
         v.spin();
     }
-    valid_output_pose(pose);
     return pose;
 }
 
