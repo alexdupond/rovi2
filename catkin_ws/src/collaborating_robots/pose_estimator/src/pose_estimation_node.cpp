@@ -31,10 +31,13 @@ pcl::PCLPointCloud2::Ptr cloud2_from_msg (new pcl::PCLPointCloud2 ());
 pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_from_msg(new pcl::PointCloud<pcl::PointXYZ>);
 pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_from_mesh(new pcl::PointCloud<pcl::PointXYZ>);
 pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_object_yoshi (new pcl::PointCloud<pcl::PointXYZ>);
+pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_object_yoda (new pcl::PointCloud<pcl::PointXYZ>);
 pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_from_msg_plane (new pcl::PointCloud<pcl::PointXYZ>);
 
 const std::string path_object_yoshi = "src/collaborating_robots/pose_estimator/object_yoshi.pcd";
-const std::string path_scene_yoshi = "src/collaborating_robots/pose_estimator/scene_joshi7.ply";
+const std::string path_object_yoda = "src/collaborating_robots/pose_estimator/object_yoda.pcd";
+//const std::string path_scene_yoshi = "src/collaborating_robots/pose_estimator/scene_joshi7.ply";
+const float leaf_size = 0.005f; // leaf size for downscaling
 
 bool kbhit()							//used for checking for terminla input, without pausing the loop
 {
@@ -68,11 +71,11 @@ void point_cloud_callback(const sensor_msgs::PointCloud2ConstPtr& cloud_msg)	//c
                 pcl::PCLPointCloud2::Ptr input_cloud (new pcl::PCLPointCloud2 ());
                 //pcl::fromROSMsg(*cloud_msg, *cloud_from_msg);                                   //convert msg to pointcloud
 
-                pcl_conversions::toPCL(*cloud_msg, *input_cloud);				//convert msg to pcl pointcloud
+                pcl_conversions::toPCL(*cloud_msg, *input_cloud);//convert msg to pcl pointcloud
                 // Downsample the input cloud
                 pcl::VoxelGrid<pcl::PCLPointCloud2> sor;
                 sor.setInputCloud (input_cloud);
-                sor.setLeafSize (0.005f, 0.005f, 0.005f);
+                sor.setLeafSize (leaf_size, leaf_size, leaf_size);
                 sor.filter (*cloud2_from_msg);
                 ROS_INFO_STREAM("PointCloud before filtering: " << input_cloud->width * input_cloud->height
                                 << " data points (" << pcl::getFieldsList (*input_cloud) << ")." << endl
@@ -106,6 +109,7 @@ int main(int argc, char** argv)
 	ros::Publisher pose_pub = nh.advertise<std_msgs::Float64MultiArray>("objects_pose", 1);
 	ros::Rate loop_rate(10);	//loop rate in Hz
 
+        // add yoshi
 	if (pcl::io::loadPCDFile<pcl::PointXYZ> (path_object_yoshi, *cloud_object_yoshi) == -1) //* load the file
 	{
     	PCL_ERROR ("Couldn't read file object yoshi \n");
@@ -113,12 +117,28 @@ int main(int argc, char** argv)
 	}
 	pcl::transformPointCloud(*cloud_object_yoshi, *cloud_object_yoshi, Eigen::Matrix4f::Identity()*0.001);	//scale down yoshi
 
+        // add yoda
+        if (pcl::io::loadPCDFile<pcl::PointXYZ> (path_object_yoda, *cloud_object_yoda) == -1) //* load the file
+        {
+        PCL_ERROR ("Couldn't read file object yoshi \n");
+        return (-1);
+        }
+        pcl::transformPointCloud(*cloud_object_yoda, *cloud_object_yoda, Eigen::Matrix4f::Identity()*0.001);	//scale down yoda
+
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_segmented_scene(new pcl::PointCloud<pcl::PointXYZ>);
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_aligned(new pcl::PointCloud<pcl::PointXYZ>);
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_output (new pcl::PointCloud<pcl::PointXYZ>);
-	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_discarded (new pcl::PointCloud<pcl::PointXYZ>);
+        pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_discarded (new pcl::PointCloud<pcl::PointXYZ>);
 
-	float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.01, maxZ = 0.3;
+        // Downsample objects - same leaf size as for scene cloud
+        pcl::VoxelGrid<pcl::PointXYZ> grid;
+        grid.setLeafSize (leaf_size, leaf_size, leaf_size);
+        grid.setInputCloud (cloud_object_yoshi);
+        grid.filter (*cloud_object_yoshi);
+        grid.setInputCloud (cloud_object_yoda);
+        grid.filter (*cloud_object_yoda);
+
+        float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.01, maxZ = 0.3;
 
 	pcl::visualization::PCLVisualizer viewer("Plane segmentation result");
 	viewer.addCoordinateSystem(0.3); // 0,0,0
@@ -146,7 +166,8 @@ int main(int argc, char** argv)
 		cout << endl << endl << "    Huu.. You can't even type one letter. SHAME ON YOU!" << endl << endl;
 	}
 
-	PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", -0.05, 1.0);
+        PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", -0.05, 1.0);
+        PE.addObjectCloud(cloud_object_yoda,"cloud_object_yoda", -0.05, 1.0);
 	while(ros::ok)
 	{
 		ros::spinOnce();		//update all ROS related stuff
@@ -174,15 +195,19 @@ int main(int argc, char** argv)
 			if(first_run && enable_pose_estimation)
 			{
 				Eigen::Matrix4f T_pose_estimation;
-				T_pose_estimation = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, false);
-				pcl::transformPointCloud(*cloud_object_yoshi, *cloud_object_yoshi, T_pose_estimation);
-				T_pose_estimation = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200) * T_pose_estimation;
+                                T_pose_estimation = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, true);
+                                pcl::transformPointCloud(*cloud_object_yoshi, *cloud_object_yoshi, T_pose_estimation);
+                                T_pose_estimation = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200) * T_pose_estimation;
+                                //T_pose_estimation = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoda", 3500, 0.000025, true);
+                                //pcl::transformPointCloud(*cloud_object_yoda, *cloud_object_yoda, T_pose_estimation);
+                                //T_pose_estimation = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoda", 200, 0.0001) * T_pose_estimation;
+
 				cout << "Final pose:" << endl << T_pose_estimation << endl;
 				
 				std_msgs::Float64MultiArray pose_msg;				//convert eigen matrix to ros msg and publish it
 				tf::matrixEigenToMsg(T_pose_estimation, pose_msg);
 				pose_pub.publish(pose_msg);
-            }
+                        }
 			viewer.removePointCloud("cloud_boxFilter_output");
 			viewer.removePointCloud("cloud_boxFilter_discarded");
 			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_output, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_output, 0, 255, 0), "cloud_boxFilter_output");

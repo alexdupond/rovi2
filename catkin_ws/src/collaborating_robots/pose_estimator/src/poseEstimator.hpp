@@ -41,7 +41,7 @@ public:
 	bool addObjectCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr object, string object_name, float crop_minZ, float crop_maxZ);
 	pcl::PointCloud<pcl::PointXYZ>::Ptr getObjectCloud(string name);
 	void printObjectCloudsNames();
-	Matrix4f get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 4000, bool show_matches = true);
+        Matrix4f get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 4000, float thressq = 0.000025, bool show_matches = true);
 	Matrix4f get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 50, float thressq = 0.0001);
 
 private:

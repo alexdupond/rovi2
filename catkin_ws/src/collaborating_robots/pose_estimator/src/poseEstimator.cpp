@@ -1,7 +1,6 @@
 #include "poseEstimator.hpp"
 #include <ros/console.h>
 #include <pcl/filters/crop_box.h>
-
 typedef PointNormal PointT;
 typedef Histogram<153> FeatureT;
 
@@ -21,14 +20,14 @@ void poseEstimator::cropCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in, floa
 	Eigen::Vector4f centroidObject;									//move object to centroid
 	pcl::compute3DCentroid(*cloud_in, centroidObject);
 	pcl::demeanPointCloud(*cloud_in, centroidObject, *cloud_temp);
-	*cloud_in = *cloud_temp;
+        *cloud_in = *cloud_temp;
 
 	pcl::CropBox<pcl::PointXYZ> boxFilter1(true);					//fintering yoshi pointcloud. remove the bottom of the figure
 	boxFilter1.setMin(Eigen::Vector4f(-1, -1, minZ, 1.0));
 	boxFilter1.setMax(Eigen::Vector4f(1, 1, maxZ, 1.0));
 	boxFilter1.setInputCloud(cloud_in);
 	boxFilter1.filter(*cloud_temp);
-	*cloud_in = *cloud_temp;
+        *cloud_in = *cloud_temp;
 }
 
 bool poseEstimator::addObjectCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr object, string object_name, float crop_minZ, float crop_maxZ)
@@ -70,7 +69,7 @@ void poseEstimator::printObjectCloudsNames()
 	ROS_INFO_STREAM("Object cloud names:\n\t" << names);
 }
 
-Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter, bool show_matches)
+Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter, float thressq, bool show_matches)
 {
 	// Load
     PointCloud<PointT>::Ptr object(new PointCloud<PointT>);
@@ -111,10 +110,8 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
         //spin.setRadiusSearch(0.05);
 		// spin.setRadiusSearch(0.03);
 		// spin.setMinPointCountInNeighbourhood(8);		//added by us
-
-		spin.setRadiusSearch(0.5);
-		spin.setMinPointCountInNeighbourhood(30);		// 10 before : added by us
-        
+        spin.setRadiusSearch(0.05);
+        //spin.setMinPointCountInNeighbourhood(30);		// 10 before : added by us
         spin.setInputCloud(object);
         spin.setInputNormals(object);
         spin.compute(*object_features);
@@ -154,7 +151,7 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
     // Set RANSAC parameters
     //const size_t iter = argc >= 4 ? std::stoi(argv[3]) : 5000;
 	//const size_t iter = 5000;
-    const float thressq = 0.01 * 0.01;
+    //const float thressq = 0.005 * 0.005;
     
     // Start RANSAC
     Matrix4f pose = Matrix4f::Identity();
@@ -230,13 +227,14 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
     } // End timing
     
     // Show result
-    // {
-    //     PCLVisualizer v("After global alignment");
-    //     v.addPointCloud<PointT>(object_aligned, PointCloudColorHandlerCustom<PointT>(object_aligned, 0, 255, 0), "object_aligned");
-    //     v.addPointCloud<PointT>(scene, PointCloudColorHandlerCustom<PointT>(scene, 255, 0, 0),"scene");
-    //     v.spin();
-    // }
-    //valid_output_pose(pose);
+    if(show_matches = true)
+     {
+         PCLVisualizer v("After global alignment");
+         v.addPointCloud<PointT>(object_aligned, PointCloudColorHandlerCustom<PointT>(object_aligned, 0, 255, 0), "object_aligned");
+         v.addPointCloud<PointT>(scene, PointCloudColorHandlerCustom<PointT>(scene, 255, 0, 0),"scene");
+         v.spin();
+     }
+    
     return pose;
 }
 // (this->getObjectCloud(object_name)
@@ -352,32 +350,4 @@ inline float poseEstimator::dist_sq(const FeatureT& query, const FeatureT& targe
     }
     
     return result;
-}
-
-bool poseEstimator::valid_output_pose(Matrix4f H)
-{
-	//we know that the object will stand on the table, so if the pose is rotatet around x or y, it is not corretc.
-	Matrix3f R = H.block<3,3>(0,0);
-	Vector3f T = H.block<3,1>(0,3);
-	Vector3f ea = R.eulerAngles(0, 1, 2);				// x y z
-	ROS_ERROR_STREAM("Rotation:" << endl << R);
-	ROS_ERROR_STREAM("Translation:" << endl << T);
-	ROS_ERROR_STREAM( "ea:" << endl << ea );
-	bool pose_error = false;
-	if(ea(0) > maxPoseAngle || ea(1) > maxPoseAngle)
-	{
-		ROS_WARN_STREAM("Pose is rotatet too mutch.. Dam it! it's not trustworthy");
-		pose_error = true;
-	}
-	if(T(0,0) > maxPoseTranslationX || T(1,0) > maxPoseTranslationY || T(2,0) > maxPoseTranslationZ)
-	{
-		ROS_WARN_STREAM("Pose is translated too mutch.. Dam it! it's not trustworthy");
-		pose_error = true;
-	}
-	if(pose_error)
-	{
-		return false;
-	}
-	ROS_WARN_STREAM("Pose good!");
-	return true;
 }
