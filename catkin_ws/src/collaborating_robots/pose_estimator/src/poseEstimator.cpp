@@ -18,69 +18,69 @@ poseEstimator::~poseEstimator()
 
 void poseEstimator::cropCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in, float minZ, float maxZ)
 {
-	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_temp(new pcl::PointCloud<pcl::PointXYZ>);
-	Eigen::Vector4f centroidObject;									//move object to centroid
-	pcl::compute3DCentroid(*cloud_in, centroidObject);
-	pcl::demeanPointCloud(*cloud_in, centroidObject, *cloud_temp);
+        pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_temp(new pcl::PointCloud<pcl::PointXYZ>);
+        Eigen::Vector4f centroidObject;									//move object to centroid
+        pcl::compute3DCentroid(*cloud_in, centroidObject);
+        pcl::demeanPointCloud(*cloud_in, centroidObject, *cloud_temp);
         *cloud_in = *cloud_temp;
 
-	pcl::CropBox<pcl::PointXYZ> boxFilter1(true);					//fintering yoshi pointcloud. remove the bottom of the figure
-	boxFilter1.setMin(Eigen::Vector4f(-1, -1, minZ, 1.0));
-	boxFilter1.setMax(Eigen::Vector4f(1, 1, maxZ, 1.0));
-	boxFilter1.setInputCloud(cloud_in);
-	boxFilter1.filter(*cloud_temp);
+        pcl::CropBox<pcl::PointXYZ> boxFilter1(true);					//fintering yoshi pointcloud. remove the bottom of the figure
+        boxFilter1.setMin(Eigen::Vector4f(-1, -1, minZ, 1.0));
+        boxFilter1.setMax(Eigen::Vector4f(1, 1, maxZ, 1.0));
+        boxFilter1.setInputCloud(cloud_in);
+        boxFilter1.filter(*cloud_temp);
         *cloud_in = *cloud_temp;
 }
 
 bool poseEstimator::addObjectCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr object, string object_name, float crop_minZ, float crop_maxZ)
 {
-	for (int i = 0; i < vec_objects_names.size(); i++)
-	{
-		if(vec_objects_names[i] == object_name)
-		{
-			ROS_ERROR_STREAM("poseEstimator: object cloud '" << object_name << " already exists... object cloud not added");
-			return false;
-		}
-	}
-	cropCloud(object, crop_minZ, crop_maxZ);
-	vec_objects_ptr.push_back(object);
-	vec_objects_names.push_back(object_name);
-	return true;
+        for (int i = 0; i < vec_objects_names.size(); i++)
+        {
+                if(vec_objects_names[i] == object_name)
+                {
+                        ROS_ERROR_STREAM("poseEstimator: object cloud '" << object_name << " already exists... object cloud not added");
+                        return false;
+                }
+        }
+        cropCloud(object, crop_minZ, crop_maxZ);
+        vec_objects_ptr.push_back(object);
+        vec_objects_names.push_back(object_name);
+        return true;
 }
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr poseEstimator::getObjectCloud(string name)
 {
-	for (int i = 0; i < vec_objects_names.size(); i++)
-	{
-		if(vec_objects_names[i] == name)
-		{
-			return vec_objects_ptr[i];
-		}
-	}
-	ROS_ERROR_STREAM("poseEstimator: cant find object cloud '" << name << "'...");
-	return nullptr;
+        for (int i = 0; i < vec_objects_names.size(); i++)
+        {
+                if(vec_objects_names[i] == name)
+                {
+                        return vec_objects_ptr[i];
+                }
+        }
+        ROS_ERROR_STREAM("poseEstimator: cant find object cloud '" << name << "'...");
+        return nullptr;
 }
 
 void poseEstimator::printObjectCloudsNames()
 {
-	string names = "";
-	for (int i = 0; i < vec_objects_names.size(); i++)
-	{
-		names += "'" + vec_objects_names[i] + "'  ";
-	}
-	ROS_INFO_STREAM("Object cloud names:\n\t" << names);
+        string names = "";
+        for (int i = 0; i < vec_objects_names.size(); i++)
+        {
+                names += "'" + vec_objects_names[i] + "'  ";
+        }
+        ROS_INFO_STREAM("Object cloud names:\n\t" << names);
 }
 
 Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter, float thressq, bool show_matches)
 {
-	// Load
+        // Load
     PointCloud<PointT>::Ptr object(new PointCloud<PointT>);
     PointCloud<PointT>::Ptr scene(new PointCloud<PointT>);
 
-	//PointCloud<PointXYZ>::Ptr object_in = this->getObjectCloud(object_name);
-	copyPointCloud(*scene_in, *scene);
-	copyPointCloud(*(this->getObjectCloud(object_name)), *object);
-    
+        //PointCloud<PointXYZ>::Ptr object_in = this->getObjectCloud(object_name);
+        copyPointCloud(*scene_in, *scene);
+        copyPointCloud(*(this->getObjectCloud(object_name)), *object);
+
     // Show
     // {
     //     PCLVisualizer v("Before global alignment");
@@ -88,41 +88,41 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
     //     v.addPointCloud<PointT>(scene, PointCloudColorHandlerCustom<PointT>(scene, 255, 0, 0),"scene");
     //     v.spin();
     // }
-    
+
     // Compute surface normals
     {
         ScopeTime t("Surface normals");
         NormalEstimation<PointT,PointT> ne;
         ne.setKSearch(10);
-        
+
         ne.setInputCloud(object);
         ne.compute(*object);
-        
+
         ne.setInputCloud(scene);
         ne.compute(*scene);
     }
-    
+
     // Compute shape features
     PointCloud<FeatureT>::Ptr object_features(new PointCloud<FeatureT>);
     PointCloud<FeatureT>::Ptr scene_features(new PointCloud<FeatureT>);
     {
         ScopeTime t("Shape features");
-        
+
         SpinImageEstimation<PointT,PointT,FeatureT> spin;
         //spin.setRadiusSearch(0.05);
-		// spin.setRadiusSearch(0.03);
-		// spin.setMinPointCountInNeighbourhood(8);		//added by us
+                // spin.setRadiusSearch(0.03);
+                // spin.setMinPointCountInNeighbourhood(8);		//added by us
         spin.setRadiusSearch(0.05);
         //spin.setMinPointCountInNeighbourhood(10);		// 10 before : added by us
         spin.setInputCloud(object);
         spin.setInputNormals(object);
         spin.compute(*object_features);
-        
+
         spin.setInputCloud(scene);
         spin.setInputNormals(scene);
         spin.compute(*scene_features);
     }
-    
+
     // Find feature matches
     Correspondences corr(object_features->size());
     {
@@ -132,29 +132,29 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
             nearest_feature(object_features->points[i], *scene_features, corr[i].index_match, corr[i].distance);
         }
     }
-    
+
     // Show matches
-	if(show_matches == true)
-	{
-		{
+        if(show_matches == true)
+        {
+                {
         PCLVisualizer v("Matches");
         v.addPointCloud<PointT>(object, PointCloudColorHandlerCustom<PointT>(object, 0, 255, 0), "object");
         v.addPointCloud<PointT>(scene, PointCloudColorHandlerCustom<PointT>(scene, 255, 0, 0),"scene");
         v.addCorrespondences<PointT>(object, scene, corr, 1);
         v.spin();
-    	}
-	}
+        }
+        }
 
-    
+
     // Create a k-d tree for scene
     search::KdTree<PointNormal> tree;
     tree.setInputCloud(scene);
-    
+
     // Set RANSAC parameters
     //const size_t iter = argc >= 4 ? std::stoi(argv[3]) : 5000;
-	//const size_t iter = 5000;
+        //const size_t iter = 5000;
     //const float thressq = 0.005 * 0.005;
-    
+
     // Start RANSAC
     Matrix4f pose = Matrix4f::Identity();
     PointCloud<PointNormal>::Ptr object_aligned(new PointCloud<PointNormal>);
@@ -174,20 +174,20 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
                 idxobj[j] = corr[idx].index_query;
                 idxscn[j] = corr[idx].index_match;
             }
-            
+
             // Estimate transformation
             Matrix4f T;
             TransformationEstimationSVD<PointNormal,PointNormal> est;
             est.estimateRigidTransformation(*object, idxobj, *scene, idxscn, T);
-            
+
             // Apply pose
             transformPointCloud(*object, *object_aligned, T);
-            
+
             // Validate
             vector<vector<int> > idx;
             vector<vector<float> > distsq;
             tree.nearestKSearch(*object_aligned, std::vector<int>(), 1, idx, distsq);
-            
+
             // Compute inliers and RMSE
             size_t inliers = 0;
             float rmse = 0;
@@ -195,12 +195,12 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
                 if(distsq[j][0] <= thressq)
                     ++inliers, rmse += distsq[j][0];
             rmse = sqrtf(rmse / inliers);
-            
+
             // Evaluate a penalty function
             const float outlier_rate = 1.0f - float(inliers) / object->size();
             //const float penaltyi = rmse;
             const float penaltyi = outlier_rate;
-            
+
             // Update result
             if(penaltyi < penalty) {
                 cout << "\t--> Got a new model with " << inliers << " inliers!" << endl;
@@ -208,9 +208,9 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
                 pose = T;
             }
         }
-        
+
         transformPointCloud(*object, *object_aligned, pose);
-        
+
         // Compute inliers and RMSE
         vector<vector<int> > idx;
         vector<vector<float> > distsq;
@@ -221,13 +221,13 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
             if(distsq[i][0] <= thressq)
                 ++inliers, rmse += distsq[i][0];
         rmse = sqrtf(rmse / inliers);
-    
+
         // Print pose
         cout << "Got the following pose:" << endl << pose << endl;
         cout << "Inliers: " << inliers << "/" << object->size() << endl;
         cout << "RMSE: " << rmse << endl;
     } // End timing
-    
+
     // Show result
     if(show_matches = true)
      {
@@ -236,21 +236,21 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
          v.addPointCloud<PointT>(scene, PointCloudColorHandlerCustom<PointT>(scene, 255, 0, 0),"scene");
          v.spin();
      }
-    
+
     return pose;
 }
 // (this->getObjectCloud(object_name)
 Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter, float thressq, Eigen::Matrix4f T_pose)
 {
 
-    
+
     // Load
     PointCloud<PointT>::Ptr object(new PointCloud<PointT>);
     PointCloud<PointT>::Ptr scene(new PointCloud<PointT>);
     copyPointCloud(*scene_in, *scene);
     copyPointCloud(*(this->getObjectCloud(object_name)), *object);
     pcl::transformPointCloud(*object, *object, T_pose);
-    
+
     // Show
     // {
     //     PCLVisualizer v("Before local alignment");
@@ -258,15 +258,15 @@ Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, strin
     //     v.addPointCloud<PointNormal>(scene, PointCloudColorHandlerCustom<PointNormal>(scene, 255, 0, 0),"scene");
     //     v.spin();
     // }
-    
+
     // Create a k-d tree for scene
     search::KdTree<PointNormal> tree;
     tree.setInputCloud(scene);
-    
+
     // Set ICP parameters
     //const size_t iter = argc >= 4 ? std::stoi(argv[3]) : 50;
     //const float thressq = 0.01 * 0.01;
-    
+
     // Start ICP
     Matrix4f pose = Matrix4f::Identity();
     PointCloud<PointNormal>::Ptr object_aligned(new PointCloud<PointNormal>(*object));
@@ -278,7 +278,7 @@ Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, strin
             vector<vector<int> > idx;
             vector<vector<float> > distsq;
             tree.nearestKSearch(*object_aligned, std::vector<int>(), 1, idx, distsq);
-            
+
             // Threshold and create indices for object/scene and compute RMSE
             vector<int> idxobj;
             vector<int> idxscn;
@@ -288,19 +288,19 @@ Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, strin
                     idxscn.push_back(idx[j][0]);
                 }
             }
-            
+
             // 2) Estimate transformation
             Matrix4f T;
             TransformationEstimationSVD<PointNormal,PointNormal> est;
             est.estimateRigidTransformation(*object_aligned, idxobj, *scene, idxscn, T);
-            
+
             // 3) Apply pose
             transformPointCloud(*object_aligned, *object_aligned, T);
-            
+
             // 4) Update result
             pose = T * pose;
         }
-        
+
         // Compute inliers and RMSE
         vector<vector<int> > idx;
         vector<vector<float> > distsq;
@@ -311,19 +311,19 @@ Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, strin
             if(distsq[i][0] <= thressq)
                 ++inliers, rmse += distsq[i][0];
         rmse = sqrtf(rmse / inliers);
-    
+
         // Print pose
         cout << "Got the following pose:" << endl << pose << endl;
         cout << "Inliers: " << inliers << "/" << object->size() << endl;
         cout << "RMSE: " << rmse << endl;
     } // End timing
-    
+
     // Show result
     {
         PCLVisualizer v("After local alignment");
         v.addPointCloud<PointNormal>(object_aligned, PointCloudColorHandlerCustom<PointNormal>(object_aligned, 0, 255, 0), "object_aligned");
         v.addPointCloud<PointNormal>(scene, PointCloudColorHandlerCustom<PointNormal>(scene, 255, 0, 0),"scene");
-		v.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "scene");
+                v.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "scene");
         v.spin();
     }
     return pose;
@@ -331,7 +331,7 @@ Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, strin
 
 void poseEstimator::nearest_feature(const FeatureT& query, const PointCloud<FeatureT>& target, int &idx, float &distsq)
 {
-	idx = 0;
+        idx = 0;
     distsq = dist_sq(query, target[0]);
     for(size_t i = 1; i < target.size(); ++i) {
         const float disti = dist_sq(query, target[i]);
@@ -350,49 +350,50 @@ inline float poseEstimator::dist_sq(const FeatureT& query, const FeatureT& targe
         const float diff = reinterpret_cast<const float*>(&query)[i] - reinterpret_cast<const float*>(&target)[i];
         result += diff * diff;
     }
-    
+
     return result;
 }
 
 bool poseEstimator::valid_output_pose(Matrix4f H)
 {
-	//we know that the object will stand on the table, so if the pose is rotatet around x or y, it is not corretc.
-	Matrix3f R = H.block<3,3>(0,0);
-	Vector3f T = H.block<3,1>(0,3);
-	vector<float> rpy = R2RPY(R);
+        //we know that the object will stand on the table, so if the pose is rotatet around x or y, it is not corretc.
+        Matrix3f R = H.block<3,3>(0,0);
+        Vector3f T = H.block<3,1>(0,3);
+        vector<float> rpy = R2RPY(R);
 
-	bool pose_error = false;
-	if(rpy(1) > maxPoseAngle || rpy(2) > maxPoseAngle)
-	{
-		ROS_WARN_STREAM("Pose is rotatet too mutch.. Dam it! it's not trustworthy");
-		ROS_WARN_STREAM("rpy: " << rpy[2] << " " << rpy[1] << " " << rpy[0]);
-		pose_error = true;
-	}
-	if(T(0,0) > maxPoseTranslationX || T(1,0) > maxPoseTranslationY || T(2,0) > maxPoseTranslationZ)
-	{
-		ROS_WARN_STREAM("Pose is translated too mutch.. Dam it! it's not trustworthy");
-		ROS_WARN_STREAM("Translation:" << endl << T);
-		pose_error = true;
-	}
-	if(pose_error)
-	{
-		return false;
-	}
-	ROS_INFO("Pose good!");
-	return true;
+        bool pose_error = false;
+        if(!(rpy[1] < maxPoseAngle || rpy[1] > M_PI-maxPoseAngle) || !(rpy[2] < maxPoseAngle || rpy[2] > M_PI-maxPoseAngle))
+        {
+                ROS_WARN_STREAM("Pose is rotatet too mutch.. Dam it! it's not trustworthy");
+                ROS_WARN_STREAM("rpy: " << rpy[2] << " " << rpy[1] << " " << rpy[0]);
+                pose_error = true;
+        }
+        if(T(0,0) > maxPoseTranslationX || T(1,0) > maxPoseTranslationY || T(2,0) > maxPoseTranslationZ)
+        {
+                ROS_WARN_STREAM("Pose is translated too mutch.. Dam it! it's not trustworthy");
+                ROS_WARN_STREAM("Translation:" << endl << T);
+                pose_error = true;
+        }
+        if(pose_error)
+        {
+                return false;
+        }
+        ROS_INFO("Pose good!");
+        ROS_WARN_STREAM("rpy: " << rpy[2] << " " << rpy[1] << " " << rpy[0]);
+        return true;
 }
 
 vector<float> poseEstimator::R2RPY(Matrix3f R)
 {
-	vector<float> rpy;
+        vector<float> rpy;
 
-	float r11 = R(0,0), r21 = R(1,0), r31 = R(2,0), r32 = R(2,1), r33 = R(2,2); 
-	float yaw = atan2(r21,r11);
-	float pitch = atan2( -r31, sqrt( pow(r32,2) + pow(r33,2) ) );
-	float roll = atan2(r32, r33);
-	rpy.reserve(3);
-	rpy.push_back(yaw);
-	rpy.push_back(pitch);
-	rpy.push_back(roll);
-	return rpy;
+        float r11 = R(0,0), r21 = R(1,0), r31 = R(2,0), r32 = R(2,1), r33 = R(2,2);
+        float yaw = atan2(r21,r11);
+        float pitch = atan2( -r31, sqrt( pow(r32,2) + pow(r33,2) ) );
+        float roll = atan2(r32, r33);
+        rpy.reserve(3);
+        rpy.push_back(yaw);
+        rpy.push_back(pitch);
+        rpy.push_back(roll);
+        return rpy;
 }
