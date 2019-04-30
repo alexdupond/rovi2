@@ -160,14 +160,15 @@ bool PrioritizedPlanner::calculateDynamicRRTPath(const rw::math::Q &start, const
     return false;
 }
 
-bool PrioritizedPlanner::inCollision(const rw::proximity::CollisionDetector &detector, const rw::math::Q &q_new, const rw::math::Q &q_robot_1)
+
+bool PrioritizedPlanner::inCollision(const rw::proximity::CollisionDetector &detector, const rw::math::Q &q1, const rw::math::Q &q2); 
 {
 	rw::proximity::CollisionDetector::QueryResult data;
     
-	_device1->setQ(q_robot_1,_state);
-    _device2->setQ(q_new, _state);
+	_device1->setQ(q1,_state);
+    _device2->setQ(q2, _state);
 	if (detector.inCollision(_state,&data)) {
-		cout << "Configuration between " << q_new << ", and " << q_robot_1 << endl;
+		cout << "Collision between " << q1 << ", and " << q2 << endl;
 		return true;
 	}
 	return false;
@@ -208,7 +209,6 @@ ExtendResult PrioritizedPlanner::extend(Tree& tree,const rw::math::Q& q,Node* qN
     // Init data needed
     int depth = getDepth(qNearNode); 
     double multi = 0;
-    Q qNew;
     const rw::math::Q& qNear = getQVal(qNearNode);
 
     // Calculate the difference between random q and the near node
@@ -223,7 +223,9 @@ ExtendResult PrioritizedPlanner::extend(Tree& tree,const rw::math::Q& q,Node* qN
 
     // Convert to distance - This is calculated to estimate the step size
     const double dist = distance(delta);
-  
+    Q qNew;
+    Q qRobPrev = _path_1[depth-1]; 
+    Q qRobNext = _path_1[depth]; 
     if(depth < int(_path_1.size()-1)){
         multi = multiplier(delta, depth);
         qNew = qNear + multi * delta;
@@ -232,18 +234,13 @@ ExtendResult PrioritizedPlanner::extend(Tree& tree,const rw::math::Q& q,Node* qN
         depth = _path_1.size() - 1; 
         qNew = qNear + (_extend/dist) * delta;
     }
-    
-    cout << "Depth = " << depth << endl; 
 
-//  cout << "Configuration device 1 = " << _device1->getQ(_state) << endl; 
- //   cout << "Configuration device 2 = " << qNew << endl; 
-
-    // Calculating the distance to the goal configuration 
     double distGoal = distance(qNew - qGoal);
     cout << "Distance to goal = " << distGoal << endl;
 
     if (distGoal <= _extend) {
-        if (!inCollision(detector, qNew, _path_1[depth])){//!inCollision(rrt, qNearNode, q)) {                
+        if (!inCollision(detector, qRobPrev, qRobNext, qNear, qNew, 10))
+        {             
             tree.add(q, qNearNode, 1);
             return Reached;
         } else {
@@ -251,7 +248,8 @@ ExtendResult PrioritizedPlanner::extend(Tree& tree,const rw::math::Q& q,Node* qN
             return Trapped;
         }
     } else {
-        if (!inCollision(detector, qNew, _path_1[depth])){//!inCollision(rrt, qNearNode, qNew)) {
+        if (!inCollision(detector, qRobPrev, qRobNext, qNear, qNew, 10))
+        {
             tree.add(qNew, qNearNode, 1);
             return Advanced;
         } else {
@@ -289,6 +287,33 @@ void PrioritizedPlanner::getPathFromTree(const Tree& startTree, const Tree& goal
     result.insert(result.end(), revPart.rbegin(), revPart.rend());
     Tree::getRootPath(goalTree.getLast(), result);
 }
+
+
+bool PrioritizedPlanner::inCollision(const rw::proximity::CollisionDetector &detector, const Q& qPrev1, const Q& qNext1, const Q& qPrev2, const Q& qNext2, float e)    
+{
+    double collisionDetectorCalls = 0;
+
+    Q dq1 = qNext1 - qPrev1;
+    Q dq2 = qNext2 - qPrev2; 
+    int n1 = ceil(dq1.norm2() / e)-1;
+    int n2 = ceil(dq2.norm2() / e)-1;
+
+    Q step = (dq/(n+1));
+    for(int i = 1; i < n; i++)
+    {
+        Q qi1 = i * step + qPrev1;
+        Q qi2 = i * step + qPrev2;
+        collisionDetectorCalls++;
+        if(inCollision(detector, qi1, qi2))
+        {   
+            cout << "In collision between two configurations" << endl; 
+            return true;
+        }
+    }
+    return false;
+}
+
+
 
 
 PrioritizedPlanner::~PrioritizedPlanner(){

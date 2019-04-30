@@ -58,9 +58,16 @@ public:
     ExtendResult extend(Tree& tree,const Q& q,Node* qNearNode, const Q& qGoal, const rw::proximity::CollisionDetector &detector);
     ExtendResult growTree(Tree& tree,const Q& q_rand, const Q& qGoal, const rw::proximity::CollisionDetector &detector);
     void getPathFromTree(const Tree& startTree, const Tree& goalTree, rw::trajectory::QPath& result);
-    bool inCollision(const rw::proximity::CollisionDetector &detector, const rw::math::Q &q_new, const rw::math::Q &q_robot_1); 
     double multiplier(const rw::math::Q& q, int d); 
     double distance(const rw::math::Q& q); 
+
+    // Colissions checking
+    bool inCollision(const rw::proximity::CollisionDetector &detector, const Q& qPrev1, const Q& qNext1, const Q& qPrev2, const Q& qNext2, float e);    
+    bool inCollision(const rw::proximity::CollisionDetector &detector, const rw::math::Q &q_1, const rw::math::Q &q_2); 
+
+
+
+
 
 
 private:
