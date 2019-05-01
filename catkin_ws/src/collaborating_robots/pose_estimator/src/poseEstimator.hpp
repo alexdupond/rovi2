@@ -56,7 +56,6 @@ struct local_pose_data
 	bool pose_valid;
 };
 
-
 typedef PointNormal PointT;
 typedef Histogram<153> FeatureT;
 
@@ -70,10 +69,11 @@ public:
 	pcl::PointCloud<pcl::PointXYZ>::Ptr getObjectCloud(string name);
 	void printObjectCloudsNames();
 	// Matrix4f get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 4000, float thressq = 0.000025, bool show_matches = false);
-	local_pose_dataata get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 4000, float thressq = 0.000025, bool show_matches = false);
+	global_pose_data get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 4000, float thressq = 0.000025, bool show_matches = false);
 	// Matrix4f get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 50, float thressq = 0.0001, Eigen::Matrix4f T_pose = Eigen::Matrix4f::Identity());
-	local_pose_data get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 50, float thressq = 0.0001, Eigen::Matrix4f T_pose = Eigen::Matrix4f::Identity());
+	local_pose_data get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 50, float thressq = 0.0001, Eigen::Matrix4f T_pose = Eigen::Matrix4f::Identity(), bool show_output = false);
 	bool valid_output_pose(Matrix4f H);
+	void save_pose_data(string file_name, global_pose_data global, local_pose_data local);
 
 private:
 	void nearest_feature(const FeatureT& query, const PointCloud<FeatureT>& target, int &idx, float &distsq);
@@ -83,7 +83,6 @@ private:
 
 	vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> vec_objects_ptr;
 	vector<string> vec_objects_names;
-
 };
 
 #endif

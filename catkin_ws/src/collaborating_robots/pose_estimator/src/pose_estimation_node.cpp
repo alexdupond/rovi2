@@ -98,6 +98,37 @@ Eigen::Matrix4f RPY2H(float Rz, float Ry, float Rx, float tx, float ty, float tz
 	return T_homogenus;
 }
 
+void test_function(poseEstimator PE, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_output)
+{
+	static int iteration = 0;
+	static int rotations = 16;
+
+	if(rotations > 0)
+	{
+		if(iteration < 10)
+		{
+			ROS_WARN_STREAM("Run: " << iteration+1 << " / " << " 10   (rotations left: " << rotations-1 << ")");
+			global_pose_data global_pose;
+			local_pose_data local_pose;
+			global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, 0.000025, false);		// TODO change to true after test
+			local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200, 0.0001, global_pose.pose, false);
+			PE.save_pose_data("./pose_data.csv", global_pose, local_pose); //save pose
+			iteration++;
+		}
+		else
+		{
+			char temp;
+			ROS_WARN_STREAM("Rotate object and press a key, followed by 'Enter'");
+			cin >> temp;
+			iteration = 0;
+			rotations--;
+		}
+	}
+	else
+	{
+		ROS_WARN_STREAM("test done!");
+	}
+}
 
 int main(int argc, char** argv)
 {
@@ -147,9 +178,10 @@ int main(int argc, char** argv)
 	
 	bool first_run = true;
 	bool enable_pose_estimation = false;
+	bool enable_test = false;
 
 	char user_input;
-	cout << "You have the following options:" << endl << "p  : Pose estimation" << endl << "f  : Free view" << endl;
+	cout << "You have the following options:" << endl << "p  : Pose estimation" << endl << "f  : Free view" << endl  << "t  : Test" << endl;
 	cin >> user_input;
 	if(user_input == 'p')
 	{
@@ -158,6 +190,10 @@ int main(int argc, char** argv)
 	else if(user_input == 'f')
 	{
 		enable_pose_estimation = false;
+	}
+	else if(user_input == 't')
+	{
+		enable_test = true;
 	}
 	else
 	{
@@ -170,7 +206,7 @@ int main(int argc, char** argv)
 		ros::spinOnce();		//update all ROS related stuff
 		if(new_cloud_from_msg)
 		{	
-			PE.printObjectCloudsNames();
+			//PE.printObjectCloudsNames();
 			new_cloud_from_msg = false;
 
 			if (first_run)
@@ -187,35 +223,43 @@ int main(int argc, char** argv)
 			//ROS_INFO_STREAM("PointCloud after segmentation+clipping: " << cloud2_from_msg->width * cloud2_from_msg->height
 			//                       << " data points (" << pcl::getFieldsList (*cloud2_from_msg) << ").");
 
-			if(first_run && enable_pose_estimation)
-			{
+			// if(first_run && enable_pose_estimation)	// TODO comment back in after test
+			if(enable_pose_estimation)		// TODO delete after test
+			{	
 				Eigen::Matrix4f T_pose_global;
 				Eigen::Matrix4f T_pose_local;
 				Eigen::Matrix4f T_pose_estimation;
 				global_pose_data global_pose;
 				local_pose_data local_pose;
 
-				global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, 0.000025, true);
-				local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200, 0.0001, global_pose.pose);
+				global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, 0.000025, false);		// TODO change to true after test
+				local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200, 0.0001, global_pose.pose, false);
 				T_pose_estimation = local_pose.pose * global_pose.pose;
 
 				cout << "Final pose:" << endl << T_pose_estimation << endl;
 				PE.valid_output_pose(T_pose_estimation);
-				
+				PE.save_pose_data("./pose_data.csv", global_pose, local_pose); //save pose
+
 				std_msgs::Float64MultiArray pose_msg;				//convert eigen matrix to ros msg and publish it
 				tf::matrixEigenToMsg(T_pose_estimation, pose_msg);
 				pose_pub.publish(pose_msg);
+
             }
+			if(enable_test)
+			{
+				test_function(PE, cloud_boxFilter_output);
+			}
 			viewer.removePointCloud("cloud_boxFilter_output");
 			viewer.removePointCloud("cloud_boxFilter_discarded");
+			viewer.removePointCloud("yoshi");
 			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_output, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_output, 0, 255, 0), "cloud_boxFilter_output");
 			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_discarded, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_discarded, 150, 150, 0), "cloud_boxFilter_discarded");
             viewer.addPointCloud<pcl::PointXYZ>(cloud_object_yoshi, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_object_yoshi, 255, 0, 0), "yoshi");
 			viewer.spinOnce();
 			//viewer.spin();
 
-			ready_for_new_cloud = true;		//signal that the function is ready for a new cloud from the camera
-			first_run = false;
+			ready_for_new_cloud = true;		// signal that the function is ready for a new cloud from the camera
+			first_run = true;
 
 		}
 		if (kbhit())		//it there is a terminal input
