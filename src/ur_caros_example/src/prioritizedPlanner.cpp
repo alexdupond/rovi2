@@ -224,22 +224,26 @@ ExtendResult PrioritizedPlanner::extend(Tree& tree,const rw::math::Q& q,Node* qN
     // Convert to distance - This is calculated to estimate the step size
     const double dist = distance(delta);
     Q qNew;
-    Q qRobPrev = _path_1[depth-1]; 
-    Q qRobNext = _path_1[depth]; 
+    Q qRobPrev;
+    Q qRobNext; 
+
     if(depth < int(_path_1.size()-1)){
         multi = multiplier(delta, depth);
         qNew = qNear + multi * delta;
-
+        qRobPrev = _path_1[depth-1]; 
+        qRobNext = _path_1[depth];
     }else{
         depth = _path_1.size() - 1; 
         qNew = qNear + (_extend/dist) * delta;
+        qRobPrev = _path_1[depth]; 
+        qRobNext = _path_1[depth];
     }
 
     double distGoal = distance(qNew - qGoal);
     cout << "Distance to goal = " << distGoal << endl;
 
     if (distGoal <= _extend) {
-        if (!inCollision(detector, qRobPrev, qRobNext, qNear, qNew, 0.005))
+        if (!inCollision(detector, qNew, qRobNext) && !inCollision(detector, qRobPrev, qRobNext, qNear, qNew, 0.005))
         {             
             tree.add(q, qNearNode, 1);
             return Reached;
@@ -296,15 +300,11 @@ bool PrioritizedPlanner::inCollision(const rw::proximity::CollisionDetector &det
     Q dq1 = qNext1 - qPrev1;
     Q dq2 = qNext2 - qPrev2; 
     int n = 0; 
-
-    cout << "Checking collision between " << qPrev1 << " and " << qNext1 << endl; 
-    cout << "Checking collision between " << qPrev2 << " and " << qNext2 << endl; 
  
     if((ceil(dq1.norm2() / e)-1) > (ceil(dq2.norm2() / e)-1))
         n = (ceil(dq1.norm2() / e)-1); 
     else
         n = (ceil(dq2.norm2() / e)-1); 
-    cout << "Test where n = " << n << endl; 
 
     Q step1 = (dq1/(n+1));
     Q step2 = (dq2/(n+1));
@@ -313,7 +313,6 @@ bool PrioritizedPlanner::inCollision(const rw::proximity::CollisionDetector &det
         Q qi1 = i * step1 + qPrev1;
         Q qi2 = i * step2 + qPrev2;
         collisionDetectorCalls++;
-        cout << "Test n# = " << i << endl; 
         if(inCollision(detector, qi1, qi2))
         {   
             cout << "In collision between two configurations" << endl; 
@@ -321,7 +320,6 @@ bool PrioritizedPlanner::inCollision(const rw::proximity::CollisionDetector &det
         }
         
     }
-    cout << "Done with this shit! " << endl;
     return false;
 }
 
