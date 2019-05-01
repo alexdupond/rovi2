@@ -1,0 +1,104 @@
+global_pose, 0.790297, 0.596945, 0.138159, -0.232171
+global_pose, -0.598185, 0.800503, -0.0370023, 0.0977477
+global_pose, -0.132685, -0.053402, 0.989719, -0.000480942
+global_pose, 0, 0, 0, 1
+global_time_surface_normals, 7
+global_time_shape_features, 140
+global_time_feature_matches, 1141
+global_time_ransac, 26673
+global_ransac_iterations, 1127
+global_ransac_inliers, 435
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 785
+global_rms_error, 0.00304861
+global_pose_valid, 0
+local_pose, 0.981702, 0.105387, -0.158756, 0.00580331
+local_pose, -0.095993, 0.993195, 0.0658972, -0.0225931
+local_pose, 0.164623, -0.0494462, 0.98515, 0.0364655
+local_pose, 0, 0, 0, 1
+local_time_icp, 1870
+local_icp_inliers, 1238
+local_object_cloud_size, 2277
+local_scene_cloud_size, 785
+local_rms_error, 0.0047685
+local_pose_valid, 0
+=======================================================
+global_pose, 0.791961, 0.599091, 0.117847, -0.230689
+global_pose, -0.596706, 0.800322, -0.0585385, 0.0991079
+global_pose, -0.129385, -0.0239599, 0.991305, -0.00223016
+global_pose, 0, 0, 0, 1
+global_time_surface_normals, 7
+global_time_shape_features, 143
+global_time_feature_matches, 1235
+global_time_ransac, 26900
+global_ransac_iterations, 1127
+global_ransac_inliers, 449
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 794
+global_rms_error, 0.00308729
+global_pose_valid, 0
+local_pose, 0.985249, 0.0980856, -0.140149, 0.00593162
+local_pose, -0.0873789, 0.992868, 0.0807573, -0.0221091
+local_pose, 0.147081, -0.0673228, 0.98682, 0.0353518
+local_pose, 0, 0, 0, 1
+local_time_icp, 1840
+local_icp_inliers, 1245
+local_object_cloud_size, 2277
+local_scene_cloud_size, 794
+local_rms_error, 0.00469965
+local_pose_valid, 0
+=======================================================
+global_pose, 0.544778, 0.823408, -0.158799, -0.196642
+global_pose, -0.79557, 0.567353, 0.212556, 0.0820474
+global_pose, 0.265115, 0.0105393, 0.964159, -0.00718003
+global_pose, 0, 0, 0, 1
+global_time_surface_normals, 7
+global_time_shape_features, 135
+global_time_feature_matches, 1079
+global_time_ransac, 27097
+global_ransac_iterations, 1755
+global_ransac_inliers, 437
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 775
+global_rms_error, 0.00332589
+global_pose_valid, 0
+local_pose, 0.96244, -0.205395, 0.177683, -0.00416544
+local_pose, 0.234469, 0.958541, -0.162067, 0.0630359
+local_pose, -0.137021, 0.19763, 0.97066, -0.043505
+local_pose, 0, 0, 0, 1
+local_time_icp, 1827
+local_icp_inliers, 1230
+local_object_cloud_size, 2277
+local_scene_cloud_size, 775
+local_rms_error, 0.00477369
+local_pose_valid, 0
+=======================================================
+global_pose, 0.675819, 0.730843, 0.0955894, -0.227324
+global_pose, -0.734589, 0.657231, 0.168602, 0.0848783
+global_pose, 0.0603976, -0.184163, 0.981038, 0.00311814
+global_pose, 0, 0, 0, 1
+global_time_surface_normals, 9
+global_time_shape_features, 149
+global_time_feature_matches, 1225
+global_time_ransac, 26882
+global_ransac_iterations, 475
+global_ransac_inliers, 525
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 801
+global_rms_error, 0.00329001
+global_pose_valid, 0
+local_pose, 0.990091, -0.0945767, -0.10402, 0.021485
+local_pose, 0.0766903, 0.98348, -0.164084, 0.0311833
+local_pose, 0.117819, 0.15447, 0.980952, 0.00374228
+local_pose, 0, 0, 0, 1
+local_time_icp, 1900
+local_icp_inliers, 1240
+local_object_cloud_size, 2277
+local_scene_cloud_size, 801
+local_rms_error, 0.00477516
+local_pose_valid, 0
+=======================================================
