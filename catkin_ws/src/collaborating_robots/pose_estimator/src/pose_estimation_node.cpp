@@ -197,12 +197,15 @@ int main(int argc, char** argv)
                                 Eigen::Matrix4f T_pose_global;
                                 Eigen::Matrix4f T_pose_local;
                                 Eigen::Matrix4f T_pose_estimation;
-                                T_pose_global = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, 0.000025, true);
-                                T_pose_local = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200, 0.0001, T_pose_global);
-                                //T_pose_estimation = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoda", 3500, 0.000025, true);
-                                //pcl::transformPointCloud(*cloud_object_yoda, *cloud_object_yoda, T_pose_estimation);
-                                //T_pose_estimation = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoda", 200, 0.0001) * T_pose_estimation;
-                                T_pose_estimation = T_pose_local*T_pose_global;
+								global_pose_data global_pose;
+
+								global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, 0.000025, true);
+                                T_pose_local = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200, 0.0001, global_pose.pose);
+								T_pose_estimation = T_pose_local * global_pose.pose;
+                                // T_pose_global = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, 0.000025, true);
+                                // T_pose_local = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200, 0.0001, T_pose_global);
+                                //T_pose_estimation = T_pose_local*T_pose_global;
+
                                 cout << "Final pose:" << endl << T_pose_estimation << endl;
                                 PE.valid_output_pose(T_pose_estimation);
 				

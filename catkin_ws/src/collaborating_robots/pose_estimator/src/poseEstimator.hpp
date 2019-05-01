@@ -27,7 +27,34 @@ using namespace Eigen;
 #define maxPoseAngle 0.10			//the maximum amount of rotation (rad) the estimatet pose is alowed to have around rx and ry
 #define maxPoseTranslationX 1		//the maximum amound of translation (meter) in x;
 #define maxPoseTranslationY 1		//the maximum amound of translation (meter) in x;
-#define maxPoseTranslationZ 1		//the maximum amound of translation (meter) in x;
+#define maxPoseTranslationZ 1	//the maximum amound of translation (meter) in x;
+
+struct global_pose_data
+{
+	Matrix4f pose;
+	int time_surface_normals;
+	int time_shape_features;
+	int time_feature_matches;
+	int time_ransac;
+	int ransac_iterations;
+	int ransac_inliers;
+	int features;
+	int object_cloud_size;
+	int scene_cloud_size;
+	float rms_error;
+	bool pose_valid;
+};
+
+struct local_pose_data
+{
+	Matrix4f pose;
+	int time_icp;
+	int icp_inliers;
+	int object_cloud_size;
+	int scene_cloud_size;
+	float rms_error;
+	bool pose_valid;
+};
 
 typedef PointNormal PointT;
 typedef Histogram<153> FeatureT;
@@ -41,7 +68,8 @@ public:
 	bool addObjectCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr object, string object_name, float crop_minZ, float crop_maxZ);
 	pcl::PointCloud<pcl::PointXYZ>::Ptr getObjectCloud(string name);
 	void printObjectCloudsNames();
-        Matrix4f get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 4000, float thressq = 0.000025, bool show_matches = false);
+        // Matrix4f get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 4000, float thressq = 0.000025, bool show_matches = false);
+		global_pose_data get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 4000, float thressq = 0.000025, bool show_matches = false);
         Matrix4f get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 50, float thressq = 0.0001, Eigen::Matrix4f T_pose = Eigen::Matrix4f::Identity());
         bool valid_output_pose(Matrix4f H);
 

@@ -71,8 +71,10 @@ void poseEstimator::printObjectCloudsNames()
 	ROS_INFO_STREAM("Object cloud names:\n\t" << names);
 }
 
-Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter, float thressq, bool show_matches)
+// Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter, float thressq, bool show_matches)
+global_pose_data poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter, float thressq, bool show_matches)
 {
+	global_pose_data data;		//data that is returned after this function
 	// Load
     PointCloud<PointT>::Ptr object(new PointCloud<PointT>);
     PointCloud<PointT>::Ptr scene(new PointCloud<PointT>);
@@ -80,7 +82,9 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
 	//PointCloud<PointXYZ>::Ptr object_in = this->getObjectCloud(object_name);
 	copyPointCloud(*scene_in, *scene);
 	copyPointCloud(*(this->getObjectCloud(object_name)), *object);
-    
+    data.object_cloud_size = object->points.size();
+	data.features = object->points.size();				// makes features for all points in the object file
+	data.scene_cloud_size = scene->points.size();
     // Show
     // {
     //     PCLVisualizer v("Before global alignment");
@@ -100,6 +104,7 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
         
         ne.setInputCloud(scene);
         ne.compute(*scene);
+		data.time_surface_normals = t.getTime();
     }
     
     // Compute shape features
@@ -121,6 +126,7 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
         spin.setInputCloud(scene);
         spin.setInputNormals(scene);
         spin.compute(*scene_features);
+		data.time_shape_features = t.getTime();
     }
     
     // Find feature matches
@@ -131,6 +137,7 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
             corr[i].index_query = i;
             nearest_feature(object_features->points[i], *scene_features, corr[i].index_match, corr[i].distance);
         }
+		data.time_feature_matches = t.getTime();
     }
     
     // Show matches
@@ -206,6 +213,7 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
                 cout << "\t--> Got a new model with " << inliers << " inliers!" << endl;
                 penalty = penaltyi;
                 pose = T;
+				data.ransac_iterations = i;
             }
         }
         
@@ -226,6 +234,9 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
         cout << "Got the following pose:" << endl << pose << endl;
         cout << "Inliers: " << inliers << "/" << object->size() << endl;
         cout << "RMSE: " << rmse << endl;
+		data.ransac_inliers = inliers;
+		data.rms_error = rmse;
+		data.time_ransac = t.getTime();
     } // End timing
     
     // Show result
@@ -236,8 +247,10 @@ Matrix4f poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, stri
          v.addPointCloud<PointT>(scene, PointCloudColorHandlerCustom<PointT>(scene, 255, 0, 0),"scene");
          v.spin();
      }
-    
-    return pose;
+    data.pose_valid = valid_output_pose(pose);
+	data.pose = pose;
+    //return pose;
+	return data;
 }
 // (this->getObjectCloud(object_name)
 Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter, float thressq, Eigen::Matrix4f T_pose)
@@ -377,7 +390,7 @@ bool poseEstimator::valid_output_pose(Matrix4f H)
 	if(pose_error)
 	{
 		return false;
-	}
+   	}
 	ROS_INFO("Pose good!");
 	return true;
 }
