@@ -125,7 +125,7 @@ bool URRobot::setQ(rw::math::Q q1, rw::math::Q q2){
     float speed = 0.5;
     // Setting a configuration to send to the URSIM 
 
-	if (robot->moveServoQ(q1, 0.18, 0.04, 100)/*movePtp(q1, speed)*/ && setQRobot1(q1) && setQRobot2(q2)) 
+	if (/*robot->moveServoQ(q1, 0.18, 0.04, 100)*/robot->movePtp(q1, speed) && setQRobot1(q1) && setQRobot2(q2)) 
 	{ 
 		return true;
 	} else

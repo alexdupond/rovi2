@@ -62,8 +62,9 @@ public:
     double distance(const rw::math::Q& q); 
 
     // Colissions checking
+    bool inCollision(const rw::proximity::CollisionDetector &detector, const rw::math::Q& q1, const rw::math::Q& q2); 
     bool inCollision(const rw::proximity::CollisionDetector &detector, const Q& qPrev1, const Q& qNext1, const Q& qPrev2, const Q& qNext2, float e);    
-    bool inCollision(const rw::proximity::CollisionDetector &detector, const rw::math::Q &q_1, const rw::math::Q &q_2); 
+
 
 
 

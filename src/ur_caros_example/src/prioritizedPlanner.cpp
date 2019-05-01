@@ -161,7 +161,7 @@ bool PrioritizedPlanner::calculateDynamicRRTPath(const rw::math::Q &start, const
 }
 
 
-bool PrioritizedPlanner::inCollision(const rw::proximity::CollisionDetector &detector, const rw::math::Q &q1, const rw::math::Q &q2); 
+bool PrioritizedPlanner::inCollision(const rw::proximity::CollisionDetector &detector, const rw::math::Q& q1, const rw::math::Q& q2) 
 {
 	rw::proximity::CollisionDetector::QueryResult data;
     
@@ -239,7 +239,7 @@ ExtendResult PrioritizedPlanner::extend(Tree& tree,const rw::math::Q& q,Node* qN
     cout << "Distance to goal = " << distGoal << endl;
 
     if (distGoal <= _extend) {
-        if (!inCollision(detector, qRobPrev, qRobNext, qNear, qNew, 10))
+        if (!inCollision(detector, qRobPrev, qRobNext, qNear, qNew, 0.005))
         {             
             tree.add(q, qNearNode, 1);
             return Reached;
@@ -248,7 +248,7 @@ ExtendResult PrioritizedPlanner::extend(Tree& tree,const rw::math::Q& q,Node* qN
             return Trapped;
         }
     } else {
-        if (!inCollision(detector, qRobPrev, qRobNext, qNear, qNew, 10))
+        if (!inCollision(detector, qNew, qRobNext) && !inCollision(detector, qRobPrev, qRobNext, qNear, qNew, 0.005))
         {
             tree.add(qNew, qNearNode, 1);
             return Advanced;
@@ -295,21 +295,33 @@ bool PrioritizedPlanner::inCollision(const rw::proximity::CollisionDetector &det
 
     Q dq1 = qNext1 - qPrev1;
     Q dq2 = qNext2 - qPrev2; 
-    int n1 = ceil(dq1.norm2() / e)-1;
-    int n2 = ceil(dq2.norm2() / e)-1;
+    int n = 0; 
 
-    Q step = (dq/(n+1));
+    cout << "Checking collision between " << qPrev1 << " and " << qNext1 << endl; 
+    cout << "Checking collision between " << qPrev2 << " and " << qNext2 << endl; 
+ 
+    if((ceil(dq1.norm2() / e)-1) > (ceil(dq2.norm2() / e)-1))
+        n = (ceil(dq1.norm2() / e)-1); 
+    else
+        n = (ceil(dq2.norm2() / e)-1); 
+    cout << "Test where n = " << n << endl; 
+
+    Q step1 = (dq1/(n+1));
+    Q step2 = (dq2/(n+1));
     for(int i = 1; i < n; i++)
     {
-        Q qi1 = i * step + qPrev1;
-        Q qi2 = i * step + qPrev2;
+        Q qi1 = i * step1 + qPrev1;
+        Q qi2 = i * step2 + qPrev2;
         collisionDetectorCalls++;
+        cout << "Test n# = " << i << endl; 
         if(inCollision(detector, qi1, qi2))
         {   
             cout << "In collision between two configurations" << endl; 
             return true;
         }
+        
     }
+    cout << "Done with this shit! " << endl;
     return false;
 }
 
