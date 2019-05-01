@@ -2,6 +2,7 @@
 #include <ros/console.h>
 #include <pcl/filters/crop_box.h>
 #include <math.h>
+#include <fstream>
 
 typedef PointNormal PointT;
 typedef Histogram<153> FeatureT;
@@ -41,8 +42,8 @@ bool poseEstimator::addObjectCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr object, s
 	{
 		if(vec_objects_names[i] == object_name)
 		{
-				ROS_ERROR_STREAM("poseEstimator: object cloud '" << object_name << " already exists... object cloud not added");
-				return false;
+			ROS_ERROR_STREAM("poseEstimator: object cloud '" << object_name << " already exists... object cloud not added");
+			return false;
 		}
 	}
 	cropCloud(object, crop_minZ, crop_maxZ);
@@ -57,7 +58,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr poseEstimator::getObjectCloud(string name)
 	{
 		if(vec_objects_names[i] == name)
 		{
-				return vec_objects_ptr[i];
+			return vec_objects_ptr[i];
 		}
 	}
 	ROS_ERROR_STREAM("poseEstimator: cant find object cloud '" << name << "'...");
@@ -69,7 +70,7 @@ void poseEstimator::printObjectCloudsNames()
 	string names = "";
 	for (int i = 0; i < vec_objects_names.size(); i++)
 	{
-			names += "'" + vec_objects_names[i] + "'  ";
+		names += "'" + vec_objects_names[i] + "'  ";
 	}
 	ROS_INFO_STREAM("Object cloud names:\n\t" << names);
 }
@@ -144,16 +145,16 @@ global_pose_data poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_
     }
 
     // Show matches
-        if(show_matches == true)
-        {
-                {
-        PCLVisualizer v("Matches");
-        v.addPointCloud<PointT>(object, PointCloudColorHandlerCustom<PointT>(object, 0, 255, 0), "object");
-        v.addPointCloud<PointT>(scene, PointCloudColorHandlerCustom<PointT>(scene, 255, 0, 0),"scene");
-        v.addCorrespondences<PointT>(object, scene, corr, 1);
-        v.spin();
+    if(show_matches == true)
+    {
+		{
+			PCLVisualizer v("Matches");
+			v.addPointCloud<PointT>(object, PointCloudColorHandlerCustom<PointT>(object, 0, 255, 0), "object");
+			v.addPointCloud<PointT>(scene, PointCloudColorHandlerCustom<PointT>(scene, 255, 0, 0),"scene");
+			v.addCorrespondences<PointT>(object, scene, corr, 1);
+			v.spin();
         }
-        }
+	}
 
 
     // Create a k-d tree for scene
@@ -243,7 +244,7 @@ global_pose_data poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_
     } // End timing
 
     // Show result
-    if(show_matches = true)
+    if(show_matches)
      {
          PCLVisualizer v("After global alignment");
          v.addPointCloud<PointT>(object_aligned, PointCloudColorHandlerCustom<PointT>(object_aligned, 0, 255, 0), "object_aligned");
@@ -257,7 +258,7 @@ global_pose_data poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_
 }
 // (this->getObjectCloud(object_name)
 // Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter, float thressq, Eigen::Matrix4f T_pose)
-local_pose_data poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter, float thressq, Eigen::Matrix4f T_pose)
+local_pose_data poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter, float thressq, Eigen::Matrix4f T_pose, bool show_output)
 {
 	local_pose_data data;
 
@@ -342,11 +343,14 @@ local_pose_data poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in
     
 	// Show result
     {
-        PCLVisualizer v("After local alignment");
-        v.addPointCloud<PointNormal>(object_aligned, PointCloudColorHandlerCustom<PointNormal>(object_aligned, 0, 255, 0), "object_aligned");
-        v.addPointCloud<PointNormal>(scene, PointCloudColorHandlerCustom<PointNormal>(scene, 255, 0, 0),"scene");
-        v.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "scene");
-        v.spin();
+		if(show_output)
+		{
+			PCLVisualizer v("After local alignment");
+			v.addPointCloud<PointNormal>(object_aligned, PointCloudColorHandlerCustom<PointNormal>(object_aligned, 0, 255, 0), "object_aligned");
+			v.addPointCloud<PointNormal>(scene, PointCloudColorHandlerCustom<PointNormal>(scene, 255, 0, 0),"scene");
+			v.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "scene");
+			v.spin();
+		}
     }
 	data.pose_valid = valid_output_pose(pose);
 	data.pose = pose;
@@ -419,4 +423,41 @@ vector<float> poseEstimator::R2RPY(Matrix3f R)
 	rpy.push_back(pitch);
 	rpy.push_back(roll);
 	return rpy;
+}
+
+void poseEstimator::save_pose_data(string file_name, global_pose_data global, local_pose_data local)
+{
+	ROS_INFO_STREAM("Saving data to file..");
+	fstream csvfile;
+	csvfile.open(file_name, ios::out | ios::app);
+	csvfile	<< "global_pose, " << global.pose(0,0) << ", " << global.pose(0,1) << ", " << global.pose(0,2) <<  ", " << global.pose(0,3) << endl
+			<< "global_pose, " << global.pose(1,0) << ", " << global.pose(1,1) << ", " << global.pose(1,2) <<  ", " << global.pose(1,3) << endl
+			<< "global_pose, " << global.pose(2,0) << ", " << global.pose(2,1) << ", " << global.pose(2,2) <<  ", " << global.pose(2,3) << endl
+			<< "global_pose, " << global.pose(3,0) << ", " << global.pose(3,1) << ", " << global.pose(3,2) <<  ", " << global.pose(3,3) << endl
+			<< "global_time_surface_normals" << ", " << global.time_surface_normals << endl
+			<< "global_time_shape_features" << ", " << global.time_shape_features << endl
+			<< "global_time_feature_matches" << ", " << global.time_feature_matches << endl
+			<< "global_time_ransac" << ", " << global.time_ransac << endl
+			<< "global_ransac_iterations" << ", " << global.ransac_iterations << endl
+			<< "global_ransac_inliers" << ", " << global.ransac_inliers << endl
+			<< "global_features" << ", " << global.features << endl
+			<< "global_object_cloud_size" << ", " << global.object_cloud_size << endl
+			<< "global_scene_cloud_size" << ", " << global.scene_cloud_size << endl
+			<< "global_rms_error" << ", " << global.rms_error << endl
+			<< "global_pose_valid" << ", " << global.pose_valid << endl
+
+			<< "local_pose, " << local.pose(0,0) << ", " << local.pose(0,1) << ", " << local.pose(0,2) <<  ", " << local.pose(0,3) << endl
+			<< "local_pose, " << local.pose(1,0) << ", " << local.pose(1,1) << ", " << local.pose(1,2) <<  ", " << local.pose(1,3) << endl
+			<< "local_pose, " << local.pose(2,0) << ", " << local.pose(2,1) << ", " << local.pose(2,2) <<  ", " << local.pose(2,3) << endl
+			<< "local_pose, " << local.pose(3,0) << ", " << local.pose(3,1) << ", " << local.pose(3,2) <<  ", " << local.pose(3,3) << endl
+			<< "local_time_icp" << ", " << local.time_icp << endl
+			<< "local_icp_inliers" << ", " << local.icp_inliers << endl
+			<< "local_object_cloud_size" << ", " << local.object_cloud_size << endl
+			<< "local_scene_cloud_size" << ", " << local.scene_cloud_size << endl
+			<< "local_rms_error" << ", " << local.rms_error << endl
+			<< "local_pose_valid" << ", " << local.pose_valid << endl
+			<< "=======================================================" << endl;
+			
+	csvfile.close();
+	ROS_INFO_STREAM("DONE! data saved to file '" << file_name << "'");
 }
