@@ -69,16 +69,16 @@ public:
 	bool addObjectCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr object, string object_name, float crop_minZ, float crop_maxZ);
 	pcl::PointCloud<pcl::PointXYZ>::Ptr getObjectCloud(string name);
 	void printObjectCloudsNames();
-        // Matrix4f get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 4000, float thressq = 0.000025, bool show_matches = false);
-		local_pose_dataata get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 4000, float thressq = 0.000025, bool show_matches = false);
-        // Matrix4f get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 50, float thressq = 0.0001, Eigen::Matrix4f T_pose = Eigen::Matrix4f::Identity());
-		local_pose_data get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 50, float thressq = 0.0001, Eigen::Matrix4f T_pose = Eigen::Matrix4f::Identity());
-        bool valid_output_pose(Matrix4f H);
+	// Matrix4f get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 4000, float thressq = 0.000025, bool show_matches = false);
+	local_pose_dataata get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 4000, float thressq = 0.000025, bool show_matches = false);
+	// Matrix4f get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 50, float thressq = 0.0001, Eigen::Matrix4f T_pose = Eigen::Matrix4f::Identity());
+	local_pose_data get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 50, float thressq = 0.0001, Eigen::Matrix4f T_pose = Eigen::Matrix4f::Identity());
+	bool valid_output_pose(Matrix4f H);
 
 private:
 	void nearest_feature(const FeatureT& query, const PointCloud<FeatureT>& target, int &idx, float &distsq);
 	inline float dist_sq(const FeatureT& query, const FeatureT& target);
-        void cropCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in, float minZ = 1, float maxZ = 1);
+	void cropCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in, float minZ = 1, float maxZ = 1);
 	vector<float> R2RPY(Matrix3f R);
 
 	vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> vec_objects_ptr;
