@@ -14,7 +14,7 @@
 #include <pcl/registration/correspondence_rejection_sample_consensus.h>
 #include <pcl/registration/transformation_estimation_svd.h>
 #include <pcl/visualization/pcl_visualizer.h>
-
+#include <pcl/common/common.h>
 using namespace std;
 using namespace pcl;
 using namespace pcl::common;
@@ -24,10 +24,10 @@ using namespace pcl::search;
 using namespace pcl::visualization;
 using namespace Eigen;
 
-#define maxPoseAngle 0.10			//the maximum amount of rotation (rad) the estimatet pose is alowed to have around rx and ry
-#define maxPoseTranslationX 1		//the maximum amound of translation (meter) in x;
-#define maxPoseTranslationY 1		//the maximum amound of translation (meter) in x;
-#define maxPoseTranslationZ 1		//the maximum amound of translation (meter) in x;
+#define MAX_POSE_ANGLE 0.10             //the maximum amount of rotation (rad) the estimatet pose is alowed to have around rx and ry
+#define MAX_POSE_TRANSLATION_X 1    	//the maximum amound of translation (meter) in x;
+#define MAX_POSE_TRANSLATION_Y 1        //the maximum amound of translation (meter) in x;
+#define MAX_POSE_TRANSLATION_Z 0.02     //the maximum amound of translation (meter) in x;
 
 typedef PointNormal PointT;
 typedef Histogram<153> FeatureT;

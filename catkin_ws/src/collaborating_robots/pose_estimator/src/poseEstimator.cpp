@@ -19,9 +19,12 @@ poseEstimator::~poseEstimator()
 void poseEstimator::cropCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in, float minZ, float maxZ)
 {
         pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_temp(new pcl::PointCloud<pcl::PointXYZ>);
-        Eigen::Vector4f centroidObject;									//move object to centroid
-        pcl::compute3DCentroid(*cloud_in, centroidObject);
-        pcl::demeanPointCloud(*cloud_in, centroidObject, *cloud_temp);
+        pcl::PointXYZ min_point, max_point;
+        pcl::getMinMax3D (*cloud_in, min_point, max_point);
+        //Eigen::Vector4f centroidObject;									//move object to centroid
+        //pcl::compute3DCentroid(*cloud_in, centroidObject);
+        Eigen::Vector4f min_point_object(min_point.x, min_point.y, min_point.z, 1);
+        pcl::demeanPointCloud(*cloud_in, min_point_object, *cloud_temp);
         *cloud_in = *cloud_temp;
 
         pcl::CropBox<pcl::PointXYZ> boxFilter1(true);					//fintering yoshi pointcloud. remove the bottom of the figure
@@ -362,13 +365,14 @@ bool poseEstimator::valid_output_pose(Matrix4f H)
         vector<float> rpy = R2RPY(R);
 
         bool pose_error = false;
-        if(!(rpy[1] < maxPoseAngle || rpy[1] > M_PI-maxPoseAngle) || !(rpy[2] < maxPoseAngle || rpy[2] > M_PI-maxPoseAngle))
+        //if(!(rpy[1] < MAX_POSE_ANGLE || rpy[1] > M_PI-MAX_POSE_ANGLE) || !(rpy[2] < MAX_POSE_ANGLE || rpy[2] > M_PI-MAX_POSE_ANGLE))
+        if(abs(rpy[1]) > MAX_POSE_ANGLE || abs(rpy[2]) > MAX_POSE_ANGLE)
         {
                 ROS_WARN_STREAM("Pose is rotatet too mutch.. Dam it! it's not trustworthy");
                 ROS_WARN_STREAM("rpy: " << rpy[2] << " " << rpy[1] << " " << rpy[0]);
                 pose_error = true;
         }
-        if(T(0,0) > maxPoseTranslationX || T(1,0) > maxPoseTranslationY || T(2,0) > maxPoseTranslationZ)
+        if(T(0,0) > MAX_POSE_TRANSLATION_X || T(1,0) > MAX_POSE_TRANSLATION_Y || abs(T(2,0)) > MAX_POSE_TRANSLATION_Z)
         {
                 ROS_WARN_STREAM("Pose is translated too mutch.. Dam it! it's not trustworthy");
                 ROS_WARN_STREAM("Translation:" << endl << T);
