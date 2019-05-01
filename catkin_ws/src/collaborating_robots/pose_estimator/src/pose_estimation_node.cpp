@@ -138,7 +138,7 @@ int main(int argc, char** argv)
         grid.setInputCloud (cloud_object_yoda);
         grid.filter (*cloud_object_yoda);
 
-        float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.05, maxZ = 0.3;
+        float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.01, maxZ = 0.3;
 
 	pcl::visualization::PCLVisualizer viewer("Plane segmentation result");
 	viewer.addCoordinateSystem(0.3); // 0,0,0
@@ -166,11 +166,11 @@ int main(int argc, char** argv)
 		cout << endl << endl << "    Huu.. You can't even type one letter. SHAME ON YOU!" << endl << endl;
 	}
 
-        PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", -0.025, 1.0);
-        PE.addObjectCloud(cloud_object_yoda,"cloud_object_yoda", 0, 1.0);
+        PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", 0.01, 1.0);
+        PE.addObjectCloud(cloud_object_yoda,"cloud_object_yoda", 0.01, 1.0);
 	while(ros::ok)
 	{
-		ros::spinOnce();		//update all ROS related stuff
+                ros::spinOnce();		//update all ROS related stuff
 		if(new_cloud_from_msg)
 		{	
 			PE.printObjectCloudsNames();
@@ -217,7 +217,7 @@ int main(int argc, char** argv)
 			viewer.removePointCloud("cloud_boxFilter_discarded");
 			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_output, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_output, 0, 255, 0), "cloud_boxFilter_output");
 			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_discarded, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_discarded, 150, 150, 0), "cloud_boxFilter_discarded");
-			//viewer.addPointCloud<pcl::PointXYZ>(cloud_from_msg_plane, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_from_msg_plane, 255, 0, 0), "segmented plane");
+                        viewer.addPointCloud<pcl::PointXYZ>(cloud_object_yoshi, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_object_yoshi, 255, 0, 0), "yoshi");
 			viewer.spinOnce();
 			//viewer.spin();
 
