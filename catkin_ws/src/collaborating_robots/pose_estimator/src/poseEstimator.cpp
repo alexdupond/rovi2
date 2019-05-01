@@ -256,9 +256,10 @@ global_pose_data poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_
 	return data;
 }
 // (this->getObjectCloud(object_name)
-Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter, float thressq, Eigen::Matrix4f T_pose)
+// Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter, float thressq, Eigen::Matrix4f T_pose)
+local_pose_data poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter, float thressq, Eigen::Matrix4f T_pose)
 {
-
+	local_pose_data data;
 
     // Load
     PointCloud<PointT>::Ptr object(new PointCloud<PointT>);
@@ -266,6 +267,8 @@ Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, strin
     copyPointCloud(*scene_in, *scene);
     copyPointCloud(*(this->getObjectCloud(object_name)), *object);
     pcl::transformPointCloud(*object, *object, T_pose);
+	data.object_cloud_size = object->points.size();
+	data.scene_cloud_size = scene->points.size();
 
     // Show
     // {
@@ -332,6 +335,9 @@ Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, strin
         cout << "Got the following pose:" << endl << pose << endl;
         cout << "Inliers: " << inliers << "/" << object->size() << endl;
         cout << "RMSE: " << rmse << endl;
+		data.time_icp = t.getTime();
+		data.rms_error = rmse;
+		data.icp_inliers = inliers;
     } // End timing
 
     // Show result
@@ -342,7 +348,10 @@ Matrix4f poseEstimator::get_pose_local(PointCloud<PointXYZ>::Ptr scene_in, strin
                 v.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "scene");
         v.spin();
     }
-    return pose;
+	data.pose_valid = valid_output_pose(pose);
+	data.pose = pose;
+    //return pose;
+	return data;
 }
 
 void poseEstimator::nearest_feature(const FeatureT& query, const PointCloud<FeatureT>& target, int &idx, float &distsq)
