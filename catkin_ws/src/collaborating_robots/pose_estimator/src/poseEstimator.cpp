@@ -428,12 +428,17 @@ vector<float> poseEstimator::R2RPY(Matrix3f R)
 void poseEstimator::save_pose_data(string file_name, global_pose_data global, local_pose_data local)
 {
 	ROS_INFO_STREAM("Saving data to file..");
+	Matrix3f global_R = global.pose.block<3,3>(0,0);
+	Matrix3f local_R = local.pose.block<3,3>(0,0);
+	vector<float> global_rpy = R2RPY(global_R);
+	vector<float> local_rpy = R2RPY(local_R);
 	fstream csvfile;
 	csvfile.open(file_name, ios::out | ios::app);
 	csvfile	<< "global_pose, " << global.pose(0,0) << ", " << global.pose(0,1) << ", " << global.pose(0,2) <<  ", " << global.pose(0,3) << endl
 			<< "global_pose, " << global.pose(1,0) << ", " << global.pose(1,1) << ", " << global.pose(1,2) <<  ", " << global.pose(1,3) << endl
 			<< "global_pose, " << global.pose(2,0) << ", " << global.pose(2,1) << ", " << global.pose(2,2) <<  ", " << global.pose(2,3) << endl
 			<< "global_pose, " << global.pose(3,0) << ", " << global.pose(3,1) << ", " << global.pose(3,2) <<  ", " << global.pose(3,3) << endl
+			<< "global_rpy, "	<< global_rpy[0] << ", " << global_rpy[1] << ", " << global_rpy[2] << endl
 			<< "global_time_surface_normals" << ", " << global.time_surface_normals << endl
 			<< "global_time_shape_features" << ", " << global.time_shape_features << endl
 			<< "global_time_feature_matches" << ", " << global.time_feature_matches << endl
@@ -450,6 +455,7 @@ void poseEstimator::save_pose_data(string file_name, global_pose_data global, lo
 			<< "local_pose, " << local.pose(1,0) << ", " << local.pose(1,1) << ", " << local.pose(1,2) <<  ", " << local.pose(1,3) << endl
 			<< "local_pose, " << local.pose(2,0) << ", " << local.pose(2,1) << ", " << local.pose(2,2) <<  ", " << local.pose(2,3) << endl
 			<< "local_pose, " << local.pose(3,0) << ", " << local.pose(3,1) << ", " << local.pose(3,2) <<  ", " << local.pose(3,3) << endl
+			<< "local_rpy, "	<< local_rpy[0] << ", " << local_rpy[1] << ", " << local_rpy[2] << endl
 			<< "local_time_icp" << ", " << local.time_icp << endl
 			<< "local_icp_inliers" << ", " << local.icp_inliers << endl
 			<< "local_object_cloud_size" << ", " << local.object_cloud_size << endl
