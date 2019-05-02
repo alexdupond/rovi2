@@ -102,3 +102,59 @@ local_scene_cloud_size, 801
 local_rms_error, 0.00477516
 local_pose_valid, 0
 =======================================================
+global_pose, 0.59042, 0.798306, 0.118789, -0.222384
+global_pose, -0.795807, 0.600353, -0.079174, 0.119667
+global_pose, -0.13452, -0.0477868, 0.989758, 0.00823099
+global_pose, 0, 0, 0, 1
+global_rpy, -0.93249, 0.134929, -0.0482438
+global_time_surface_normals, 14
+global_time_shape_features, 159
+global_time_feature_matches, 1073
+global_time_ransac, 25842
+global_ransac_iterations, 727
+global_ransac_inliers, 459
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 786
+global_rms_error, 0.0032909
+global_pose_valid, 0
+local_pose, 0.972349, -0.171371, -0.158939, 0.0263366
+local_pose, 0.183926, 0.980604, 0.0680625, 0.0206171
+local_pose, 0.144195, -0.0954163, 0.984974, 0.0279165
+local_pose, 0, 0, 0, 1
+local_rpy, 0.186948, -0.144695, -0.0965705
+local_time_icp, 1910
+local_icp_inliers, 1233
+local_object_cloud_size, 2277
+local_scene_cloud_size, 786
+local_rms_error, 0.00473235
+local_pose_valid, 0
+=======================================================
+global_pose, 0.706572, 0.697847, 0.117329, -0.224517
+global_pose, -0.700636, 0.666623, 0.254406, 0.0786281
+global_pose, 0.0993217, -0.261961, 0.959954, 0.0158945
+global_pose, 0, 0, 0, 1
+global_rpy, -0.78118, -0.0994857, -0.266403
+global_time_surface_normals, 8
+global_time_shape_features, 134
+global_time_feature_matches, 1084
+global_time_ransac, 25687
+global_ransac_iterations, 2509
+global_ransac_inliers, 517
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 785
+global_rms_error, 0.00325021
+global_pose_valid, 0
+local_pose, 0.988837, -0.0632594, -0.134961, 0.0178089
+local_pose, 0.0286092, 0.969215, -0.244565, 0.0307912
+local_pose, 0.146279, 0.23798, 0.960214, -0.00843125
+local_pose, 0, 0, 0, 1
+local_rpy, 0.0289241, -0.146802, 0.242945
+local_time_icp, 1879
+local_icp_inliers, 1244
+local_object_cloud_size, 2277
+local_scene_cloud_size, 785
+local_rms_error, 0.00482616
+local_pose_valid, 0
+=======================================================
