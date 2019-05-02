@@ -224,7 +224,7 @@ int main(int argc, char** argv)
 			//                       << " data points (" << pcl::getFieldsList (*cloud2_from_msg) << ").");
 
 			// if(first_run && enable_pose_estimation)	// TODO comment back in after test
-			if(enable_pose_estimation)		// TODO delete after test
+			if(first_run && enable_pose_estimation)		// TODO delete after test
 			{	
 				Eigen::Matrix4f T_pose_global;
 				Eigen::Matrix4f T_pose_local;
@@ -232,8 +232,8 @@ int main(int argc, char** argv)
 				global_pose_data global_pose;
 				local_pose_data local_pose;
 
-				global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, 0.000025, false);		// TODO change to true after test
-				local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200, 0.0001, global_pose.pose, false);
+				global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, 0.000025, true);		// TODO change to true after test
+				local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200, 0.0001, global_pose.pose, true);
 				T_pose_estimation = local_pose.pose * global_pose.pose;
 
 				cout << "Final pose:" << endl << T_pose_estimation << endl;
@@ -259,7 +259,7 @@ int main(int argc, char** argv)
 			//viewer.spin();
 
 			ready_for_new_cloud = true;		// signal that the function is ready for a new cloud from the camera
-			first_run = true;
+			first_run = false;
 
 		}
 		if (kbhit())		//it there is a terminal input
