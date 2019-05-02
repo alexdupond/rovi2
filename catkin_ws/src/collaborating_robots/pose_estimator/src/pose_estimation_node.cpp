@@ -235,7 +235,14 @@ int main(int argc, char** argv)
 				global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, 0.000025, true);		// TODO change to true after test
 				local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200, 0.0001, global_pose.pose, true);
 				T_pose_estimation = local_pose.pose * global_pose.pose;
+				
+				Eigen::Matrix4f T_world2camTable;
+				T_world2camTable << 	1,  0, 	0, 0,
+										0,  1, 	0, 0,
+										0,  0,  1, 0,
+										0,  0,  0, 1;
 
+				pcl::transformPointCloud(T_pose_estimation,T_pose_estimation, T_world2camTable);		//transofrm to worldframe
 				cout << "Final pose:" << endl << T_pose_estimation << endl;
 				PE.valid_output_pose(T_pose_estimation);
 				PE.save_pose_data("./pose_data.csv", global_pose, local_pose); //save pose
