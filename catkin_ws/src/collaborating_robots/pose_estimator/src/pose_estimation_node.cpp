@@ -81,7 +81,7 @@ void point_cloud_callback(const sensor_msgs::PointCloud2ConstPtr& cloud_msg)	//c
 						<< " data points (" << pcl::getFieldsList (*cloud2_from_msg) << ").");
 		pcl::fromPCLPointCloud2(*cloud2_from_msg, *cloud_from_msg);			//convert pointcloud2 to pointcloud
 
-		pcl::transformPointCloud(*cloud_from_msg, *cloud_from_msg, T_flip);	//flip pointcloud 180 deg around x, to get the right rotation
+                pcl::transformPointCloud(*cloud_from_msg, *cloud_from_msg, T_flip);	//flip pointcloud 180 deg around x, to get the right rotation // TODO comment back in after test
 		ROS_INFO("new Pointcloud arrived! stamp: %PRIu64", cloud_from_msg->header.stamp);			//This is just for showing that the pointcloud gets updated
 		new_cloud_from_msg = true;											//signal new cloud is ready
 		ready_for_new_cloud = false;
@@ -134,7 +134,7 @@ int main(int argc, char** argv)
 {
 	ros::init(argc, argv, "pose_estimation_node");
 	ros::NodeHandle nh;
-    ros::Subscriber sub = nh.subscribe("/camera/depth/c olor/points", 1, point_cloud_callback);
+    ros::Subscriber sub = nh.subscribe("/camera/depth/color/points", 1, point_cloud_callback);
 	ros::Publisher pose_pub = nh.advertise<std_msgs::Float64MultiArray>("objects_pose", 1);
 	ros::Rate loop_rate(10);	//loop rate in Hz
 
@@ -179,6 +179,7 @@ int main(int argc, char** argv)
 	bool first_run = true;
 	bool enable_pose_estimation = false;
 	bool enable_test = false;
+        int calibrate_iterations = 100;
 
 	char user_input;
 	cout << "You have the following options:" << endl << "p  : Pose estimation" << endl << "f  : Free view" << endl  << "t  : Test" << endl;
@@ -199,7 +200,7 @@ int main(int argc, char** argv)
 	{
 		cout << endl << endl << "    Huu.. You can't even type one letter. SHAME ON YOU!" << endl << endl;
 	}
-	PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", 0.01, 1.0);
+        PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", 0.01, 1.0);
 	PE.addObjectCloud(cloud_object_yoda,"cloud_object_yoda", 0.01, 1.0);
 	while(ros::ok)
 	{
@@ -209,12 +210,16 @@ int main(int argc, char** argv)
 			//PE.printObjectCloudsNames();
 			new_cloud_from_msg = false;
 
-			if (first_run)
-				CM.segmentPlane(cloud_from_msg);
-			CM.alignWithPlane(cloud_from_msg, cloud_aligned);
-			//CM.removePlane(cloud_aligned, cloud_segmented_scene);
-			CM.cropCloud(cloud_aligned, cloud_boxFilter_output, minX, maxX, minY, maxY, minZ, maxZ);
-			CM.getDiscardedPoints(cloud_aligned, cloud_boxFilter_discarded);
+                        //if (first_run)
+
+                        if(calibrate_iterations > 0)
+                        {
+                            CM.segmentPlane(cloud_from_msg);
+                            calibrate_iterations--;
+                        }
+                        CM.alignWithPlane(cloud_from_msg, cloud_aligned);
+                        CM.cropCloud(cloud_aligned, cloud_boxFilter_output, minX, maxX, minY, maxY, minZ, maxZ);
+                        CM.getDiscardedPoints(cloud_aligned, cloud_boxFilter_discarded);
 
 			//ROS_INFO_STREAM("Plane coefficients: 0:" << coefficients->values[0] << " 1:" << coefficients->values[1]<< " 2:" << coefficients->values[2]<< " 3:" << coefficients->values[3]);
 
@@ -224,7 +229,7 @@ int main(int argc, char** argv)
 			//                       << " data points (" << pcl::getFieldsList (*cloud2_from_msg) << ").");
 
 			// if(first_run && enable_pose_estimation)	// TODO comment back in after test
-			if(first_run && enable_pose_estimation)		// TODO delete after test
+                        if(!calibrate_iterations && first_run && enable_pose_estimation)		// TODO delete after test
 			{	
 				Eigen::Matrix4f T_pose_global;
 				Eigen::Matrix4f T_pose_local;
@@ -251,8 +256,10 @@ int main(int argc, char** argv)
 				tf::matrixEigenToMsg(T_pose_estimation, pose_msg);
 				pose_pub.publish(pose_msg);
 
-            }
-			if(enable_test)
+                                first_run = false;
+
+                      }
+                        if(!calibrate_iterations && enable_test)
 			{
 				test_function(PE, cloud_boxFilter_output);
 			}
@@ -261,12 +268,12 @@ int main(int argc, char** argv)
 			viewer.removePointCloud("yoshi");
 			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_output, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_output, 0, 255, 0), "cloud_boxFilter_output");
 			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_discarded, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_discarded, 150, 150, 0), "cloud_boxFilter_discarded");
-            viewer.addPointCloud<pcl::PointXYZ>(cloud_object_yoshi, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_object_yoshi, 255, 0, 0), "yoshi");
+                        viewer.addPointCloud<pcl::PointXYZ>(cloud_object_yoshi, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_object_yoshi, 255, 0, 0), "yoshi");
+                        viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "yoshi");
 			viewer.spinOnce();
 			//viewer.spin();
 
-			ready_for_new_cloud = true;		// signal that the function is ready for a new cloud from the camera
-			first_run = false;
+                        ready_for_new_cloud = true;		// signal that the function is ready for a new cloud from the camera
 
 		}
 		if (kbhit())		//it there is a terminal input
