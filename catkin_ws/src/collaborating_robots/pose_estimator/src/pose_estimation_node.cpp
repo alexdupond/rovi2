@@ -81,7 +81,7 @@ void point_cloud_callback(const sensor_msgs::PointCloud2ConstPtr& cloud_msg)	//c
 						<< " data points (" << pcl::getFieldsList (*cloud2_from_msg) << ").");
 		pcl::fromPCLPointCloud2(*cloud2_from_msg, *cloud_from_msg);			//convert pointcloud2 to pointcloud
 
-		pcl::transformPointCloud(*cloud_from_msg, *cloud_from_msg, T_flip);	//flip pointcloud 180 deg around x, to get the right rotation
+                pcl::transformPointCloud(*cloud_from_msg, *cloud_from_msg, T_flip);	//flip pointcloud 180 deg around x, to get the right rotation // TODO comment back in after test
 		ROS_INFO("new Pointcloud arrived! stamp: %PRIu64", cloud_from_msg->header.stamp);			//This is just for showing that the pointcloud gets updated
 		new_cloud_from_msg = true;											//signal new cloud is ready
 		ready_for_new_cloud = false;
@@ -179,6 +179,7 @@ int main(int argc, char** argv)
 	bool first_run = true;
 	bool enable_pose_estimation = false;
 	bool enable_test = false;
+        int calibrate_iterations = 100;
 
 	char user_input;
 	cout << "You have the following options:" << endl << "p  : Pose estimation" << endl << "f  : Free view" << endl  << "t  : Test" << endl;
@@ -209,12 +210,16 @@ int main(int argc, char** argv)
 			//PE.printObjectCloudsNames();
 			new_cloud_from_msg = false;
 
-			if (first_run)
-				CM.segmentPlane(cloud_from_msg);
-			CM.alignWithPlane(cloud_from_msg, cloud_aligned);
-			//CM.removePlane(cloud_aligned, cloud_segmented_scene);
-			CM.cropCloud(cloud_aligned, cloud_boxFilter_output, minX, maxX, minY, maxY, minZ, maxZ);
-			CM.getDiscardedPoints(cloud_aligned, cloud_boxFilter_discarded);
+                        //if (first_run)
+
+                        if(calibrate_iterations > 0)
+                        {
+                            CM.segmentPlane(cloud_from_msg);
+                            calibrate_iterations--;
+                        }
+                        CM.alignWithPlane(cloud_from_msg, cloud_aligned);
+                        CM.cropCloud(cloud_aligned, cloud_boxFilter_output, minX, maxX, minY, maxY, minZ, maxZ);
+                        CM.getDiscardedPoints(cloud_aligned, cloud_boxFilter_discarded);
 
 			//ROS_INFO_STREAM("Plane coefficients: 0:" << coefficients->values[0] << " 1:" << coefficients->values[1]<< " 2:" << coefficients->values[2]<< " 3:" << coefficients->values[3]);
 
@@ -224,7 +229,7 @@ int main(int argc, char** argv)
 			//                       << " data points (" << pcl::getFieldsList (*cloud2_from_msg) << ").");
 
 			// if(first_run && enable_pose_estimation)	// TODO comment back in after test
-			if(first_run && enable_pose_estimation)		// TODO delete after test
+                        if(!calibrate_iterations && first_run && enable_pose_estimation)		// TODO delete after test
 			{	
 				Eigen::Matrix4f T_pose_global;
 				Eigen::Matrix4f T_pose_local;
@@ -244,8 +249,10 @@ int main(int argc, char** argv)
 				tf::matrixEigenToMsg(T_pose_estimation, pose_msg);
 				pose_pub.publish(pose_msg);
 
-            }
-			if(enable_test)
+                                first_run = false;
+
+                      }
+                        if(!calibrate_iterations && enable_test)
 			{
 				test_function(PE, cloud_boxFilter_output);
 			}
@@ -259,8 +266,7 @@ int main(int argc, char** argv)
 			viewer.spinOnce();
 			//viewer.spin();
 
-			ready_for_new_cloud = true;		// signal that the function is ready for a new cloud from the camera
-			first_run = false;
+                        ready_for_new_cloud = true;		// signal that the function is ready for a new cloud from the camera
 
 		}
 		if (kbhit())		//it there is a terminal input

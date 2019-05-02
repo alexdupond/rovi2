@@ -37,7 +37,9 @@ bool cloudManipulator::segmentPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_or
     seg.segment (inliers, coefficients);
     if (inliers.indices.size() == 0)
         return false;
-    //ROS_INFO_STREAM("Plane coefficients: 0:" << coefficients.values[0] << " 1:" << coefficients.values[1]<< " 2:" << coefficients.values[2]<< " 3:" << coefficients.values[3]);
+    ROS_INFO_STREAM("Plane coefficients: 0:" << coefficients.values[0] << " 1:" << coefficients.values[1]<< " 2:" << coefficients.values[2]<< " 3:" << coefficients.values[3]);
+    coefficients_vector.push_back(coefficients);
+    averageCoefficients();
     return true;
 }
 
@@ -86,4 +88,26 @@ void cloudManipulator::getDiscardedPoints(pcl::PointCloud<pcl::PointXYZ>::Ptr cl
     boxFilter.setMax(Eigen::Vector4f(1, 1, 1, 1.0));
     boxFilter.setInputCloud(cloud_temp);
     boxFilter.filter(*cloud_boxFilter_discarded);
+}
+
+void cloudManipulator::averageCoefficients()
+{
+    vector<float> coefficients_temp(4, 0);
+    for (int i = 0; i < coefficients_vector.size(); i++)
+    {
+        coefficients_temp[0] += coefficients_vector[i].values[0];
+        coefficients_temp[1] += coefficients_vector[i].values[1];
+        coefficients_temp[2] += coefficients_vector[i].values[2];
+        coefficients_temp[3] += coefficients_vector[i].values[3];
+    }
+    coefficients_temp[0] /= coefficients_vector.size();
+    coefficients_temp[1] /= coefficients_vector.size();
+    coefficients_temp[2] /= coefficients_vector.size();
+    coefficients_temp[3] /= coefficients_vector.size();
+    coefficients.values[0] = coefficients_temp[0];
+    coefficients.values[1] = coefficients_temp[1];
+    coefficients.values[2] = coefficients_temp[2];
+    coefficients.values[3] = coefficients_temp[3];
+
+    ROS_INFO_STREAM("Plane coefficients: 0:" << coefficients.values[0] << " 1:" << coefficients.values[1]<< " 2:" << coefficients.values[2]<< " 3:" << coefficients.values[3]);
 }

@@ -24,10 +24,10 @@ using namespace pcl::search;
 using namespace pcl::visualization;
 using namespace Eigen;
 
-#define MAX_POSE_ANGLE 0.10             //the maximum amount of rotation (rad) the estimatet pose is alowed to have around rx and ry
+#define MAX_POSE_ANGLE 0.20             //the maximum amount of rotation (rad) the estimatet pose is alowed to have around rx and ry
 #define MAX_POSE_TRANSLATION_X 1    	//the maximum amound of translation (meter) in x;
 #define MAX_POSE_TRANSLATION_Y 1        //the maximum amound of translation (meter) in x;
-#define MAX_POSE_TRANSLATION_Z 0.02     //the maximum amound of translation (meter) in x;
+#define MAX_POSE_TRANSLATION_Z 0.03     //the maximum amound of translation (meter) in x;
 
 struct global_pose_data
 {

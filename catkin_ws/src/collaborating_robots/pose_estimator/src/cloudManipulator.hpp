@@ -15,6 +15,7 @@
 #include <pcl/filters/crop_box.h>
 #include <pcl/PointIndices.h>
 #include <boost/foreach.hpp>
+#include <vector>
 
 using namespace std;
 
@@ -30,9 +31,11 @@ public:
         void removePlane(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_aligned, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_segmented);
         void cropCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_segmented, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_output, float minX, float maxX, float minY, float maxY, float minZ, float maxZ);
         void getDiscardedPoints(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_segmented_scene, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_discarded);
+        void averageCoefficients();
 
 private:
         Eigen::Matrix4f RPY2H(float Rz, float Ry, float Rx, float tx, float ty, float tz);
+        vector<pcl::ModelCoefficients> coefficients_vector;
         pcl::ModelCoefficients coefficients;
         pcl::PointIndices inliers;
         pcl::PointIndices indices_discarded_points;

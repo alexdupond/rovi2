@@ -432,6 +432,9 @@ void poseEstimator::save_pose_data(string file_name, global_pose_data global, lo
 	Matrix3f local_R = local.pose.block<3,3>(0,0);
 	vector<float> global_rpy = R2RPY(global_R);
 	vector<float> local_rpy = R2RPY(local_R);
+        Matrix4f final_pose = local.pose * global.pose;
+        bool is_valid = valid_output_pose(final_pose);
+        vector<float> final_rpy = R2RPY(final_pose.block<3,3>(0,0));
 	fstream csvfile;
 	csvfile.open(file_name, ios::out | ios::app);
 	csvfile	<< "global_pose, " << global.pose(0,0) << ", " << global.pose(0,1) << ", " << global.pose(0,2) <<  ", " << global.pose(0,3) << endl
@@ -448,8 +451,7 @@ void poseEstimator::save_pose_data(string file_name, global_pose_data global, lo
 			<< "global_features" << ", " << global.features << endl
 			<< "global_object_cloud_size" << ", " << global.object_cloud_size << endl
 			<< "global_scene_cloud_size" << ", " << global.scene_cloud_size << endl
-			<< "global_rms_error" << ", " << global.rms_error << endl
-			<< "global_pose_valid" << ", " << global.pose_valid << endl
+                        << "global_rms_error" << ", " << global.rms_error << endl
 
 			<< "local_pose, " << local.pose(0,0) << ", " << local.pose(0,1) << ", " << local.pose(0,2) <<  ", " << local.pose(0,3) << endl
 			<< "local_pose, " << local.pose(1,0) << ", " << local.pose(1,1) << ", " << local.pose(1,2) <<  ", " << local.pose(1,3) << endl
@@ -460,8 +462,14 @@ void poseEstimator::save_pose_data(string file_name, global_pose_data global, lo
 			<< "local_icp_inliers" << ", " << local.icp_inliers << endl
 			<< "local_object_cloud_size" << ", " << local.object_cloud_size << endl
 			<< "local_scene_cloud_size" << ", " << local.scene_cloud_size << endl
-			<< "local_rms_error" << ", " << local.rms_error << endl
-			<< "local_pose_valid" << ", " << local.pose_valid << endl
+                        << "local_rms_error" << ", " << local.rms_error << endl
+
+                        << "final_pose, " << final_pose(0,0) << ", " << final_pose(0,1) << ", " << final_pose(0,2) <<  ", " << final_pose(0,3) << endl
+                        << "final_pose, " << final_pose(1,0) << ", " << final_pose(1,1) << ", " << final_pose(1,2) <<  ", " << final_pose(1,3) << endl
+                        << "final_pose, " << final_pose(2,0) << ", " << final_pose(2,1) << ", " << final_pose(2,2) <<  ", " << final_pose(2,3) << endl
+                        << "final_pose, " << final_pose(3,0) << ", " << final_pose(3,1) << ", " << final_pose(3,2) <<  ", " << final_pose(3,3) << endl
+                        << "final_rpy, "	<< final_rpy[0] << ", " << final_rpy[1] << ", " << final_rpy[2] << endl
+                        << "final_is_valid, " << is_valid << endl
 			<< "=======================================================" << endl;
 			
 	csvfile.close();
