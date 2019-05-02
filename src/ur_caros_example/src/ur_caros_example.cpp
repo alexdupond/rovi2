@@ -21,62 +21,48 @@ int main(int argc, char** argv)
 
 	URRobot robot(&nodehandler);
 
-	vector<double> QrobotFrom11{2, -0.8, 1.0, -1.5, -1.5, 0};
-	vector<double> QrobotFrom21{-1.0, -2.2, -1.2, -1.5, 1.5, 0};
+	vector<double> Qrob1Q1{2, -0.8, 1.0, -1.5, -1.5, 0};
+	vector<double> Qrob1Q2{0.5, -0.95, 0.95, -1.45, -1.0, 0};
+	vector<double> Qrob1Q3{-0.2, 0.0, 0.60, -1.45, -1.0, 0};
 
-	vector<double> QrobotTo11{0.5, -0.95, 0.95, -1.45, -1.0, 0};
-	vector<double> QrobotTo21{-2.0, -2.2, -1.2, -1.5, 1.5, 0};
-
-	vector<double> QrobotTo12{0.0, -1.2, 1.0, -1.6, -1.0, 0}; 
-
-	vector<double> QvecFrom = QrobotFrom11; 
-	QvecFrom.insert(QvecFrom.end(), QrobotFrom21.begin(), QrobotFrom21.end()); 
-
-	vector<double> QvecTo = QrobotTo11;
-	QvecTo.insert(QvecTo.end(), QrobotTo21.begin(), QrobotTo21.end());
-
-	rw::math::Q from(QvecFrom);
-	rw::math::Q to(QvecTo);
+	vector<double> Qrob2Q1{-1.0, -2.2, -1.2, -1.5, 1.5, 0};
+	vector<double> Qrob2Q2{-2.0, -2.2, -1.2, -1.5, 1.5, 0};
+	vector<double> Qrob2Q3{0.0, -1.2, 1.0, -1.6, -1.0, 0}; 
 
 	vector<rw::math::Q> robot1Path;
 	vector<rw::math::Q> robot2Path; 
 
-	robot1Path.push_back(QrobotFrom11);
-	robot1Path.push_back(QrobotTo11);
-	robot1Path.push_back(QrobotTo12);
-	robot2Path.push_back(QrobotFrom21);
-	robot2Path.push_back(QrobotTo21); 
+	robot1Path.push_back(Qrob1Q1);
+	robot1Path.push_back(Qrob1Q2);
+	robot1Path.push_back(Qrob1Q3);
+	robot2Path.push_back(Qrob2Q1);
+	robot2Path.push_back(Qrob2Q2);
+	robot2Path.push_back(Qrob2Q3);  
 
 	while(true){
 		std::cout << "Current joint config:" << std::endl << robot.getQ() << std::endl << std::endl;
 		cout << "Input command: " << endl; 
 		string input; 
 		cin >> input;
-		if(input == "sbl"){
-			if(robot.calculateSBLPath(from, to)){
-				cout << "Calculated SBL path!" << endl; 
-			}else{
-				cout << "Could not calculate SBL path!" << endl; 
-			}
-		}else if(input == "rrt"){
-			if(robot.calculatePrioritizedPath(robot1Path, robot2Path)){
+		if(input == "rrt"){
+			rw::trajectory::QPath qPath1; 
+			rw::trajectory::QPath qPath2;
+			if(robot.calculatePrioritizedPath(robot1Path, robot2Path, qPath1, qPath2)){
 				cout << "Calculated RRT path!" << endl; 
-				rw::trajectory::QPath path1 = robot.getPath(1);
-				rw::trajectory::QPath path2 = robot.getPath(2);
 
-				int it = robot.getPath(2).size(); 
-				if(robot.getPath(1).size() > robot.getPath(2).size()){
-					it =  robot.getPath(1).size();
+				int it =  qPath2.size();
+				if(qPath1.size() > qPath2.size()){
+					it =  qPath1.size();
 				}
-				cout << "Size of path 1 =" << path1.size() << ", and size of path 2 = " << path2.size() << endl; 
+				cout << "Size of path 1 =" << qPath1.size() << ", and size of path 2 = " << qPath2.size() << endl; 
 
 				rw::trajectory::QPath::iterator it1; 
 				rw::trajectory::QPath::iterator it2;
 
-				if(path1.size() && path2.size()){
+				if(qPath1.size() && qPath2.size()){
 					cout << "Itteration through path" << endl; 
-					it1 = path1.begin();
-					it2 = path2.begin(); 
+					it1 = qPath1.begin();
+					it2 = qPath2.begin(); 
 					for (int i = 0 ; i < it; i++) {
 						
 						cout << *it1 << " && " << *it2 << endl;
@@ -85,10 +71,10 @@ int main(int argc, char** argv)
 						else
 							cout << endl << "Failed to move robot" << endl;
 
-						if(it2 < path2.end()-1){
+						if(it2 < qPath2.end()-1){
 							it2++; 
 						}
-						if(it1 < path1.end()-1){
+						if(it1 < qPath1.end()-1){
 							it1++; 
 						}			
 					}

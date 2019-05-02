@@ -47,8 +47,8 @@ public:
     bool calculateTimesteps(rw::trajectory::QPath& path);
     rw::trajectory::QPath getPath(int ID); 
     void setPath(rw::trajectory::QPath& path);
-    bool calculateRRTPath(const rw::math::Q& from, const rw::math::Q& to);
-    bool calculateDynamicRRTPath(const rw::math::Q &from, const rw::math::Q &to);
+    bool calculateRRTPath(const rw::math::Q& from, const rw::math::Q& to, rw::trajectory::QPath& result);
+    bool calculateDynamicRRTPath(const rw::math::Q &from, const rw::math::Q &to, rw::trajectory::QPath& path1, rw::trajectory::QPath& result);
     void optimizePath(rw::trajectory::QPath& path, rw::models::Device::Ptr device);  
     bool checkCollisions(rw::models::Device::Ptr device, const rw::proximity::CollisionDetector &detector, const rw::math::Q &q);
     ~PrioritizedPlanner(); 
@@ -81,6 +81,7 @@ private:
 	vector<double> _timesteps; 
     double currentTimestep = 0;
     double _extend = 0; 
+    int _depth = 1; 
 
 };
 

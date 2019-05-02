@@ -31,7 +31,7 @@ bool PrioritizedPlanner::checkCollisions(rw::models::Device::Ptr device, const r
 	return true;
 }
 
-bool PrioritizedPlanner::calculateRRTPath(const rw::math::Q& from, const rw::math::Q& to){
+bool PrioritizedPlanner::calculateRRTPath(const rw::math::Q& from, const rw::math::Q& to, rw::trajectory::QPath& result){
     // Setting device 2 to be as far from device 1 as possible - Hack to remove device 2 when planning for device 1
     rw::math::Q q(6, 2, -2, -1.2, -1.5, 1.5, 0);
     _device2->setQ(q, _state);
@@ -49,20 +49,19 @@ bool PrioritizedPlanner::calculateRRTPath(const rw::math::Q& from, const rw::mat
 		return 0;
 
 	cout << "Planning from " << from << " to " << to << endl;
-    rw::trajectory::QPath rrt_path; 
 	rw::common::Timer t;
 	t.resetAndResume();
-	planner->query(from,to,rrt_path,MAXTIME);
+	planner->query(from,to,result,MAXTIME);
 	t.pause(); 
-    _path_1 = rrt_path; 
-	cout << "Path of length " << _path_1.size() << " found in " << t.getTime() << " seconds." << endl;
+
+	cout << "Path of length " << result.size() << " found in " << t.getTime() << " seconds." << endl;
 	if (t.getTime() >= MAXTIME) {
 		cout << "Notice: max time of " << MAXTIME << " seconds reached." << endl;
 		return false; 
 	}else{
         rwlibs::pathoptimization::PathLengthOptimizer pathOptimizer(constraint,metric);
-        _path_1 = pathOptimizer.partialShortCut(_path_1);
-        cout << "Optimized path lenght: " << _path_1.size() << endl; 
+        result = pathOptimizer.partialShortCut(result);
+        cout << "Optimized path lenght: " << result.size() << endl; 
 		return true;
 	}
 	
@@ -120,7 +119,8 @@ rw::trajectory::QPath PrioritizedPlanner::getPath(int ID){
 }
 
 
-bool PrioritizedPlanner::calculateDynamicRRTPath(const rw::math::Q &start, const rw::math::Q &goal){
+bool PrioritizedPlanner::calculateDynamicRRTPath(const rw::math::Q &start, const rw::math::Q &goal, rw::trajectory::QPath& path1, rw::trajectory::QPath& result){
+    _path_1 = path1; 
     // SETTING UP RRT STRUCT FOR PLANNER
 	rw::proximity::CollisionDetector detector(_wc, rwlibs::proximitystrategies::ProximityStrategyFactory::makeDefaultCollisionStrategy());
 	rw::pathplanning::PlannerConstraint constraint = rw::pathplanning::PlannerConstraint::make(&detector,_device2,_state);
@@ -129,13 +129,21 @@ bool PrioritizedPlanner::calculateDynamicRRTPath(const rw::math::Q &start, const
 
     // Checking start and end configuration 
     cout << "Calculation path from: " << start << ", to: " << goal << endl; 
-    if (inCollision(detector, start, _path_1[0])) {
-        std::cout<<"Start is in collision"<<std::endl;
-        return false;
+    if(_depth < path1.size()){
+        if (inCollision(detector, start, path1[_depth])) {
+            std::cout<<"Start is in collision"<<std::endl;
+            return false;
+        }
+    }else{
+        if (inCollision(detector, start, path1[path1.size()-1])) {
+            std::cout<<"Start is in collision"<<std::endl;
+            return false;
+        }
     }
+  
    
-    Tree startTree(start);
-    Tree goalTree(goal);
+    Tree startTree(start, _depth);
+    Tree goalTree(goal, 1);
     Tree* treeA = &startTree;
 
     rw::common::Timer t;
@@ -148,8 +156,8 @@ bool PrioritizedPlanner::calculateDynamicRRTPath(const rw::math::Q &start, const
 
         if (growTree(*treeA, qAttr, goal, detector) == Reached )
         {
-            getPathFromTree(startTree, goalTree, _path_2);
-            cout << "Path found - Size = " << _path_2.size() << endl;
+            getPathFromTree(startTree, goalTree, result);
+            cout << "Path found - Size = " << result.size() << endl;
             cout << "Time to calculate path = " << t.getTime() << endl; 
             return true;
         }
@@ -245,7 +253,8 @@ ExtendResult PrioritizedPlanner::extend(Tree& tree,const rw::math::Q& q,Node* qN
     if (distGoal <= _extend) {
         if (!inCollision(detector, qNew, qRobNext) && !inCollision(detector, qRobPrev, qRobNext, qNear, qNew, 0.005))
         {             
-            tree.add(q, qNearNode, 1);
+            tree.add(qGoal, qNearNode, 1);
+            _depth = _depth + getDepth(qNearNode) + 1; 
             return Reached;
         } else {
             cout << "Collision!" << endl; 

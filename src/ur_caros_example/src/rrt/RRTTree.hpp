@@ -48,7 +48,7 @@ namespace rwlibs { namespace pathplanners {
          * @brief Construct new tree.
          * @param value [in] value of the root node.
          */
-        RRTTree(const value_type& value)
+        RRTTree(const value_type& value, const int depth)
         {
             add(value, 0, 1);
         }

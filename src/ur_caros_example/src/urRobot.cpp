@@ -23,49 +23,43 @@ URRobot::URRobot(ros::NodeHandle* nodehandler):nh(*nodehandler)
 	ros::spinOnce();
 }
 
-bool URRobot::calculatePrioritizedPath(vector<rw::math::Q> robot1, vector<rw::math::Q> robot2){
+bool URRobot::calculatePrioritizedPath(vector<rw::math::Q>& robot1, vector<rw::math::Q>& robot2, rw::trajectory::QPath& result1, rw::trajectory::QPath& result2){
 	double extend = 0.1; 
 	PrioritizedPlanner planner(wc, UR5E1, UR5E2, extend); 
 
-	rw::trajectory::QPath path_1;
-	rw::trajectory::QPath path_2; 
-
 	cout << "Robot 1 size = " << robot1.size() << ", and Robot 2 size = " << robot2.size() << endl; 
 	if(robot1.size() && robot2.size()){
+
 	
 		for(size_t i = 0; i < robot1.size() - 1; i++)
 		{
-			if(planner.calculateRRTPath(robot1[i], robot1[i+1])){
-				for(size_t i = 0; i < planner.getPath(1).size(); i++)
+			rw::trajectory::QPath path1;
+			if(planner.calculateRRTPath(robot1[i], robot1[i+1], path1)){
+				for(size_t j = 0; j < path1.size(); j++)
 				{
-					path_1.push_back(planner.getPath(1)[i]);
-				}
+					result1.push_back(path1[j]);
+				}				
 			}else{
 				return false;
 			}
 		}
+
+		cout << "Finished planning for robot 1" << endl; 
 		
-		planner.setPath(path_1);
-		path_UR5E1 = path_1; 
-
-
-		if(planner.calculateTimesteps(path_UR5E1)){
+		if(planner.calculateTimesteps(result1)){
 			for(size_t i = 0; i < robot2.size() -1 ; i++)
 			{
-				if(planner.calculateDynamicRRTPath(robot2[0], robot2[1])){
-					for(size_t i = 0; i < planner.getPath(2).size(); i++)
+				rw::trajectory::QPath path2;
+				if(planner.calculateDynamicRRTPath(robot2[i], robot2[i+1], result1, path2)){
+					for(size_t j = 0; j < path2.size(); j++)
 					{
-						path_2.push_back(planner.getPath(2)[i]);
+						result2.push_back(path2[j]);
 					}
-					
 				}else{
 					return false; 
 				}
 			}
 		}
-		
-		path_UR5E2 = path_2; 	
-
 		return true; 
 	}
 	return false; 

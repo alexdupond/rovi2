@@ -75,7 +75,7 @@ namespace rwlibs { namespace pathplanners {
         }
 
         value_type _value;
-        double _depth; 
+        int _depth; 
         node_type* _parent;
 
         RRTNode(const RRTNode&);
