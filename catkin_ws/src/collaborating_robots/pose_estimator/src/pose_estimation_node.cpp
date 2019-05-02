@@ -134,7 +134,7 @@ int main(int argc, char** argv)
 {
 	ros::init(argc, argv, "pose_estimation_node");
 	ros::NodeHandle nh;
-    ros::Subscriber sub = nh.subscribe("/camera/depth/c olor/points", 1, point_cloud_callback);
+    ros::Subscriber sub = nh.subscribe("/camera/depth/color/points", 1, point_cloud_callback);
 	ros::Publisher pose_pub = nh.advertise<std_msgs::Float64MultiArray>("objects_pose", 1);
 	ros::Rate loop_rate(10);	//loop rate in Hz
 
@@ -199,7 +199,7 @@ int main(int argc, char** argv)
 	{
 		cout << endl << endl << "    Huu.. You can't even type one letter. SHAME ON YOU!" << endl << endl;
 	}
-	PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", 0.01, 1.0);
+        PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", 0.01, 1.0);
 	PE.addObjectCloud(cloud_object_yoda,"cloud_object_yoda", 0.01, 1.0);
 	while(ros::ok)
 	{
@@ -254,7 +254,8 @@ int main(int argc, char** argv)
 			viewer.removePointCloud("yoshi");
 			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_output, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_output, 0, 255, 0), "cloud_boxFilter_output");
 			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_discarded, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_discarded, 150, 150, 0), "cloud_boxFilter_discarded");
-            viewer.addPointCloud<pcl::PointXYZ>(cloud_object_yoshi, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_object_yoshi, 255, 0, 0), "yoshi");
+                        viewer.addPointCloud<pcl::PointXYZ>(cloud_object_yoshi, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_object_yoshi, 255, 0, 0), "yoshi");
+                        viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "yoshi");
 			viewer.spinOnce();
 			//viewer.spin();
 
