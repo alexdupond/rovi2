@@ -134,7 +134,7 @@ int main(int argc, char** argv)
 {
 	ros::init(argc, argv, "pose_estimation_node");
 	ros::NodeHandle nh;
-    ros::Subscriber sub = nh.subscribe("/camera/depth/color/points", 1, point_cloud_callback);
+    ros::Subscriber sub = nh.subscribe("/camera/depth/c olor/points", 1, point_cloud_callback);
 	ros::Publisher pose_pub = nh.advertise<std_msgs::Float64MultiArray>("objects_pose", 1);
 	ros::Rate loop_rate(10);	//loop rate in Hz
 
