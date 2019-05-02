@@ -81,7 +81,7 @@ void point_cloud_callback(const sensor_msgs::PointCloud2ConstPtr& cloud_msg)	//c
 						<< " data points (" << pcl::getFieldsList (*cloud2_from_msg) << ").");
 		pcl::fromPCLPointCloud2(*cloud2_from_msg, *cloud_from_msg);			//convert pointcloud2 to pointcloud
 
-                pcl::transformPointCloud(*cloud_from_msg, *cloud_from_msg, T_flip);	//flip pointcloud 180 deg around x, to get the right rotation // TODO comment back in after test
+        pcl::transformPointCloud(*cloud_from_msg, *cloud_from_msg, T_flip);	//flip pointcloud 180 deg around x, to get the right rotation // TODO comment back in after test
 		ROS_INFO("new Pointcloud arrived! stamp: %PRIu64", cloud_from_msg->header.stamp);			//This is just for showing that the pointcloud gets updated
 		new_cloud_from_msg = true;											//signal new cloud is ready
 		ready_for_new_cloud = false;
@@ -171,6 +171,15 @@ int main(int argc, char** argv)
 
 	pcl::visualization::PCLVisualizer viewer("Plane segmentation result");
 	viewer.addCoordinateSystem(0.3); // 0,0,0
+	Eigen::Matrix4f T_camTable2World;
+	T_camTable2World << 	0, -1, 	0,  -0.45,				//used for transform output from pose estimation to worldframe
+							1,  0, 	0,  1.20,
+							0,  0,  1,  0,
+							0,  0,  0,  1;
+
+	Eigen::Affine3f worldframe;
+	worldframe = T_camTable2World;
+	viewer.addCoordinateSystem(0.3, worldframe);
 	viewer.addCube(minX, maxX, minY, maxY, minZ, maxZ, 1.0,1.0,0, "filter_box", 0);
 	viewer.setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_REPRESENTATION, pcl::visualization::PCL_VISUALIZER_REPRESENTATION_WIREFRAME, "filter_box");
 	poseEstimator PE;
@@ -240,14 +249,8 @@ int main(int argc, char** argv)
 				global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, 0.000025, true);		// TODO change to true after test
 				local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200, 0.0001, global_pose.pose, true);
 				T_pose_estimation = local_pose.pose * global_pose.pose;
-				
-				Eigen::Matrix4f T_world2camTable;
-				T_world2camTable << 	1,  0, 	0, 0,
-										0,  1, 	0, 0,
-										0,  0,  1, 0,
-										0,  0,  0, 1;
 
-				pcl::transformPointCloud(T_pose_estimation,T_pose_estimation, T_world2camTable);		//transofrm to worldframe
+				T_pose_estimation *= T_camTable2World.inverse();		//transofrm to worldframe
 				cout << "Final pose:" << endl << T_pose_estimation << endl;
 				PE.valid_output_pose(T_pose_estimation);
 				PE.save_pose_data("./pose_data.csv", global_pose, local_pose); //save pose
