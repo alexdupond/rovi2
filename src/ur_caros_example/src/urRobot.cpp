@@ -30,37 +30,17 @@ bool URRobot::calculatePrioritizedPath(vector<rw::math::Q>& robot1, vector<rw::m
 	cout << "Robot 1 size = " << robot1.size() << ", and Robot 2 size = " << robot2.size() << endl; 
 	if(robot1.size() && robot2.size()){
 
-	
-		for(size_t i = 0; i < robot1.size() - 1; i++)
-		{
-			rw::trajectory::QPath path1;
-			if(planner.calculateRRTPath(robot1[i], robot1[i+1], path1)){
-				for(size_t j = 0; j < path1.size(); j++)
-				{
-					result1.push_back(path1[j]);
-				}				
-			}else{
-				return false;
-			}
-		}
+		if(!planner.calculateRRTPath(robot1, result1))
+			return false;
 
-		cout << "Finished planning for robot 1" << endl; 
+		cout << "Finished planning for robot 1 - Total size = " << result1.size() << endl; 
 		
-		if(planner.calculateTimesteps(result1)){
-			for(size_t i = 0; i < robot2.size() -1 ; i++)
-			{
-				rw::trajectory::QPath path2;
-				if(planner.calculateDynamicRRTPath(robot2[i], robot2[i+1], result1, path2)){
-					for(size_t j = 0; j < path2.size(); j++)
-					{
-						result2.push_back(path2[j]);
-					}
-				}else{
-					return false; 
-				}
-			}
+		if(planner.calculateDynamicRRTPath(robot2, result1, result2)){
+			cout << "Finished planning for robot 2 " << endl; 
+			return true; 
+		}else{
+			return false; 
 		}
-		return true; 
 	}
 	return false; 
 };

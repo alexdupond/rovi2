@@ -49,8 +49,11 @@ namespace rwlibs { namespace pathplanners {
          * @param value [in] value of the root node.
          */
         RRTTree(const value_type& value, const int depth)
-        {
-            add(value, 0, 1);
+        {   
+            if(depth)
+                add(value, 0, depth);
+            else 
+                add(value, 0, 1);
         }
 
         /**

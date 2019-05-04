@@ -21,23 +21,40 @@ int main(int argc, char** argv)
 
 	URRobot robot(&nodehandler);
 
-	vector<double> Qrob1Q1{2, -0.8, 1.0, -1.5, -1.5, 0};
-	vector<double> Qrob1Q2{0.5, -0.95, 0.95, -1.45, -1.0, 0};
-	vector<double> Qrob1Q3{-0.2, 0.0, 0.60, -1.45, -1.0, 0};
+	vector<double> Qrob1Start{1.339, -2.324, 2.297, -1.544, -1.569, -1.017}; // Start
+	vector<double> Qrob1Q1{2.009, -0.859, 1.164, -1.874, -1.571, -0.347}; // First point 
+	vector<double> Qrob1Q2{0.698, -0.904, 1.289, -1.956, -1.574, -1.655}; // Pick point 
+	vector<double> Qrob1Q3{0.698, -0.792, 1.374, -2.153, -1.574, -1.655}; // Go down
+	vector<double> Qrob1Q4{0.698, -0.904, 1.289, -1.956, -1.574, -1.655}; // Go up
 
-	vector<double> Qrob2Q1{-1.0, -2.2, -1.2, -1.5, 1.5, 0};
-	vector<double> Qrob2Q2{-2.0, -2.2, -1.2, -1.5, 1.5, 0};
-	vector<double> Qrob2Q3{0.0, -1.2, 1.0, -1.6, -1.0, 0}; 
+	vector<double> Qrob2Start{1.339, -2.324, 2.297, -1.544, -1.569, -1.017}; // Start
+	vector<double> Qrob2Q1{-0.677, -2.228, -1.303, -1.191, 1.572, 0.118}; // Pick point 
+	vector<double> Qrob2Q2{-0.677, -2.341, -1.388, -0.993, 1.572, 0.118}; // Go down
+	vector<double> Qrob2Q3{-0.677, -2.228, -1.303, -1.191, 1.572, 0.118}; // Go up
+	vector<double> Qrob2Q4{-2.073, -2.058, -1.541, -1.115, 1.555, -1.272}; // Last point 
+
 
 	vector<rw::math::Q> robot1Path;
 	vector<rw::math::Q> robot2Path; 
 
+	robot1Path.push_back(Qrob1Start); 
 	robot1Path.push_back(Qrob1Q1);
 	robot1Path.push_back(Qrob1Q2);
 	robot1Path.push_back(Qrob1Q3);
+	robot1Path.push_back(Qrob1Q4);
+	robot1Path.push_back(Qrob1Q1);
+	robot1Path.push_back(Qrob1Q2);
+	robot1Path.push_back(Qrob1Q3);
+	robot1Path.push_back(Qrob1Q4);
+	robot1Path.push_back(Qrob1Start); 
+
+	robot2Path.push_back(Qrob2Start); 
 	robot2Path.push_back(Qrob2Q1);
 	robot2Path.push_back(Qrob2Q2);
-	robot2Path.push_back(Qrob2Q3);  
+	robot2Path.push_back(Qrob2Q3);
+	robot2Path.push_back(Qrob2Q4);
+	robot2Path.push_back(Qrob2Start); 
+	//robot2Path.push_back(Qrob2Q3);  
 
 	while(true){
 		std::cout << "Current joint config:" << std::endl << robot.getQ() << std::endl << std::endl;

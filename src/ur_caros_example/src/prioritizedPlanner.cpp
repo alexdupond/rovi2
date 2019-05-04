@@ -31,7 +31,7 @@ bool PrioritizedPlanner::checkCollisions(rw::models::Device::Ptr device, const r
 	return true;
 }
 
-bool PrioritizedPlanner::calculateRRTPath(const rw::math::Q& from, const rw::math::Q& to, rw::trajectory::QPath& result){
+bool PrioritizedPlanner::calculateRRTPath(const vector<rw::math::Q>& qVec, rw::trajectory::QPath& result){
     // Setting device 2 to be as far from device 1 as possible - Hack to remove device 2 when planning for device 1
     rw::math::Q q(6, 2, -2, -1.2, -1.5, 1.5, 0);
     _device2->setQ(q, _state);
@@ -43,27 +43,42 @@ bool PrioritizedPlanner::calculateRRTPath(const rw::math::Q& from, const rw::mat
 	rw::math::QMetric::Ptr metric = rw::math::MetricFactory::makeEuclidean<rw::math::Q>();
 	rw::pathplanning::QToQPlanner::Ptr planner = rwlibs::pathplanners::RRTPlanner::makeQToQPlanner(constraint, sampler, metric, _extend, rwlibs::pathplanners::RRTPlanner::RRTConnect);
 
-	if (!checkCollisions(_device1, detector, from))
-		return 0;
-	if (!checkCollisions(_device1, detector, to))
-		return 0;
+	for(size_t i = 0; i < qVec.size()-1; i++)
+    {
+        rw::math::Q from = qVec[i]; 
+        rw::math::Q to = qVec[i+1]; 
+        rw::trajectory::QPath path; 
 
-	cout << "Planning from " << from << " to " << to << endl;
-	rw::common::Timer t;
-	t.resetAndResume();
-	planner->query(from,to,result,MAXTIME);
-	t.pause(); 
 
-	cout << "Path of length " << result.size() << " found in " << t.getTime() << " seconds." << endl;
-	if (t.getTime() >= MAXTIME) {
-		cout << "Notice: max time of " << MAXTIME << " seconds reached." << endl;
-		return false; 
-	}else{
-        rwlibs::pathoptimization::PathLengthOptimizer pathOptimizer(constraint,metric);
-        result = pathOptimizer.partialShortCut(result);
-        cout << "Optimized path lenght: " << result.size() << endl; 
-		return true;
-	}
+        if (!checkCollisions(_device1, detector, from))
+            return 0;
+        if (!checkCollisions(_device1, detector, to))
+            return 0;
+
+        cout << "Planning from " << from << " to " << to << endl;
+        rw::common::Timer t;
+        t.resetAndResume();
+        planner->query(from,to,path,MAXTIME);
+        t.pause(); 
+
+        cout << "Path of length " << path.size() << " found in " << t.getTime() << " seconds." << endl;
+        if (t.getTime() >= MAXTIME) {
+            cout << "Notice: max time of " << MAXTIME << " seconds reached." << endl;
+            return false; 
+        }else{
+            rwlibs::pathoptimization::PathLengthOptimizer pathOptimizer(constraint,metric);
+            path = pathOptimizer.partialShortCut(path);
+            cout << "Optimized path lenght: " << path.size() << endl; 
+        }
+
+        for(size_t j = 0; j < path.size(); j++)
+        {
+            result.push_back(path[j]);
+        }
+        
+    }
+
+    return true; 
 	
 }
 
@@ -119,8 +134,8 @@ rw::trajectory::QPath PrioritizedPlanner::getPath(int ID){
 }
 
 
-bool PrioritizedPlanner::calculateDynamicRRTPath(const rw::math::Q &start, const rw::math::Q &goal, rw::trajectory::QPath& path1, rw::trajectory::QPath& result){
-    _path_1 = path1; 
+bool PrioritizedPlanner::calculateDynamicRRTPath(const vector<rw::math::Q> &qVec, rw::trajectory::QPath& qPathRob1, rw::trajectory::QPath& result){
+    _path_1 = qPathRob1; 
     // SETTING UP RRT STRUCT FOR PLANNER
 	rw::proximity::CollisionDetector detector(_wc, rwlibs::proximitystrategies::ProximityStrategyFactory::makeDefaultCollisionStrategy());
 	rw::pathplanning::PlannerConstraint constraint = rw::pathplanning::PlannerConstraint::make(&detector,_device2,_state);
@@ -128,44 +143,72 @@ bool PrioritizedPlanner::calculateDynamicRRTPath(const rw::math::Q &start, const
 	rw::pathplanning::QSampler::Ptr sampler = rw::pathplanning::QSampler::makeConstrained(rw::pathplanning::QSampler::makeUniform(_device2),constraint.getQConstraintPtr());
 
     // Checking start and end configuration 
-    cout << "Calculation path from: " << start << ", to: " << goal << endl; 
-    if(_depth < path1.size()){
-        if (inCollision(detector, start, path1[_depth])) {
-            std::cout<<"Start is in collision"<<std::endl;
-            return false;
-        }
-    }else{
-        if (inCollision(detector, start, path1[path1.size()-1])) {
-            std::cout<<"Start is in collision"<<std::endl;
-            return false;
-        }
-    }
-  
-   
-    Tree startTree(start, _depth);
-    Tree goalTree(goal, 1);
-    Tree* treeA = &startTree;
 
-    rw::common::Timer t;
-	t.resetAndResume();
-    srand (time(NULL)); 
-    while (t.getTime() < 15 ) {
+    double timeout = 20;
+    rw::trajectory::QPath qPathRob2;
 
-        const Q qAttr = sampler->sample();
-        if (qAttr.empty()) RW_THROW("Sampler must always succeed.");
+    if(!calculateTimesteps(qPathRob1))
+        return false; 
+    
+    cout << "Total path of path 1 is = " << qPathRob1.size() << " and number of timesteps = " << _timesteps.size() << endl; 
 
-        if (growTree(*treeA, qAttr, goal, detector) == Reached )
-        {
-            getPathFromTree(startTree, goalTree, result);
-            cout << "Path found - Size = " << result.size() << endl;
-            cout << "Time to calculate path = " << t.getTime() << endl; 
-            return true;
+    for(size_t i = 0; i < qVec.size()-1; i++)
+    {
+        rw::math::Q start = qVec[i]; 
+        rw::math::Q goal = qVec[i+1]; 
+        int depth = result.size(); 
+
+        cout << "Calculation path from: " << start << ", to: " << goal << endl; 
+
+        if(depth < qPathRob1.size()){
+            if (inCollision(detector, start, qPathRob1[depth])) {
+                std::cout<<"Start is in collision"<<std::endl;
+                return false;
+            }
+        }else{
+            if (inCollision(detector, start, qPathRob1[qPathRob1.size()-1])) {
+                std::cout<<"Start is in collision"<<std::endl;
+                return false;
+            }
         }
+
+        cout << "Depth initialized to = " << depth << endl;
+        Tree startTree(start, depth);
+        Tree goalTree(goal, 1);
+        Tree* treeA = &startTree;
+
+        rw::common::Timer t;
+        t.resetAndResume();
+        srand (time(NULL)); 
+        while (true) {
+
+            const Q qAttr = sampler->sample();
+            if (qAttr.empty()) RW_THROW("Sampler must always succeed.");
+
+            if (growTree(*treeA, qAttr, goal, detector) == Reached )
+            {
+                getPathFromTree(startTree, goalTree, qPathRob2);
+                
+                for(size_t j = 0; j < qPathRob2.size(); j++)
+                {
+                    result.push_back(qPathRob2[j]);
+                }
+                
+                cout << "Path found - Size = " << qPathRob2.size() << endl;
+                cout << "Time to calculate path = " << t.getTime() << endl; 
+                break; 
+            }
+
+            if(t.getTime() > timeout){
+                cout << "TIMEOUT!" << endl; 
+                return false; 
+            }
+        }
+
     }
     
-    cout << "TIMEOUT!" << endl; 
-
-    return false;
+    return true; 
+    
 }
 
 
@@ -214,15 +257,18 @@ double PrioritizedPlanner::distance(const rw::math::Q& q){
 
 ExtendResult PrioritizedPlanner::extend(Tree& tree,const rw::math::Q& q,Node* qNearNode, const Q& qGoal, const rw::proximity::CollisionDetector &detector)
 {   
+    cout << "Random q val = " << q << endl; 
+    cout << "Nearest node = " << getQVal(qNearNode) << endl; 
     // Init data needed
     int depth = getDepth(qNearNode); 
+    cout << "The current depth of the node is = " << depth << endl; 
     double multi = 0;
     const rw::math::Q& qNear = getQVal(qNearNode);
 
     // Calculate the difference between random q and the near node
     int val = rand()%100; 
     rw::math::Q delta; 
-    if(val > 80){
+    if(val > 65){
         delta = q - qNear; 
     }else{
         delta = qGoal - qNear;
@@ -248,13 +294,12 @@ ExtendResult PrioritizedPlanner::extend(Tree& tree,const rw::math::Q& q,Node* qN
     }
 
     double distGoal = distance(qNew - qGoal);
-    cout << "Distance to goal = " << distGoal << endl;
+    cout << "Distance to goal = " << distGoal << endl; 
 
     if (distGoal <= _extend) {
         if (!inCollision(detector, qNew, qRobNext) && !inCollision(detector, qRobPrev, qRobNext, qNear, qNew, 0.005))
         {             
-            tree.add(qGoal, qNearNode, 1);
-            _depth = _depth + getDepth(qNearNode) + 1; 
+            tree.add(qNew, qNearNode, 1);
             return Reached;
         } else {
             cout << "Collision!" << endl; 
