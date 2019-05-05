@@ -65,7 +65,7 @@ namespace rwlibs { namespace pathplanners {
             _value(value),
             _parent(parent)
         {
-            if(parent != 0 && parent->getDepth() != 0){
+            if(parent != 0){
                 _depth = depth + parent->getDepth();
             }else{
                 _depth = depth; 
