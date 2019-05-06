@@ -247,6 +247,7 @@ global_pose_data poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_
          PCLVisualizer v("After global alignment");
          v.addPointCloud<PointT>(object_aligned, PointCloudColorHandlerCustom<PointT>(object_aligned, 0, 255, 0), "object_aligned");
          v.addPointCloud<PointT>(scene, PointCloudColorHandlerCustom<PointT>(scene, 255, 0, 0),"scene");
+		 v.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "scene");
          v.spin();
      }
     data.pose_valid = valid_output_pose(pose);
