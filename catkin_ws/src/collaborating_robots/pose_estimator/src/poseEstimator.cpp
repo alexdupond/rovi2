@@ -21,10 +21,9 @@ void poseEstimator::cropCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in, floa
 {
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_temp(new pcl::PointCloud<pcl::PointXYZ>);
 	pcl::PointXYZ min_point, max_point;
-	pcl::getMinMax3D (*cloud_in, min_point, max_point);
-	//Eigen::Vector4f centroidObject;									//move object to centroid
-	//pcl::compute3DCentroid(*cloud_in, centroidObject);
-        Eigen::Vector4f min_point_object(min_point.x+0.04, min_point.y+0.01, min_point.z, 1);
+        pcl::getMinMax3D (*cloud_in, min_point, max_point);
+        //Eigen::Vector4f min_point_object(min_point.x+0.04, min_point.y+0.01, min_point.z, 1);
+        Eigen::Vector4f min_point_object(min_point.x+0.073, min_point.y+0.035, min_point.z, 1);
 	pcl::demeanPointCloud(*cloud_in, min_point_object, *cloud_temp);
 	*cloud_in = *cloud_temp;
 

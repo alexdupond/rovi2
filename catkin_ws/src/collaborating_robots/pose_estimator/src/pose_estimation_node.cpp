@@ -110,8 +110,8 @@ void test_function(poseEstimator PE, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_b
 			ROS_WARN_STREAM("Run: " << iteration+1 << " / " << " 10   (rotations left: " << rotations-1 << ")");
 			global_pose_data global_pose;
 			local_pose_data local_pose;
-			global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, 0.000025, false);		// TODO change to true after test
-			local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200, 0.0001, global_pose.pose, false);
+                        global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoda", 3500, 0.000025, false);		// TODO change to true after test
+                        local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoda", 200, 0.0001, global_pose.pose, false);
 			PE.save_pose_data("./pose_data.csv", global_pose, local_pose); //save pose
 			iteration++;
 		}
@@ -167,7 +167,7 @@ int main(int argc, char** argv)
 	grid.setInputCloud (cloud_object_yoda);
 	grid.filter (*cloud_object_yoda);
 
-	float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.01, maxZ = 0.3;
+        float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.04, maxZ = 0.3;
 
 	pcl::visualization::PCLVisualizer viewer("Plane segmentation result");
 	viewer.addCoordinateSystem(0.3); // 0,0,0
@@ -210,7 +210,7 @@ int main(int argc, char** argv)
 		cout << endl << endl << "    Huu.. You can't even type one letter. SHAME ON YOU!" << endl << endl;
 	}
         PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", 0.01, 1.0);
-	PE.addObjectCloud(cloud_object_yoda,"cloud_object_yoda", 0.01, 1.0);
+        PE.addObjectCloud(cloud_object_yoda,"cloud_object_yoda", 0.05, 1.0);
 	while(ros::ok)
 	{
 		ros::spinOnce();		//update all ROS related stuff
@@ -246,8 +246,8 @@ int main(int argc, char** argv)
 				global_pose_data global_pose;
 				local_pose_data local_pose;
 
-				global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, 0.000025, true);		// TODO change to true after test
-				local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200, 0.0001, global_pose.pose, true);
+                                global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoda", 3500, 0.000025, true);		// TODO change to true after test
+                                local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoda", 200, 0.0001, global_pose.pose, true);
 				T_pose_estimation = local_pose.pose * global_pose.pose;
 
 				T_pose_estimation *= T_camTable2World.inverse();		//transofrm to worldframe
@@ -268,11 +268,14 @@ int main(int argc, char** argv)
 			}
 			viewer.removePointCloud("cloud_boxFilter_output");
 			viewer.removePointCloud("cloud_boxFilter_discarded");
-			viewer.removePointCloud("yoshi");
+                        //viewer.removePointCloud("yoshi");
+                        viewer.removePointCloud("yoda");
 			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_output, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_output, 0, 255, 0), "cloud_boxFilter_output");
 			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_discarded, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_discarded, 150, 150, 0), "cloud_boxFilter_discarded");
-                        viewer.addPointCloud<pcl::PointXYZ>(cloud_object_yoshi, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_object_yoshi, 255, 0, 0), "yoshi");
-                        viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "yoshi");
+                        //viewer.addPointCloud<pcl::PointXYZ>(cloud_object_yoshi, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_object_yoshi, 255, 0, 0), "yoshi");
+                        //viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "yoshi");
+                        viewer.addPointCloud<pcl::PointXYZ>(cloud_object_yoda, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_object_yoda, 255, 0, 0), "yoda");
+                        viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "yoda");
 			viewer.spinOnce();
 			//viewer.spin();
 
