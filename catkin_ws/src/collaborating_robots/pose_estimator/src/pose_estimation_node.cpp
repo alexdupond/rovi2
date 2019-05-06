@@ -110,8 +110,8 @@ void test_function(poseEstimator PE, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_b
 			ROS_WARN_STREAM("Run: " << iteration+1 << " / " << " 10   (rotations left: " << rotations-1 << ")");
 			global_pose_data global_pose;
 			local_pose_data local_pose;
-                        global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoda", 3500, 0.000025, false);		// TODO change to true after test
-                        local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoda", 200, 0.0001, global_pose.pose, false);
+                        global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, 0.000025, false);		// TODO change to true after test
+                        local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200, 0.0001, global_pose.pose, false);
 			PE.save_pose_data("./pose_data.csv", global_pose, local_pose); //save pose
 			iteration++;
 		}
@@ -167,15 +167,38 @@ int main(int argc, char** argv)
 	grid.setInputCloud (cloud_object_yoda);
 	grid.filter (*cloud_object_yoda);
 
-        float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.04, maxZ = 0.3;
+        float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.01, maxZ = 0.3;
 
 	pcl::visualization::PCLVisualizer viewer("Plane segmentation result");
 	viewer.addCoordinateSystem(0.3); // 0,0,0
 	Eigen::Matrix4f T_camTable2World;
-	T_camTable2World << 	0, -1, 	0,  -0.45,				//used for transform output from pose estimation to worldframe
-							1,  0, 	0,  1.20,
-							0,  0,  1,  0,
-							0,  0,  0,  1;
+	T_camTable2World << 	 0,  1,  0,  -1.443098,				//0.45 used for transform output from pose estimation to worldframe
+							-1,  0,  0,  0.069557,				//0.05259 + 0.185987
+							 0,  0,  1,  0,
+							 0,  0,  0,  1;
+
+		// T_camTable2World << 	0, -1,  0,  -1.0332,				//0.45 used for transform output from pose estimation to worldframe
+		// 					1,  0, 	0,  0.450987,				//0.05259 + 0.185987
+		// 					0,  0,  1,  0,
+		// 					0,  0,  0,  1;
+
+		// T_camTable2World << 	0, -1,  0,  0.05259,				//0.45 used for transform output from pose estimation to worldframe
+			// 					1,  0, 	0,  1.0332,				//0.9799
+			// 					0,  0,  1,  0,
+			// 					0,  0,  0,  1;
+
+
+	Eigen::Matrix4f T_yoshiButtom2GraspPoint;
+	T_yoshiButtom2GraspPoint << 1,  0,  0,  0.12183-0.05318,				//used for transform output from pose estimation to worldframe
+								0,  1, 	0,  0,					
+								0,  0,  1,  0.166741,
+								0,  0,  0,  1;
+
+	Eigen::Matrix4f T_yoshiGraspPoint2RobotGripper;
+	T_yoshiGraspPoint2RobotGripper << 	1,  0,  0,  0,				//used for transform output from pose estimation to worldframe
+										0,  1, 	0,  0,					
+										0,  0,  1,  0.205,
+										0,  0,  0,  1;
 
 	Eigen::Affine3f worldframe;
 	worldframe = T_camTable2World;
@@ -209,8 +232,8 @@ int main(int argc, char** argv)
 	{
 		cout << endl << endl << "    Huu.. You can't even type one letter. SHAME ON YOU!" << endl << endl;
 	}
-        PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", 0.01, 1.0);
-        PE.addObjectCloud(cloud_object_yoda,"cloud_object_yoda", 0.05, 1.0);
+        PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", 0.01, 1.0, 0.04, 0.01);
+        PE.addObjectCloud(cloud_object_yoda,"cloud_object_yoda", 0.05, 1.0, 0.073, 0.035);
 	while(ros::ok)
 	{
 		ros::spinOnce();		//update all ROS related stuff
@@ -238,7 +261,7 @@ int main(int argc, char** argv)
 			//                       << " data points (" << pcl::getFieldsList (*cloud2_from_msg) << ").");
 
 			// if(first_run && enable_pose_estimation)	// TODO comment back in after test
-                        if(!calibrate_iterations && first_run && enable_pose_estimation)		// TODO delete after test
+            if(!calibrate_iterations && first_run && enable_pose_estimation)		// TODO delete after test
 			{	
 				Eigen::Matrix4f T_pose_global;
 				Eigen::Matrix4f T_pose_local;
@@ -246,12 +269,21 @@ int main(int argc, char** argv)
 				global_pose_data global_pose;
 				local_pose_data local_pose;
 
-                                global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoda", 3500, 0.000025, true);		// TODO change to true after test
-                                local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoda", 200, 0.0001, global_pose.pose, true);
+                                global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, 0.000025, true);		// TODO change to true after test
+                                local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200, 0.0001, global_pose.pose, true);
 				T_pose_estimation = local_pose.pose * global_pose.pose;
 
-				T_pose_estimation *= T_camTable2World.inverse();		//transofrm to worldframe
+				cout << "raw pose:" << endl << T_pose_estimation << endl;
+
+				T_pose_estimation = T_camTable2World * T_pose_estimation;				//transform from youshi buttom(seen in cam frame) to youshi buttom(seen in world frame)
 				cout << "Final pose:" << endl << T_pose_estimation << endl;
+
+				T_pose_estimation = T_yoshiButtom2GraspPoint * T_pose_estimation;		//transform from youshi buttom to grasping point(middle of the top surface of the cube)
+				cout << "Top pose:" << endl << T_pose_estimation << endl;
+				
+				T_pose_estimation = T_yoshiGraspPoint2RobotGripper * T_pose_estimation;	//transform from youshi grasping point to robot gripper grasping point
+				cout << "grip pose:" << endl << T_pose_estimation << endl;
+
 				PE.valid_output_pose(T_pose_estimation);
 				PE.save_pose_data("./pose_data.csv", global_pose, local_pose); //save pose
 
@@ -262,7 +294,7 @@ int main(int argc, char** argv)
                                 first_run = false;
 
                       }
-                        if(!calibrate_iterations && enable_test)
+        	if(!calibrate_iterations && enable_test)
 			{
 				test_function(PE, cloud_boxFilter_output);
 			}

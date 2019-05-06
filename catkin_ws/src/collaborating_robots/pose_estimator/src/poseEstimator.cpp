@@ -17,13 +17,12 @@ poseEstimator::~poseEstimator()
 
 }
 
-void poseEstimator::cropCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in, float minZ, float maxZ)
+void poseEstimator::cropCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in, float minZ, float maxZ, float offset_x, float offset_y)
 {
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_temp(new pcl::PointCloud<pcl::PointXYZ>);
 	pcl::PointXYZ min_point, max_point;
         pcl::getMinMax3D (*cloud_in, min_point, max_point);
-        //Eigen::Vector4f min_point_object(min_point.x+0.04, min_point.y+0.01, min_point.z, 1);
-        Eigen::Vector4f min_point_object(min_point.x+0.073, min_point.y+0.035, min_point.z, 1);
+        Eigen::Vector4f min_point_object(min_point.x + offset_x, min_point.y + offset_y, min_point.z, 1);
 	pcl::demeanPointCloud(*cloud_in, min_point_object, *cloud_temp);
 	*cloud_in = *cloud_temp;
 
@@ -35,7 +34,7 @@ void poseEstimator::cropCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in, floa
 	*cloud_in = *cloud_temp;
 }
 
-bool poseEstimator::addObjectCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr object, string object_name, float crop_minZ, float crop_maxZ)
+bool poseEstimator::addObjectCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr object, string object_name, float crop_minZ, float crop_maxZ, float offset_x, float offset_y)
 {
 	for (int i = 0; i < vec_objects_names.size(); i++)
 	{
@@ -45,7 +44,7 @@ bool poseEstimator::addObjectCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr object, s
 			return false;
 		}
 	}
-	cropCloud(object, crop_minZ, crop_maxZ);
+	cropCloud(object, crop_minZ, crop_maxZ, offset_x, offset_y);
 	vec_objects_ptr.push_back(object);
 	vec_objects_names.push_back(object_name);
 	return true;

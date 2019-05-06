@@ -65,7 +65,7 @@ class poseEstimator
 public:
 	poseEstimator();
 	~poseEstimator();
-	bool addObjectCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr object, string object_name, float crop_minZ, float crop_maxZ);
+	bool addObjectCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr object, string object_name, float crop_minZ, float crop_maxZ, float offset_x, float offset_y);
 	pcl::PointCloud<pcl::PointXYZ>::Ptr getObjectCloud(string name);
 	void printObjectCloudsNames();
 	// Matrix4f get_pose_global(PointCloud<PointXYZ>::Ptr scene_in, string object_name, size_t iter = 4000, float thressq = 0.000025, bool show_matches = false);
@@ -78,7 +78,7 @@ public:
 private:
 	void nearest_feature(const FeatureT& query, const PointCloud<FeatureT>& target, int &idx, float &distsq);
 	inline float dist_sq(const FeatureT& query, const FeatureT& target);
-	void cropCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in, float minZ = 1, float maxZ = 1);
+	void cropCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in, float minZ = 1, float maxZ = 1, float offset_x = 0, float offset_y = 0);
 	vector<float> R2RPY(Matrix3f R);
 
 	vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> vec_objects_ptr;
