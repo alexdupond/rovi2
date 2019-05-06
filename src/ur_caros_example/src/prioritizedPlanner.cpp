@@ -11,10 +11,11 @@ double getDepth(Node* node){ return node->getDepth(); }
 
 
 
-PrioritizedPlanner::PrioritizedPlanner(rw::models::WorkCell::Ptr wc, rw::models::Device::Ptr device1, rw::models::Device::Ptr device2, double extend){
+PrioritizedPlanner::PrioritizedPlanner(rw::models::WorkCell::Ptr wc, rw::models::Device::Ptr device1, rw::models::Device::Ptr device2, double extend, double aggressiveness){
     _wc = wc;
     _state = wc->getDefaultState();
     _extend = extend; 
+    _aggressiveness = aggressiveness;
     _device1 = device1; 
     _device2 = device2;
 }
@@ -25,11 +26,12 @@ bool PrioritizedPlanner::checkCollisions(rw::models::Device::Ptr device, const r
 
 	device->setQ(q,_state);
 	if (detector.inCollision(_state,&data)) {
-		cout << "Configuration in collision: " << q << endl;
+	//	cout << "Configuration in collision: " << q << endl;
 		return false;
 	}
 	return true;
 }
+
 
 bool PrioritizedPlanner::calculateRRTPath(const vector<rw::math::Q>& qVec, rw::trajectory::QPath& result){
     // Setting device 2 to be as far from device 1 as possible - Hack to remove device 2 when planning for device 1
@@ -55,20 +57,31 @@ bool PrioritizedPlanner::calculateRRTPath(const vector<rw::math::Q>& qVec, rw::t
         if (!checkCollisions(_device1, detector, to))
             return 0;
 
-        cout << "Planning from " << from << " to " << to << endl;
+     //   cout << "Planning from " << from << " to " << to << endl;
         rw::common::Timer t;
         t.resetAndResume();
         planner->query(from,to,path,MAXTIME);
         t.pause(); 
 
-        cout << "Path of length " << path.size() << " found in " << t.getTime() << " seconds." << endl;
+        //cout << "Path of length " << path.size() << " found in " << t.getTime() << " seconds." << endl;
+        // string file_name = "./test.txt";
+		// fstream csvfile;
+		// csvfile.open(file_name, ios::out | ios::app);
+		// csvfile << path.size() << ", " << t.getTime() << ", ";
+		// csvfile.close();
+        
         if (t.getTime() >= MAXTIME) {
-            cout << "Notice: max time of " << MAXTIME << " seconds reached." << endl;
+           // cout << "Notice: max time of " << MAXTIME << " seconds reached." << endl;
             return false; 
         }else{
             rwlibs::pathoptimization::PathLengthOptimizer pathOptimizer(constraint,metric);
+            t.resetAndResume();
             path = pathOptimizer.partialShortCut(path);
-            cout << "Optimized path lenght: " << path.size() << endl; 
+            t.pause(); 
+           // cout << "Optimized path lenght: " << path.size() << endl; 
+		    // csvfile.open(file_name, ios::out | ios::app);
+		    // csvfile << path.size() << ", " << t.getTime() << ", ";
+		    // csvfile.close();
         }
         
 
@@ -101,7 +114,8 @@ void PrioritizedPlanner::optimizePath(rw::trajectory::QPath& path, rw::models::D
     rw::math::QMetric::Ptr metric = rw::math::MetricFactory::makeEuclidean<rw::math::Q>();
     rwlibs::pathoptimization::PathLengthOptimizer pathOptimizer(constraint,metric);
     path = pathOptimizer.partialShortCut(path);
-	cout << "Optimized path lenght: " << path.size() << endl; 
+//	cout << "Optimized path lenght: " << path.size() << endl;
+    cout << path.size(); 
 }
 
 
@@ -149,10 +163,10 @@ bool PrioritizedPlanner::calculateDynamicRRTPath(const vector<rw::math::Q> &qVec
 
     double timeout = 20;
     
-    cout << "Total path of path 1 is = " << qPathRob1.size() << " and number of timesteps = " << _timesteps.size() << endl; 
+   // cout << "Total path of path 1 is = " << qPathRob1.size() << " and number of timesteps = " << _timesteps.size() << endl; 
 
     if (inCollision(detector, qVec[0], qPathRob1[0])) {
-        std::cout<<"Start is in collision"<<std::endl;
+       // std::cout<<"Start is in collision"<<std::endl;
         return false;
     }
 
@@ -163,12 +177,14 @@ bool PrioritizedPlanner::calculateDynamicRRTPath(const vector<rw::math::Q> &qVec
         int depth = result.size(); 
         rw::trajectory::QPath qPathRob2;
 
-        cout << "Calculation path from: " << start << ", to: " << goal << endl; 
-        cout << "Depth initialized to = " << depth << endl;
+   //     cout << "Calculation path from: " << start << ", to: " << goal << endl; 
+    //    cout << "Depth initialized to = " << depth << endl;
 
         Tree startTree(start, depth);
         Tree goalTree(goal, 1);
         Tree* treeA = &startTree;
+
+        fstream csvfile;
 
         rw::common::Timer t;
         t.resetAndResume();
@@ -183,16 +199,27 @@ bool PrioritizedPlanner::calculateDynamicRRTPath(const vector<rw::math::Q> &qVec
             {
                 getPathFromTree(startTree, goalTree, qPathRob2);
 
-                cout << "Path found - Size = " << qPathRob2.size() << endl;
-                cout << "Time to calculate path = " << t.getTime() << endl; 
+             //   cout << "Path found - Size = " << qPathRob2.size() << endl;
+              //  cout << "Time to calculate path = " << t.getTime() << endl; 
+                // string file_name = "./test.txt";
+                // fstream csvfile;
+                // csvfile.open(file_name, ios::out | ios::app);
+                // csvfile << qPathRob2.size() << ", " << t.getTime()  << endl; 
+                // csvfile.close();
+
+               // rw::trajectory::QPath qPath = optimizeDynamicPath(detector, qPathRob1, qPathRob2, _timesteps, result.size()); 
                 break; 
             }
 
             if(t.getTime() > timeout){
-                cout << "TIMEOUT!" << endl; 
+                // string file_name = "./test.txt";
+                // csvfile.open(file_name, ios::out | ios::app);
+                // csvfile << 0 << ", " << 0  << endl; 
+                // csvfile.close();
                 return false; 
             }
         }
+
 
         if(i != 0 && (qPathRob2[0] == result[result.size()-1]) ){
             result.pop_back();
@@ -264,7 +291,7 @@ ExtendResult PrioritizedPlanner::extend(Tree& tree,const rw::math::Q& q,Node* qN
     // Calculate the difference between random q and the near node
     int val = rand()%100; 
     rw::math::Q delta; 
-    if(val > 90){
+    if(val > _aggressiveness){
         delta = q - qNear; 
     }else{
         delta = qGoal - qNear;
@@ -274,8 +301,7 @@ ExtendResult PrioritizedPlanner::extend(Tree& tree,const rw::math::Q& q,Node* qN
     const double dist = distance(delta);
     Q qNew;
     Q qRobPrev;
-    Q qRobNext; 
-
+    Q qRobNext;
     if(depth < int(_path_1.size()-1)){
         multi = multiplier(delta, depth - 1);
         qNew = qNear + multi * delta;     
@@ -287,6 +313,7 @@ ExtendResult PrioritizedPlanner::extend(Tree& tree,const rw::math::Q& q,Node* qN
         qRobPrev = _path_1[depth]; 
         qRobNext = _path_1[depth];
     }
+
 
     double distGoal = distance(qNew - qGoal);
 
@@ -336,6 +363,48 @@ void PrioritizedPlanner::getPathFromTree(const Tree& startTree, const Tree& goal
     Tree::getRootPath(*startTree.getLast().getParent(), revPart);
     result.insert(result.end(), revPart.rbegin(), revPart.rend());
     Tree::getRootPath(goalTree.getLast(), result);
+}
+
+
+double maxJoint(rw::math::Q& q){
+    double maxJoint = 0;
+    for(size_t i = 0; i < q.size(); i++)
+    {
+        double joint = abs(q[i]);
+        if(joint > maxJoint ){
+            maxJoint = joint; 
+        }
+    }
+    return maxJoint;  
+}
+
+rw::trajectory::QPath PrioritizedPlanner::optimizeDynamicPath(const rw::proximity::CollisionDetector &detector, rw::trajectory::QPath& qFullPath, rw::trajectory::QPath& qPartialPath, vector<double> timesteps, int depth){
+    int size = qPartialPath.size(); 
+    rw::trajectory::QPath optimizedPath; 
+
+    optimizedPath.push_back(qPartialPath[0]); 
+
+    for(size_t i = 0; i < size - 2; i++)
+    {
+
+        rw::math::Q qRob1Old = qFullPath[depth + i]; 
+        rw::math::Q qRob1New = qFullPath[depth + i + 2]; 
+        rw::math::Q qRob2Old = qPartialPath[i]; 
+        rw::math::Q qRob2New = qPartialPath[i + 2]; 
+
+        rw::math::Q delta = qRob2New - qRob2Old;
+     //   cout << "Time interval is equal to = " << timesteps[depth + i] << " + " << timesteps[depth + i + 1] << endl;   
+        double timeInterval = timesteps[depth + i] + timesteps[depth + i + 1]; 
+        double multi = multiplier(delta, depth);
+
+       // cout << "Time interval = " << timeInterval << ", and max joint = " << maxJoint(delta) << endl;  
+        if((timeInterval < maxJoint(delta)) && !inCollision(detector, qRob1Old, qRob1New, qRob2Old , qRob2New, 0.005)){
+            optimizedPath.push_back(qRob2Old + multi * delta);
+        }
+    }
+
+    cout << "Old size = " << size << " vs. new size = " << optimizedPath.size() << endl; 
+    return optimizedPath; 
 }
 
 

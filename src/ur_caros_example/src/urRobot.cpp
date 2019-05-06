@@ -23,20 +23,19 @@ URRobot::URRobot(ros::NodeHandle* nodehandler):nh(*nodehandler)
 	ros::spinOnce();
 }
 
-bool URRobot::calculatePrioritizedPath(vector<rw::math::Q>& robot1, vector<rw::math::Q>& robot2, rw::trajectory::QPath& result1, rw::trajectory::QPath& result2){
-	double extend = 0.1; 
-	PrioritizedPlanner planner(wc, UR5E1, UR5E2, extend); 
+bool URRobot::calculatePrioritizedPath(vector<rw::math::Q>& robot1, vector<rw::math::Q>& robot2, rw::trajectory::QPath& result1, rw::trajectory::QPath& result2, double extend, double aggressiveness){
+	PrioritizedPlanner planner(wc, UR5E1, UR5E2, extend, aggressiveness); 
 
-	cout << "Robot 1 size = " << robot1.size() << ", and Robot 2 size = " << robot2.size() << endl; 
+	//cout << "Robot 1 size = " << robot1.size() << ", and Robot 2 size = " << robot2.size() << endl; 
 	if(robot1.size() && robot2.size()){
 
 		if(!planner.calculateRRTPath(robot1, result1))
 			return false;
 
-		cout << "Finished planning for robot 1 - Total size = " << result1.size() << endl; 
+	//	cout << "Finished planning for robot 1 - Total size = " << result1.size() << endl; 
 		
 		if(planner.calculateDynamicRRTPath(robot2, result1, result2)){
-			cout << "Finished planning for robot 2 " << endl; 
+	//		cout << "Finished planning for robot 2 " << endl; 
 			return true; 
 		}else{
 			return false; 

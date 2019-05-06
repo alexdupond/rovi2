@@ -22,7 +22,7 @@
 #include <stdio.h>      /* printf, scanf, puts, NULL */
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
-
+#include <fstream>
 
 using namespace std;
 using namespace rw;
@@ -43,13 +43,14 @@ enum ExtendResult { Trapped, Reached, Advanced };
 class PrioritizedPlanner{
 
 public:
-	PrioritizedPlanner(rw::models::WorkCell::Ptr wc, rw::models::Device::Ptr device1, rw::models::Device::Ptr device2, double extend); 
+	PrioritizedPlanner(rw::models::WorkCell::Ptr wc, rw::models::Device::Ptr device1, rw::models::Device::Ptr device2, double extend, double aggressiveness); 
     bool calculateTimesteps(rw::trajectory::QPath& path);
     rw::trajectory::QPath getPath(int ID); 
     void setPath(rw::trajectory::QPath& path);
     bool calculateRRTPath(const vector<rw::math::Q>& qVec, rw::trajectory::QPath& result);
     bool calculateDynamicRRTPath(const vector<rw::math::Q>& qVec, rw::trajectory::QPath& qPathRob1, rw::trajectory::QPath& result);
-    void optimizePath(rw::trajectory::QPath& path, rw::models::Device::Ptr device);  
+    void optimizePath(rw::trajectory::QPath& path, rw::models::Device::Ptr device); 
+    rw::trajectory::QPath optimizeDynamicPath(const rw::proximity::CollisionDetector &detector, rw::trajectory::QPath& qFullPath, rw::trajectory::QPath& qPartialPath, vector<double> timesteps, int depth);
     bool checkCollisions(rw::models::Device::Ptr device, const rw::proximity::CollisionDetector &detector, const rw::math::Q &q);
     ~PrioritizedPlanner(); 
 
@@ -81,6 +82,7 @@ private:
 	vector<double> _timesteps; 
     double currentTimestep = 0;
     double _extend = 0; 
+    double _aggressiveness = 0; 
 };
 
 #endif // PRIORITIZEDMULTIPLANNER
