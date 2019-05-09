@@ -98,6 +98,41 @@ Eigen::Matrix4f RPY2H(float Rz, float Ry, float Rx, float tx, float ty, float tz
 	return T_homogenus;
 }
 
+void test_two_objects(poseEstimator PE, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_output)
+{
+	static int iteration = 0;
+	static int rotations = 1;
+
+	if(rotations > 0)
+	{
+		if(iteration < 10)
+		{
+			ROS_WARN_STREAM("Run: " << iteration+1 << " / " << " 10   (rotations left: " << rotations-1 << ")");
+			global_pose_data global_pose;
+			local_pose_data local_pose;
+                        global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoda", 3500, 0.000025, false);		// TODO change to true after test
+                        local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoda", 200, 0.0001, global_pose.pose, false);
+			PE.save_pose_data("./pose_data.csv", global_pose, local_pose); //save pose
+			char temp;
+			ROS_WARN_STREAM("Move object and press a key, followed by 'Enter'");
+			cin >> temp;
+			iteration++;
+		}
+		else
+		{
+			char temp;
+			ROS_WARN_STREAM("Rotate object and press a key, followed by 'Enter'");
+			cin >> temp;
+			iteration = 0;
+			rotations--;
+		}
+	}
+	else
+	{
+		ROS_WARN_STREAM("test done!");
+	}
+}
+
 void test_function(poseEstimator PE, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_boxFilter_output)
 {
 	static int iteration = 0;
@@ -110,8 +145,8 @@ void test_function(poseEstimator PE, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_b
 			ROS_WARN_STREAM("Run: " << iteration+1 << " / " << " 10   (rotations left: " << rotations-1 << ")");
 			global_pose_data global_pose;
 			local_pose_data local_pose;
-                        global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoda", 3500, 0.000025, false);		// TODO change to true after test
-                        local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoda", 200, 0.0001, global_pose.pose, false);
+                        global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, 0.000025, false);		// TODO change to true after test
+                        local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200, 0.0001, global_pose.pose, false);
 			PE.save_pose_data("./pose_data.csv", global_pose, local_pose); //save pose
 			iteration++;
 		}
@@ -167,15 +202,27 @@ int main(int argc, char** argv)
 	grid.setInputCloud (cloud_object_yoda);
 	grid.filter (*cloud_object_yoda);
 
-        float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.04, maxZ = 0.3;
+        float minX = -1, maxX = 0.0, minY = 0.0, maxY = 1, minZ = 0.01, maxZ = 0.3;
 
 	pcl::visualization::PCLVisualizer viewer("Plane segmentation result");
 	viewer.addCoordinateSystem(0.3); // 0,0,0
 	Eigen::Matrix4f T_camTable2World;
-	T_camTable2World << 	0, -1, 	0,  -0.45,				//used for transform output from pose estimation to worldframe
-							1,  0, 	0,  1.20,
-							0,  0,  1,  0,
-							0,  0,  0,  1;
+	T_camTable2World << 	 0,  1,  0, -1.4730,				//0.45 used for transform output from pose estimation to worldframe
+							-1,  0,  0,  0.054,				//0.05259 + 0.185987
+							 0,  0,  1,  0,
+							 0,  0,  0,  1;
+
+	Eigen::Matrix4f T_yoshiButtom2GraspPoint;
+	T_yoshiButtom2GraspPoint << 1,  0,  0,  0,		//0.12183-0.05318 //used for transform output from pose estimation to worldframe
+								0,  1, 	0,  0.075,					
+								0,  0,  1,  0.15,
+								0,  0,  0,  1;
+
+	Eigen::Matrix4f T_yoshiGraspPoint2RobotGripper;
+	T_yoshiGraspPoint2RobotGripper << 	1,  0,  0,  0,				//used for transform output from pose estimation to worldframe
+										0,  1, 	0,  0,					
+										0,  0,  1,  0.205,
+										0,  0,  0,  1;
 
 	Eigen::Affine3f worldframe;
 	worldframe = T_camTable2World;
@@ -209,8 +256,8 @@ int main(int argc, char** argv)
 	{
 		cout << endl << endl << "    Huu.. You can't even type one letter. SHAME ON YOU!" << endl << endl;
 	}
-        PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", 0.01, 1.0);
-        PE.addObjectCloud(cloud_object_yoda,"cloud_object_yoda", 0.05, 1.0);
+        PE.addObjectCloud(cloud_object_yoshi,"cloud_object_yoshi", 0.01, 1.0, 0.04, 0.01);
+        PE.addObjectCloud(cloud_object_yoda,"cloud_object_yoda", 0.01, 1.0, 0.073, 0.035);
 	while(ros::ok)
 	{
 		ros::spinOnce();		//update all ROS related stuff
@@ -237,8 +284,7 @@ int main(int argc, char** argv)
 			//ROS_INFO_STREAM("PointCloud after segmentation+clipping: " << cloud2_from_msg->width * cloud2_from_msg->height
 			//                       << " data points (" << pcl::getFieldsList (*cloud2_from_msg) << ").");
 
-			// if(first_run && enable_pose_estimation)	// TODO comment back in after test
-                        if(!calibrate_iterations && first_run && enable_pose_estimation)		// TODO delete after test
+            if(!calibrate_iterations && first_run && enable_pose_estimation)		// TODO delete after test
 			{	
 				Eigen::Matrix4f T_pose_global;
 				Eigen::Matrix4f T_pose_local;
@@ -246,13 +292,16 @@ int main(int argc, char** argv)
 				global_pose_data global_pose;
 				local_pose_data local_pose;
 
-                                global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoda", 3500, 0.000025, true);		// TODO change to true after test
-                                local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoda", 200, 0.0001, global_pose.pose, true);
+				global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, 0.000025, true);		// TODO change to true after test
+				local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200, 0.0001, global_pose.pose, true);
+				
 				T_pose_estimation = local_pose.pose * global_pose.pose;
-
-				T_pose_estimation *= T_camTable2World.inverse();		//transofrm to worldframe
-				cout << "Final pose:" << endl << T_pose_estimation << endl;
 				PE.valid_output_pose(T_pose_estimation);
+				cout << "raw pose:" << endl << T_pose_estimation << endl;
+
+				T_pose_estimation =  T_camTable2World * T_pose_estimation * T_yoshiGraspPoint2RobotGripper * T_yoshiButtom2GraspPoint;		//transform from youshi buttom to grasping point(middle of the top surface of the cube)
+				cout << "Top pose:" << endl << T_pose_estimation << endl;
+
 				PE.save_pose_data("./pose_data.csv", global_pose, local_pose); //save pose
 
 				std_msgs::Float64MultiArray pose_msg;				//convert eigen matrix to ros msg and publish it
@@ -262,9 +311,10 @@ int main(int argc, char** argv)
                                 first_run = false;
 
                       }
-                        if(!calibrate_iterations && enable_test)
+        	if(!calibrate_iterations && enable_test)
 			{
-				test_function(PE, cloud_boxFilter_output);
+				//test_function(PE, cloud_boxFilter_output);
+				test_two_objects(PE, cloud_boxFilter_output);
 			}
 			viewer.removePointCloud("cloud_boxFilter_output");
 			viewer.removePointCloud("cloud_boxFilter_discarded");
@@ -272,10 +322,10 @@ int main(int argc, char** argv)
                         viewer.removePointCloud("yoda");
 			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_output, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_output, 0, 255, 0), "cloud_boxFilter_output");
 			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_discarded, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_discarded, 150, 150, 0), "cloud_boxFilter_discarded");
-                        //viewer.addPointCloud<pcl::PointXYZ>(cloud_object_yoshi, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_object_yoshi, 255, 0, 0), "yoshi");
-                        //viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "yoshi");
-                        viewer.addPointCloud<pcl::PointXYZ>(cloud_object_yoda, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_object_yoda, 255, 0, 0), "yoda");
-                        viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "yoda");
+                        viewer.addPointCloud<pcl::PointXYZ>(cloud_object_yoshi, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_object_yoshi, 255, 0, 0), "yoshi");
+                        viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "yoshi");
+                        //viewer.addPointCloud<pcl::PointXYZ>(cloud_object_yoda, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_object_yoda, 255, 0, 0), "yoda");
+                        //viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "yoda");
 			viewer.spinOnce();
 			//viewer.spin();
 
