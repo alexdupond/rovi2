@@ -1,6 +1,6 @@
 # rovi2
 
-The "catkin_we" contains all the code for Vision pose estimation
+The "catkin_wc" contains all the code for Vision pose estimation
 
 The "planningAndRobotControl" contains all the code made for the two multi robot planner. 
 
