@@ -7,6 +7,7 @@ n = length(fullpaths);
 real_is_valid_all = [];
 time_all = [];
 for i=1:n  
+    i=5
 [pathstr,name,ext] = fileparts(string(fullpaths(1,i)));
 %%
 data = readtable(string(fullpaths(1,i)),'Delimiter',',','ReadVariableNames', false);
@@ -107,23 +108,10 @@ time_all = [time_all; sum(avg)];
 %ylabel('Detections [%]')
 
 %%
-figure('Name',['z_rotation_' char(name)])
-scatter3(rot_z_gt_valid, rot_z_valid, xyz_valid, 'MarkerEdgeColor', 'g')
-hold on
-scatter3(rot_z_gt_not_valid, rot_z_not_valid, xyz_not_valid, 'MarkerEdgeColor', 'r')
-plot(rot_z_gt,rot_z_gt)
-plot([-(rots/2-1)/(rots/2)*pi pi], [-(rots/2-1)/(rots/2)*pi+0.2 pi+0.2],'r:')
-plot([-(rots/2-1)/(rots/2)*pi pi], [-(rots/2-1)/(rots/2)*pi-0.2 pi-0.2],'r:')
-legend({'Estimated vs actual rotation (valid)', 'Estimated vs actual rotation (not valid)', 'Ground truth rotation', 'Threshold'}, 'Location', 'northwest')
-xlabel('Actual rotation [rad]')
-ylabel('Estimated rotation [rad]')
-xlim([-(rots/2-1)/(rots/2)*pi-0.2 pi+0.2])
-ylim([-2*pi 2*pi])
-%% Show figures and save
 % figure('Name',['z_rotation_' char(name)])
-% scatter(rot_z_gt_valid, rot_z_valid, 'MarkerEdgeColor', 'g')
+% scatter3(rot_z_gt_valid, rot_z_valid, xyz_valid, 'MarkerEdgeColor', 'g')
 % hold on
-% scatter(rot_z_gt_not_valid, rot_z_not_valid, 'MarkerEdgeColor', 'r')
+% scatter3(rot_z_gt_not_valid, rot_z_not_valid, xyz_not_valid, 'MarkerEdgeColor', 'r')
 % plot(rot_z_gt,rot_z_gt)
 % plot([-(rots/2-1)/(rots/2)*pi pi], [-(rots/2-1)/(rots/2)*pi+0.2 pi+0.2],'r:')
 % plot([-(rots/2-1)/(rots/2)*pi pi], [-(rots/2-1)/(rots/2)*pi-0.2 pi-0.2],'r:')
@@ -132,60 +120,79 @@ ylim([-2*pi 2*pi])
 % ylabel('Estimated rotation [rad]')
 % xlim([-(rots/2-1)/(rots/2)*pi-0.2 pi+0.2])
 % ylim([-2*pi 2*pi])
-% saveas(gcf,['z_rotation_' char(name)],'epsc')
-% 
-% figure('Name',['xyz_translation_' char(name)])
-% scatter(rot_z_gt_valid, xyz_valid, 'MarkerEdgeColor', 'g')
-% hold on
-% scatter(rot_z_gt_not_valid, xyz_not_valid, 'MarkerEdgeColor', 'r')
-% plot([-(rots/2-1)/(rots/2)*pi pi], [0.03 0.03], 'r:')
-% legend({'Estimated translation vs actual rotation (valid)', 'Estimated translation vs actual rotation (not valid)', 'Threshold'} , 'Location', 'northwest')
-% xlabel('Actual rotation [rad]')
-% ylabel('Distance from actual xyz-position [m]')
-% xlim([-(rots/2-1)/(rots/2)*pi-0.2 pi+0.2])
-% ylim([0 0.3])
-% hold off
-% saveas(gcf,['xyz_translation_' char(name)],'epsc')
-% 
-% figure('Name',['histogram_' char(name)])
-% b = bar(rotations, y,'stacked');
-% set(b,{'FaceColor'},{'g';'r'});
-% legend({'True positives', 'False positives'}, 'Location', 'northwest')
-% ylim([0 100])
-% xlabel('Actual rotation [rad]')
-% ylabel('Detections [%]')
-% saveas(gcf,['histogram_' char(name)],'epsc')
-% 
-% figure('Name',['z_rotation_refinement_' char(name)])
-% plot(rot_z_global_error_corrected(real_is_valid))
-% hold on
-% plot(rot_z_error_corrected(real_is_valid))
-% legend({'z-rotation before refinement', 'z-rotation after refinement'}, 'Location', 'northwest')
-% xlabel('Pose estimations within threshold')
-% ylabel('Estimated rotation [rad]')
-% 
-% figure('Name',['xyz_translation_refinement_' char(name)])
-% plot(xyz_global_valid)
-% hold on
-% plot(xyz_error_euclidian(real_is_valid))
-% legend({'Translation offset before refinement', 'Translation offset after refinement'}, 'Location', 'northwest')
-% xlabel('Pose estimations within threshold')
-% ylabel('Distance from actual xyz-position [m]')
+%% Show figures and save
+figure('Name',['z_rotation_' char(name)])
+scatter(rot_z_gt_valid, rot_z_valid, 'MarkerEdgeColor', 'g')
+hold on
+scatter(rot_z_gt_not_valid, rot_z_not_valid, 'MarkerEdgeColor', 'r')
+plot(rot_z_gt,rot_z_gt)
+plot([-(rots/2-1)/(rots/2)*pi pi], [-(rots/2-1)/(rots/2)*pi+0.2 pi+0.2],'r:')
+plot([-(rots/2-1)/(rots/2)*pi pi], [-(rots/2-1)/(rots/2)*pi-0.2 pi-0.2],'r:')
+legend({'Estimated vs actual rotation (valid)', 'Estimated vs actual rotation (not valid)', 'Ground truth rotation', 'Threshold'}, 'Location', 'northwest')
+xlabel('Actual rotation [rad]')
+ylabel('Estimated rotation [rad]')
+xlim([-(rots/2-1)/(rots/2)*pi-0.2 pi+0.2])
+ylim([-2*pi 2*pi])
+xticks(-3/4*pi:1/4*pi:pi)
+xticklabels({'-3/4\pi','-1/2\pi','-1/4\pi','0','1/4\pi','1/2\pi','3/4\pi','\pi'})
+saveas(gcf,['z_rotation_' char(name)],'epsc')
+
+figure('Name',['xyz_translation_' char(name)])
+scatter(rot_z_gt_valid, xyz_valid, 'MarkerEdgeColor', 'g')
+hold on
+scatter(rot_z_gt_not_valid, xyz_not_valid, 'MarkerEdgeColor', 'r')
+plot([-(rots/2-1)/(rots/2)*pi pi], [0.03 0.03], 'r:')
+legend({'Estimated translation vs actual rotation (valid)', 'Estimated translation vs actual rotation (not valid)', 'Threshold'} , 'Location', 'northwest')
+xlabel('Actual rotation [rad]')
+ylabel('Distance from actual xyz-position [m]')
+xlim([-(rots/2-1)/(rots/2)*pi-0.2 pi+0.2])
+ylim([0 0.3])
+xticks(-3/4*pi:1/4*pi:pi)
+xticklabels({'-3/4\pi','-1/2\pi','-1/4\pi','0','1/4\pi','1/2\pi','3/4\pi','\pi'})
+hold off
+saveas(gcf,['xyz_translation_' char(name)],'epsc')
+
+figure('Name',['histogram_' char(name)])
+b = bar(rotations, y,'stacked');
+set(b,{'FaceColor'},{'g';'r'});
+legend({'True positives', 'False positives'}, 'Location', 'northwest')
+ylim([0 100])
+xlabel('Actual rotation [rad]')
+ylabel('Detections [%]')
+xticks(-3/4*pi:1/4*pi:pi)
+xticklabels({'-3/4\pi','-1/2\pi','-1/4\pi','0','1/4\pi','1/2\pi','3/4\pi','\pi'})
+saveas(gcf,['histogram_' char(name)],'epsc')
+%%
+ figure('Name',['z_rotation_refinement_' char(name)])
+ plot(rot_z_global_error_corrected(real_is_valid))
+ hold on
+ plot(rot_z_error_corrected(real_is_valid))
+ legend({'z-rotation before refinement', 'z-rotation after refinement'}, 'Location', 'northwest')
+ xlabel('Pose estimations within threshold')
+ ylabel('Estimated rotation [rad]')
+
+%  figure('Name',['xyz_translation_refinement_' char(name)])
+%  plot(xyz_global_valid)
+%  hold on
+%  plot(xyz_error_euclidian(real_is_valid))
+%  legend({'Translation offset before refinement', 'Translation offset after refinement'}, 'Location', 'northwest')
+%  xlabel('Pose estimations within threshold')
+%  ylabel('Distance from actual xyz-position [m]')
 break
 
 end
 %%
-
-figure
-c = categorical({'yoda reduced','yoda full', 'yoda full (+clutter)', 'yoshi reduced', 'yoshi full', 'yoshi full (+clutter)'});
-c = reordercats(c,{'yoshi full' 'yoshi reduced' 'yoshi full (+clutter)' 'yoda full' 'yoda reduced' 'yoda full (+clutter)'});
-hold on
-yyaxis left
-bar(c,[real_is_valid_all, [0; 0; 0; 0; 0; 0]])
-
-ylabel('true positives [%]')
-
-yyaxis right
-bar(c,[[0; 0; 0; 0; 0; 0], time_all/1000])
-ylabel('average excecution time [s]')
-hold off
+% 
+% figure
+% c = categorical({'yoda reduced','yoda full', 'yoda full (+clutter)', 'yoshi reduced', 'yoshi full', 'yoshi full (+clutter)'});
+% c = reordercats(c,{'yoshi full' 'yoshi reduced' 'yoda full' 'yoda reduced' 'yoshi full (+clutter)' 'yoda full (+clutter)'});
+% hold on
+% yyaxis left
+% bar(c,[real_is_valid_all, [0; 0; 0; 0; 0; 0]])
+% 
+% ylabel('true positives [%]')
+% 
+% yyaxis right
+% bar(c,[[0; 0; 0; 0; 0; 0], time_all/1000])
+% ylabel('average excecution time [s]')
+% hold off

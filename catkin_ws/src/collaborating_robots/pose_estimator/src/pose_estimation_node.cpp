@@ -66,10 +66,10 @@ void point_cloud_callback(const sensor_msgs::PointCloud2ConstPtr& cloud_msg)	//c
 							
 	if(ready_for_new_cloud)											//if the program is ready for a new cloud
 	{
-		pcl::PCLPointCloud2::Ptr input_cloud (new pcl::PCLPointCloud2 ());
-		//pcl::fromROSMsg(*cloud_msg, *cloud_from_msg);                                   //convert msg to pointcloud
+                pcl::PCLPointCloud2::Ptr input_cloud (new pcl::PCLPointCloud2 ());
+                //pcl::fromROSMsg(*cloud_msg, *cloud_from_msg);                                   //convert msg to pointcloud
 
-		pcl_conversions::toPCL(*cloud_msg, *input_cloud);//convert msg to pcl pointcloud
+                pcl_conversions::toPCL(*cloud_msg, *input_cloud);//convert msg to pcl pointcloud
 		// Downsample the input cloud
 		pcl::VoxelGrid<pcl::PCLPointCloud2> sor;
 		sor.setInputCloud (input_cloud);
@@ -84,7 +84,7 @@ void point_cloud_callback(const sensor_msgs::PointCloud2ConstPtr& cloud_msg)	//c
         pcl::transformPointCloud(*cloud_from_msg, *cloud_from_msg, T_flip);	//flip pointcloud 180 deg around x, to get the right rotation // TODO comment back in after test
 		ROS_INFO("new Pointcloud arrived! stamp: %PRIu64", cloud_from_msg->header.stamp);			//This is just for showing that the pointcloud gets updated
 		new_cloud_from_msg = true;											//signal new cloud is ready
-		ready_for_new_cloud = false;
+                ready_for_new_cloud = false;
 	} 
 }
 
@@ -292,8 +292,8 @@ int main(int argc, char** argv)
 				global_pose_data global_pose;
 				local_pose_data local_pose;
 
-				global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoshi", 3500, 0.000025, true);		// TODO change to true after test
-				local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoshi", 200, 0.0001, global_pose.pose, true);
+                                global_pose = PE.get_pose_global(cloud_boxFilter_output, "cloud_object_yoda", 3500, 0.000025, true);		// TODO change to true after test
+                                local_pose = PE.get_pose_local(cloud_boxFilter_output, "cloud_object_yoda", 200, 0.0001, global_pose.pose, true);
 				
 				T_pose_estimation = local_pose.pose * global_pose.pose;
 				PE.valid_output_pose(T_pose_estimation);
@@ -322,10 +322,10 @@ int main(int argc, char** argv)
                         viewer.removePointCloud("yoda");
 			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_output, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_output, 0, 255, 0), "cloud_boxFilter_output");
 			viewer.addPointCloud<pcl::PointXYZ>(cloud_boxFilter_discarded, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_boxFilter_discarded, 150, 150, 0), "cloud_boxFilter_discarded");
-                        viewer.addPointCloud<pcl::PointXYZ>(cloud_object_yoshi, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_object_yoshi, 255, 0, 0), "yoshi");
-                        viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "yoshi");
-                        //viewer.addPointCloud<pcl::PointXYZ>(cloud_object_yoda, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_object_yoda, 255, 0, 0), "yoda");
-                        //viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "yoda");
+                        //viewer.addPointCloud<pcl::PointXYZ>(cloud_object_yoshi, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_object_yoshi, 255, 0, 0), "yoshi");
+                        //viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "yoshi");
+                        viewer.addPointCloud<pcl::PointXYZ>(cloud_object_yoda, pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ>(cloud_object_yoda, 255, 0, 0), "yoda");
+                        viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "yoda");
 			viewer.spinOnce();
 			//viewer.spin();
 

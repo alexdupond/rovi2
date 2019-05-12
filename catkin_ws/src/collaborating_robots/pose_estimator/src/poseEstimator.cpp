@@ -110,7 +110,7 @@ global_pose_data poseEstimator::get_pose_global(PointCloud<PointXYZ>::Ptr scene_
     }
 
     // Compute shape features
-    PointCloud<FeatureT>::Ptr object_features(new PointCloud<FeatureT>);
+    PointCloud<FeatureT>::Ptr object_features(new PointCl oud<FeatureT>);
     PointCloud<FeatureT>::Ptr scene_features(new PointCloud<FeatureT>);
     {
         ScopeTime t("Shape features");
