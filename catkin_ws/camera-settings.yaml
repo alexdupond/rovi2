@@ -2,7 +2,7 @@
 dictitems:
   emitter_enabled: true
   emitter_on_off: false
-  enable_auto_exposure: false
+  enable_auto_exposure: true
   error_polling_enabled: true
   exposure: 4800
   frames_queue_size: 16
@@ -11,7 +11,7 @@ dictitems:
     dictitems:
       emitter_enabled: true
       emitter_on_off: false
-      enable_auto_exposure: false
+      enable_auto_exposure: true
       error_polling_enabled: true
       exposure: 4800
       frames_queue_size: 16

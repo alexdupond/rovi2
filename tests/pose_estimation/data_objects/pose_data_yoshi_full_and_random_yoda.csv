@@ -1,0 +1,2560 @@
+global_pose, 0.977165, 0.18368, 0.106814, -0.214064
+global_pose, -0.197464, 0.970645, 0.137316, 0.218439
+global_pose, -0.0784563, -0.155273, 0.984751, -0.0164435
+global_pose, 0, 0, 0, 1
+global_rpy, -0.199394, 0.0785371, -0.15639
+global_time_surface_normals, 11
+global_time_shape_features, 156
+global_time_feature_matches, 2158
+global_time_ransac, 31334
+global_ransac_iterations, 2932
+global_ransac_inliers, 526
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1492
+global_rms_error, 0.00327984
+local_pose, 0.970295, -0.212496, -0.1161, 0.0575796
+local_pose, 0.199941, 0.973564, -0.110914, 0.0483827
+local_pose, 0.136591, 0.0843979, 0.987056, 0.00565811
+local_pose, 0, 0, 0, 1
+local_rpy, 0.203217, -0.137015, 0.0852972
+local_time_icp, 2003
+local_icp_inliers, 1203
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1492
+local_rms_error, 0.00499626
+final_pose, 0.999208, -0.0100076, -0.0398672, -0.194634
+final_pose, 0.0118329, 0.998932, 0.0458195, 0.22007
+final_pose, 0.0393658, -0.0462534, 0.998184, -0.021376
+final_pose, 0, 0, 0, 1
+final_rpy, 0.0118417, -0.0393748, -0.0463045
+final_is_valid, 1
+=======================================================
+global_pose, 0.977554, 0.194784, 0.0802961, -0.212869
+global_pose, -0.195395, 0.980725, -0.000257395, 0.220556
+global_pose, -0.0787985, -0.0154379, 0.996771, -0.0173403
+global_pose, 0, 0, 0, 1
+global_rpy, -0.197282, 0.0788803, -0.0154867
+global_time_surface_normals, 11
+global_time_shape_features, 166
+global_time_feature_matches, 2178
+global_time_ransac, 29243
+global_ransac_iterations, 1597
+global_ransac_inliers, 473
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1318
+global_rms_error, 0.00332451
+local_pose, 0.971327, -0.201183, -0.127129, 0.055124
+local_pose, 0.207265, 0.977645, 0.0364867, 0.0484868
+local_pose, 0.116938, -0.0617806, 0.991263, 0.0347982
+local_pose, 0, 0, 0, 1
+local_rpy, 0.21023, -0.1172, -0.0622446
+local_time_icp, 1845
+local_icp_inliers, 1195
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1318
+local_rms_error, 0.00502122
+final_pose, 0.998852, -0.00614305, -0.0486733, -0.193808
+final_pose, 0.0087105, 0.998609, 0.0527598, 0.219359
+final_pose, 0.0482743, -0.0531152, 0.997468, -0.0209089
+final_pose, 0, 0, 0, 1
+final_rpy, 0.00872029, -0.0482908, -0.0531998
+final_is_valid, 1
+=======================================================
+global_pose, 0.995636, -0.0933263, -0.000121655, -0.201589
+global_pose, 0.0933199, 0.99555, 0.0131129, 0.227072
+global_pose, -0.00110267, -0.0130671, 0.999914, -0.0237303
+global_pose, 0, 0, 0, 1
+global_rpy, 0.0934559, 0.00110267, -0.0130675
+global_time_surface_normals, 11
+global_time_shape_features, 166
+global_time_feature_matches, 2246
+global_time_ransac, 28732
+global_ransac_iterations, 2001
+global_ransac_inliers, 550
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1343
+global_rms_error, 0.0031211
+local_pose, 0.995686, 0.080881, -0.044741, -0.0124729
+local_pose, -0.0793181, 0.996165, 0.0356662, -0.0217286
+local_pose, 0.0474558, -0.0319695, 0.998353, 0.0193163
+local_pose, 0, 0, 0, 1
+local_rpy, -0.0794939, -0.047474, -0.0320113
+local_time_icp, 1834
+local_icp_inliers, 1152
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1343
+local_rms_error, 0.00501845
+final_pose, 0.998937, -0.011818, -0.0437977, -0.193765
+final_pose, 0.0139508, 0.998669, 0.0487354, 0.219616
+final_pose, 0.0431644, -0.0493016, 0.997842, -0.0212008
+final_pose, 0, 0, 0, 1
+final_rpy, 0.0139647, -0.0431782, -0.0493681
+final_is_valid, 1
+=======================================================
+global_pose, 0.982564, 0.0744614, 0.170361, -0.214715
+global_pose, -0.0911249, 0.991564, 0.0921734, 0.221721
+global_pose, -0.16206, -0.10609, 0.981061, -0.0175172
+global_pose, 0, 0, 0, 1
+global_rpy, -0.0924773, 0.162778, -0.10772
+global_time_surface_normals, 13
+global_time_shape_features, 165
+global_time_feature_matches, 2172
+global_time_ransac, 30556
+global_ransac_iterations, 2932
+global_ransac_inliers, 462
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1356
+global_rms_error, 0.00341189
+local_pose, 0.974125, -0.101155, -0.202345, 0.0336797
+local_pose, 0.090165, 0.993981, -0.0628215, 0.0176565
+local_pose, 0.207468, 0.042951, 0.97731, 0.0302064
+local_pose, 0, 0, 0, 1
+local_rpy, 0.092297, -0.208984, 0.04392
+local_time_icp, 1809
+local_icp_inliers, 1189
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1356
+local_rms_error, 0.0050187
+final_pose, 0.99915, -0.00630001, -0.0418837, -0.194363
+final_pose, 0.00819741, 0.998974, 0.0453474, 0.219783
+final_pose, 0.041554, -0.0456461, 0.998104, -0.0219368
+final_pose, 0, 0, 0, 1
+final_rpy, 0.0082042, -0.0415655, -0.0457009
+final_is_valid, 1
+=======================================================
+global_pose, 0.855479, 0.13221, -0.500675, -0.149009
+global_pose, -0.0938835, 0.990434, 0.101124, 0.213617
+global_pose, 0.509256, -0.0395044, 0.859708, -0.000699267
+global_pose, 0, 0, 0, 1
+global_rpy, -0.109306, -0.53432, -0.0459187
+global_time_surface_normals, 11
+global_time_shape_features, 160
+global_time_feature_matches, 2140
+global_time_ransac, 29048
+global_ransac_iterations, 986
+global_ransac_inliers, 491
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1333
+global_rms_error, 0.00309167
+local_pose, 0.99846, -0.0491372, 0.0267311, 0.0126343
+local_pose, 0.0492647, 0.998794, -0.00414809, 0.00904943
+local_pose, -0.0264804, 0.00545363, 0.999647, -0.00581805
+local_pose, 0, 0, 0, 1
+local_rpy, 0.0493006, 0.0264832, 0.0054555
+local_time_icp, 1784
+local_icp_inliers, 928
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1333
+local_rms_error, 0.00561459
+final_pose, 0.872388, 0.0822837, -0.481893, -0.146661
+final_pose, -0.0537378, 0.995917, 0.0727704, 0.215071
+final_pose, 0.48591, -0.03759, 0.873214, -0.00140625
+final_pose, 0, 0, 0, 1
+final_rpy, -0.0615208, -0.507398, -0.0430213
+final_is_valid, 0
+=======================================================
+global_pose, 0.999882, 0.0153111, -0.00156566, -0.204045
+global_pose, -0.0153338, 0.999759, -0.0156818, 0.231066
+global_pose, 0.00132518, 0.0157039, 0.999876, -0.0248543
+global_pose, 0, 0, 0, 1
+global_rpy, -0.0153344, -0.00132518, 0.0157046
+global_time_surface_normals, 10
+global_time_shape_features, 162
+global_time_feature_matches, 2196
+global_time_ransac, 28539
+global_ransac_iterations, 2001
+global_ransac_inliers, 589
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1388
+global_rms_error, 0.00321981
+local_pose, 0.998381, -0.0286441, -0.0487145, 0.0161908
+local_pose, 0.031637, 0.997582, 0.0618402, -0.00236284
+local_pose, 0.046817, -0.0632795, 0.996888, 0.0273538
+local_pose, 0, 0, 0, 1
+local_rpy, 0.0316777, -0.0468345, -0.063392
+local_time_icp, 1854
+local_icp_inliers, 1186
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1388
+local_rms_error, 0.00497314
+final_pose, 0.998637, -0.0141159, -0.0498224, -0.192931
+final_pose, 0.0164184, 0.998797, 0.0461392, 0.220152
+final_pose, 0.0491028, -0.0468925, 0.997683, -0.0215976
+final_pose, 0, 0, 0, 1
+final_rpy, 0.0164394, -0.049123, -0.0469668
+final_is_valid, 1
+=======================================================
+global_pose, 0.996576, -0.0809375, 0.0168983, -0.202537
+global_pose, 0.0801101, 0.995773, 0.0449447, 0.217003
+global_pose, -0.0204647, -0.0434371, 0.998847, -0.0248164
+global_pose, 0, 0, 0, 1
+global_rpy, 0.0802129, 0.0204661, -0.0434598
+global_time_surface_normals, 10
+global_time_shape_features, 151
+global_time_feature_matches, 2097
+global_time_ransac, 29546
+global_ransac_iterations, 2509
+global_ransac_inliers, 549
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1404
+global_rms_error, 0.00316455
+local_pose, 0.995628, 0.0644341, -0.0677237, -0.00732722
+local_pose, -0.0645815, 0.997931, 3.99769e-05, -0.0093595
+local_pose, 0.0675836, 0.00432807, 0.997687, 0.0160599
+local_pose, 0, 0, 0, 1
+local_rpy, -0.0647744, -0.0676363, 0.00433808
+local_time_icp, 1832
+local_icp_inliers, 1197
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1404
+local_rms_error, 0.00495695
+final_pose, 0.998767, -0.0134802, -0.0479252, -0.193316
+final_pose, 0.0155831, 0.998937, 0.0438003, 0.220274
+final_pose, 0.0472815, -0.0444969, 0.997873, -0.021448
+final_pose, 0, 0, 0, 1
+final_rpy, 0.0156011, -0.0473, -0.0445622
+final_is_valid, 1
+=======================================================
+global_pose, 0.996673, -0.0799712, 0.0156904, -0.200152
+global_pose, 0.0786341, 0.994255, 0.0726152, 0.213252
+global_pose, -0.0214075, -0.0711399, 0.997237, -0.0229341
+global_pose, 0, 0, 0, 1
+global_rpy, 0.0787335, 0.0214092, -0.0712164
+global_time_surface_normals, 10
+global_time_shape_features, 158
+global_time_feature_matches, 1810
+global_time_ransac, 28614
+global_ransac_iterations, 2509
+global_ransac_inliers, 552
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1049
+global_rms_error, 0.00319596
+local_pose, 0.995789, 0.0614256, -0.0682806, -0.00854079
+local_pose, -0.0626994, 0.997874, -0.016554, -0.00715302
+local_pose, 0.0671238, 0.0207802, 0.997544, 0.0109075
+local_pose, 0, 0, 0, 1
+local_rpy, -0.0628816, -0.0671733, 0.0208283
+local_time_icp, 1902
+local_icp_inliers, 1152
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1049
+local_rms_error, 0.00505282
+final_pose, 0.998768, -0.0137042, -0.0480071, -0.193184
+final_pose, 0.0163305, 0.998333, 0.0549688, 0.218575
+final_pose, 0.0471796, -0.0556723, 0.99735, -0.0209738
+final_pose, 0, 0, 0, 1
+final_rpy, 0.0163491, -0.0471964, -0.0557624
+final_is_valid, 1
+=======================================================
+global_pose, 0.982012, -0.184924, -0.0381432, -0.188798
+global_pose, 0.188632, 0.969757, 0.154883, 0.210367
+global_pose, 0.00834786, -0.159293, 0.987196, -0.010293
+global_pose, 0, 0, 0, 1
+global_rpy, 0.189776, -0.00834796, -0.15998
+global_time_surface_normals, 12
+global_time_shape_features, 179
+global_time_feature_matches, 1919
+global_time_ransac, 29073
+global_ransac_iterations, 2565
+global_ransac_inliers, 471
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1109
+global_rms_error, 0.00336037
+local_pose, 0.985665, 0.165122, -0.0346047, -0.042364
+local_pose, -0.168139, 0.97835, -0.120942, -0.0180068
+local_pose, 0.013879, 0.125024, 0.992077, -0.0355025
+local_pose, 0, 0, 0, 1
+local_rpy, -0.168958, -0.0138791, 0.125362
+local_time_icp, 1886
+local_icp_inliers, 1199
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1109
+local_rms_error, 0.00493098
+final_pose, 0.998793, -0.0166325, -0.0461833, -0.193363
+final_pose, 0.0184243, 0.99912, 0.0385499, 0.220795
+final_pose, 0.0454947, -0.0393537, 0.998209, -0.0220333
+final_pose, 0, 0, 0, 1
+final_rpy, 0.0184445, -0.0455095, -0.0394039
+final_is_valid, 1
+=======================================================
+global_pose, 0.996293, -0.0826087, 0.0240051, -0.203676
+global_pose, 0.0814776, 0.995668, 0.0448011, 0.217041
+global_pose, -0.0276022, -0.0426794, 0.998708, -0.0249579
+global_pose, 0, 0, 0, 1
+global_rpy, 0.0815991, 0.0276057, -0.0427086
+global_time_surface_normals, 11
+global_time_shape_features, 181
+global_time_feature_matches, 2677
+global_time_ransac, 31549
+global_ransac_iterations, 2509
+global_ransac_inliers, 532
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1356
+global_rms_error, 0.0032338
+local_pose, 0.994773, 0.0669338, -0.0774235, -0.00680543
+local_pose, -0.0669921, 0.997765, 0.00187907, -0.00982326
+local_pose, 0.0773815, 0.00332827, 0.997026, 0.018354
+local_pose, 0, 0, 0, 1
+local_rpy, -0.0672426, -0.0774566, 0.00333819
+local_time_icp, 2009
+local_icp_inliers, 1221
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1356
+local_rms_error, 0.00503106
+final_pose, 0.998676, -0.0122287, -0.0504451, -0.192957
+final_pose, 0.0144998, 0.998897, 0.0449695, 0.22033
+final_pose, 0.0498457, -0.045631, 0.997744, -0.0215681
+final_pose, 0, 0, 0, 1
+final_rpy, 0.014518, -0.0498649, -0.0457023
+final_is_valid, 1
+=======================================================
+global_pose, 0.695261, 0.708976, -0.118174, -0.189909
+global_pose, -0.711883, 0.701925, 0.0228799, 0.220765
+global_pose, 0.0991704, 0.0682185, 0.992729, -0.0254839
+global_pose, 0, 0, 0, 1
+global_rpy, -0.79721, -0.0993337, 0.0686102
+global_time_surface_normals, 10
+global_time_shape_features, 151
+global_time_feature_matches, 2140
+global_time_ransac, 28090
+global_ransac_iterations, 318
+global_ransac_inliers, 571
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1439
+global_rms_error, 0.00343957
+local_pose, 0.991087, -0.0964518, 0.091873, 0.0152914
+local_pose, 0.0917496, 0.994311, 0.0541051, 0.0169399
+local_pose, -0.0965619, -0.0451977, 0.994285, -0.00248619
+local_pose, 0, 0, 0, 1
+local_rpy, 0.0923117, 0.096714, -0.0454262
+local_time_icp, 1910
+local_icp_inliers, 1250
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1439
+local_rms_error, 0.00504408
+final_pose, 0.766837, 0.641223, -0.0281224, -0.196559
+final_pose, -0.638678, 0.766671, 0.065619, 0.217646
+final_pose, 0.0636434, -0.0323569, 0.997433, -0.0194646
+final_pose, 0, 0, 0, 1
+final_rpy, -0.694466, -0.0636875, -0.0324288
+final_is_valid, 1
+=======================================================
+global_pose, 0.680211, 0.728965, 0.0769567, -0.208141
+global_pose, -0.729873, 0.683264, -0.0209001, 0.236476
+global_pose, -0.0678171, -0.041952, 0.996816, -0.0167598
+global_pose, 0, 0, 0, 1
+global_rpy, -0.820602, 0.0678692, -0.0420612
+global_time_surface_normals, 13
+global_time_shape_features, 169
+global_time_feature_matches, 2850
+global_time_ransac, 28772
+global_ransac_iterations, 3097
+global_ransac_inliers, 525
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1519
+global_rms_error, 0.00325198
+local_pose, 0.98808, -0.110632, -0.107058, 0.0332418
+local_pose, 0.119496, 0.989589, 0.0803145, 0.0100205
+local_pose, 0.0970644, -0.0921555, 0.990983, 0.0389827
+local_pose, 0, 0, 0, 1
+local_rpy, 0.120353, -0.0972194, -0.0927274
+local_time_icp, 1865
+local_icp_inliers, 1245
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1519
+local_rms_error, 0.00516713
+final_pose, 0.760111, 0.649176, -0.0283659, -0.196785
+final_pose, -0.646438, 0.75989, 0.0685723, 0.217817
+final_pose, 0.0660805, -0.0337837, 0.997223, -0.0196216
+final_pose, 0, 0, 0, 1
+final_rpy, -0.704757, -0.06613, -0.0338648
+final_is_valid, 1
+=======================================================
+global_pose, -0.869691, -0.459594, -0.180033, -0.13995
+global_pose, 0.478692, -0.874282, -0.0805369, 0.314096
+global_pose, -0.120385, -0.156222, 0.980359, 0.000653826
+global_pose, 0, 0, 0, 1
+global_rpy, 2.63843, 0.120678, -0.158024
+global_time_surface_normals, 11
+global_time_shape_features, 165
+global_time_feature_matches, 2196
+global_time_ransac, 30380
+global_ransac_iterations, 651
+global_ransac_inliers, 376
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1405
+global_rms_error, 0.00329923
+local_pose, 0.989704, -0.128866, 0.0625139, 0.029695
+local_pose, 0.121609, 0.986652, 0.108343, 0.012108
+local_pose, -0.0756429, -0.0996199, 0.992175, 0.00980744
+local_pose, 0, 0, 0, 1
+local_rpy, 0.122261, 0.075713, -0.10007
+local_time_icp, 1865
+local_icp_inliers, 895
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1405
+local_rms_error, 0.00583171
+final_pose, -0.92995, -0.351962, -0.106514, -0.14925
+final_pose, 0.353497, -0.935429, 0.00485977, 0.305063
+final_pose, -0.101344, -0.0331391, 0.994328, -0.0102478
+final_pose, 0, 0, 0, 1
+final_rpy, 2.77834, 0.101515, -0.0333157
+final_is_valid, 1
+=======================================================
+global_pose, 0.767825, 0.625229, -0.139762, -0.185444
+global_pose, -0.629627, 0.776739, 0.015711, 0.218123
+global_pose, 0.118382, 0.0759346, 0.99006, -0.0239273
+global_pose, 0, 0, 0, 1
+global_rpy, -0.686826, -0.11866, 0.0765471
+global_time_surface_normals, 9
+global_time_shape_features, 150
+global_time_feature_matches, 1547
+global_time_ransac, 28702
+global_ransac_iterations, 318
+global_ransac_inliers, 535
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 974
+global_rms_error, 0.00344436
+local_pose, 0.994047, 0.0342849, 0.103394, -0.0176119
+local_pose, -0.0388314, 0.998352, 0.0422289, -0.00631917
+local_pose, -0.101774, -0.0459943, 0.993734, -0.00519655
+local_pose, 0, 0, 0, 1
+local_rpy, -0.0390442, 0.101952, -0.0462513
+local_time_icp, 1870
+local_icp_inliers, 1254
+local_object_cloud_size, 2277
+local_scene_cloud_size, 974
+local_rms_error, 0.00515196
+final_pose, 0.753907, 0.655988, -0.0360247, -0.196947
+final_pose, -0.653406, 0.754387, 0.0629215, 0.217635
+final_pose, 0.0684542, -0.0238991, 0.997358, -0.0201329
+final_pose, 0, 0, 0, 1
+final_rpy, -0.714106, -0.0685084, -0.0239578
+final_is_valid, 1
+=======================================================
+global_pose, 0.781004, 0.624405, 0.0123051, -0.196274
+global_pose, -0.624369, 0.780213, 0.0378279, 0.226247
+global_pose, 0.0140191, -0.0372266, 0.999209, -0.0235273
+global_pose, 0, 0, 0, 1
+global_rpy, -0.674402, -0.0140196, -0.0372388
+global_time_surface_normals, 10
+global_time_shape_features, 173
+global_time_feature_matches, 2331
+global_time_ransac, 28068
+global_ransac_iterations, 2509
+global_ransac_inliers, 656
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1141
+global_rms_error, 0.00314624
+local_pose, 0.998975, 0.0316132, -0.0326423, -0.00950405
+local_pose, -0.0306528, 0.999092, 0.0298491, -0.0133638
+local_pose, 0.033566, -0.0288241, 0.998995, 0.0168123
+local_pose, 0, 0, 0, 1
+local_rpy, -0.0306747, -0.0335732, -0.0288451
+local_time_icp, 1959
+local_icp_inliers, 1243
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1141
+local_rms_error, 0.00505967
+final_pose, 0.760007, 0.649645, -0.0191281, -0.197656
+final_pose, -0.647324, 0.759254, 0.0672419, 0.217992
+final_pose, 0.0582171, -0.0387194, 0.997527, -0.0198009
+final_pose, 0, 0, 0, 1
+final_rpy, -0.7055, -0.0582515, -0.0387959
+final_is_valid, 1
+=======================================================
+global_pose, 0.735137, 0.675483, -0.0574199, -0.191217
+global_pose, -0.674858, 0.737227, 0.032592, 0.217432
+global_pose, 0.0643469, 0.0147905, 0.997818, -0.0208287
+global_pose, 0, 0, 0, 1
+global_rpy, -0.742673, -0.0643914, 0.0148217
+global_time_surface_normals, 11
+global_time_shape_features, 166
+global_time_feature_matches, 2185
+global_time_ransac, 30987
+global_ransac_iterations, 318
+global_ransac_inliers, 407
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1358
+global_rms_error, 0.00343545
+local_pose, 0.998303, -0.033783, 0.0475858, 0.000816572
+local_pose, 0.0319274, 0.998716, 0.0392726, 0.00775975
+local_pose, -0.0488568, -0.0376849, 0.998114, 0.000438912
+local_pose, 0, 0, 0, 1
+local_rpy, 0.0319708, 0.0488753, -0.0377382
+local_time_icp, 1892
+local_icp_inliers, 1203
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1358
+local_rms_error, 0.00512649
+final_pose, 0.75975, 0.650135, -0.0109416, -0.198412
+final_pose, -0.647993, 0.758428, 0.0699038, 0.21799
+final_pose, 0.0537411, -0.0460217, 0.997513, -0.0192022
+final_pose, 0, 0, 0, 1
+final_rpy, -0.706177, -0.0537659, -0.0461037
+final_is_valid, 1
+=======================================================
+global_pose, 0.742742, 0.661649, 0.102742, -0.203846
+global_pose, -0.667064, 0.744474, 0.0279904, 0.220024
+global_pose, -0.057969, -0.0893252, 0.994314, -0.0116244
+global_pose, 0, 0, 0, 1
+global_rpy, -0.73177, 0.0580015, -0.0895955
+global_time_surface_normals, 9
+global_time_shape_features, 156
+global_time_feature_matches, 2096
+global_time_ransac, 30231
+global_ransac_iterations, 12
+global_ransac_inliers, 510
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1337
+global_rms_error, 0.00334868
+local_pose, 0.993444, -0.022802, -0.111982, 0.00800841
+local_pose, 0.0275831, 0.998746, 0.0415757, 0.00434496
+local_pose, 0.110898, -0.0443982, 0.992836, 0.0247617
+local_pose, 0, 0, 0, 1
+local_rpy, 0.027758, -0.111127, -0.0446888
+local_time_icp, 1924
+local_icp_inliers, 1209
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1337
+local_rms_error, 0.00521716
+final_pose, 0.759574, 0.650338, -0.00991465, -0.198217
+final_pose, -0.648151, 0.758077, 0.0721286, 0.217988
+final_pose, 0.054431, -0.0483634, 0.997342, -0.0191541
+final_pose, 0, 0, 0, 1
+final_rpy, -0.706412, -0.0544581, -0.0484543
+final_is_valid, 1
+=======================================================
+global_pose, 0.693416, 0.600541, -0.398152, -0.154145
+global_pose, -0.630787, 0.773023, 0.0673962, 0.218076
+global_pose, 0.348255, 0.204416, 0.91484, -0.0101905
+global_pose, 0, 0, 0, 1
+global_rpy, -0.738138, -0.355709, 0.219833
+global_time_surface_normals, 11
+global_time_shape_features, 162
+global_time_feature_matches, 2141
+global_time_ransac, 29212
+global_ransac_iterations, 643
+global_ransac_inliers, 448
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1346
+global_rms_error, 0.00320877
+local_pose, 0.925364, 0.0177615, 0.378684, -0.0548731
+local_pose, -0.0160793, 0.999831, -0.00763569, -0.00268819
+local_pose, -0.378758, 0.000972508, 0.925501, -0.0683945
+local_pose, 0, 0, 0, 1
+local_rpy, -0.0173744, 0.388452, 0.00105079
+local_time_icp, 1856
+local_icp_inliers, 1225
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1346
+local_rms_error, 0.00503166
+final_pose, 0.762337, 0.646858, -0.0208026, -0.197499
+final_pose, -0.64449, 0.761676, 0.0668014, 0.217908
+final_pose, 0.0590599, -0.0375209, 0.997555, -0.0192299
+final_pose, 0, 0, 0, 1
+final_rpy, -0.701825, -0.059094, -0.0375951
+final_is_valid, 1
+=======================================================
+global_pose, 0.860758, 0.509012, 0.00168391, -0.19285
+global_pose, -0.509015, 0.860753, 0.00288707, 0.217154
+global_pose, 2.02283e-05, -0.00334209, 0.999995, -0.0177347
+global_pose, 0, 0, 0, 1
+global_rpy, -0.53404, -2.02283e-05, -0.0033421
+global_time_surface_normals, 8
+global_time_shape_features, 150
+global_time_feature_matches, 1615
+global_time_ransac, 28320
+global_ransac_iterations, 318
+global_ransac_inliers, 553
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 990
+global_rms_error, 0.003213
+local_pose, 0.985914, 0.163192, -0.0365279, -0.0421848
+local_pose, -0.161032, 0.985343, 0.0561868, -0.0257395
+local_pose, 0.0451619, -0.0495172, 0.997742, 0.017601
+local_pose, 0, 0, 0, 1
+local_rpy, -0.161903, -0.0451777, -0.0495885
+local_time_icp, 1910
+local_icp_inliers, 1241
+local_object_cloud_size, 2277
+local_scene_cloud_size, 990
+local_rms_error, 0.00498625
+final_pose, 0.765566, 0.642432, -0.0343964, -0.196233
+final_pose, -0.640163, 0.765982, 0.0587601, 0.21829
+final_pose, 0.0640986, -0.0229687, 0.99767, -0.019556
+final_pose, 0, 0, 0, 1
+final_rpy, -0.696425, -0.0641431, -0.0230183
+final_is_valid, 1
+=======================================================
+global_pose, -0.991513, -0.0473764, 0.121067, -0.182935
+global_pose, 0.104226, -0.8463, 0.52241, 0.257681
+global_pose, 0.077709, 0.530595, 0.844056, -0.0251791
+global_pose, 0, 0, 0, 1
+global_rpy, 3.03686, -0.0777874, 0.561202
+global_time_surface_normals, 12
+global_time_shape_features, 160
+global_time_feature_matches, 2178
+global_time_ransac, 29309
+global_ransac_iterations, 2609
+global_ransac_inliers, 394
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1327
+global_rms_error, 0.003221
+local_pose, 0.995508, -0.0912027, 0.0265259, 0.0227542
+local_pose, 0.0948908, 0.967768, -0.233447, 0.0471625
+local_pose, -0.00437981, 0.23493, 0.972058, -0.0561602
+local_pose, 0, 0, 0, 1
+local_rpy, 0.0950319, 0.00437959, 0.237136
+local_time_icp, 1815
+local_icp_inliers, 919
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1327
+local_rms_error, 0.00569585
+final_pose, -0.994504, 0.0440958, 0.0952672, -0.183528
+final_pose, -0.01136, -0.947384, 0.320018, 0.285057
+final_pose, 0.104366, 0.317155, 0.942671, -0.0192977
+final_pose, 0, 0, 0, 1
+final_rpy, -3.13017, -0.104551, 0.324547
+final_is_valid, 0
+=======================================================
+global_pose, -0.165202, -0.978164, -0.12611, -0.0964334
+global_pose, 0.821434, -0.207233, 0.53132, 0.189391
+global_pose, -0.545852, -0.0158155, 0.837733, -0.00114119
+global_pose, 0, 0, 0, 1
+global_rpy, 1.76926, 0.577405, -0.0188767
+global_time_surface_normals, 10
+global_time_shape_features, 155
+global_time_feature_matches, 2180
+global_time_ransac, 28204
+global_ransac_iterations, 2453
+global_ransac_inliers, 416
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1457
+global_rms_error, 0.0032378
+local_pose, 0.962583, 0.148951, -0.226457, -0.0218348
+local_pose, -0.133284, 0.987599, 0.0830144, -0.0247028
+local_pose, 0.236015, -0.0497288, 0.970499, 0.0472103
+local_pose, 0, 0, 0, 1
+local_rpy, -0.13759, -0.238258, -0.0511957
+local_time_icp, 1829
+local_icp_inliers, 934
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1457
+local_rms_error, 0.00537952
+final_pose, 0.0869441, -0.96885, -0.231961, -0.0861917
+final_pose, 0.787953, -0.0756016, 0.611083, 0.175097
+final_pose, -0.609588, -0.235905, 0.756833, 0.0139249
+final_pose, 0, 0, 0, 1
+final_rpy, 1.4609, 0.655523, -0.302156
+final_is_valid, 0
+=======================================================
+global_pose, -0.812421, 0.525229, 0.253194, -0.191319
+global_pose, -0.312851, -0.759107, 0.570861, 0.202993
+global_pose, 0.492034, 0.384567, 0.781032, 0.00503878
+global_pose, 0, 0, 0, 1
+global_rpy, -2.77401, -0.514424, 0.457536
+global_time_surface_normals, 9
+global_time_shape_features, 140
+global_time_feature_matches, 1535
+global_time_ransac, 27893
+global_ransac_iterations, 419
+global_ransac_inliers, 400
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1036
+global_rms_error, 0.00316933
+local_pose, 0.872105, -0.375262, 0.314038, 0.041074
+local_pose, 0.435014, 0.888461, -0.146399, 0.105072
+local_pose, -0.22407, 0.264278, 0.93807, -0.0874977
+local_pose, 0, 0, 0, 1
+local_rpy, 0.462695, 0.225986, 0.274608
+local_time_icp, 1784
+local_icp_inliers, 894
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1036
+local_rms_error, 0.00542534
+final_pose, -0.436598, 0.863688, 0.251863, -0.200369
+final_pose, -0.703404, -0.502255, 0.502988, 0.201459
+final_pose, 0.560922, 0.0424476, 0.826796, 0.0137444
+final_pose, 0, 0, 0, 1
+final_rpy, -2.12629, -0.59549, 0.0512949
+final_is_valid, 0
+=======================================================
+global_pose, -0.0559378, 0.943427, -0.326828, -0.160598
+global_pose, -0.973556, 0.0210791, 0.227474, 0.200981
+global_pose, 0.221495, 0.33091, 0.9173, -0.0112416
+global_pose, 0, 0, 0, 1
+global_rpy, -1.62819, -0.223347, 0.346214
+global_time_surface_normals, 10
+global_time_shape_features, 166
+global_time_feature_matches, 2192
+global_time_ransac, 30185
+global_ransac_iterations, 1732
+global_ransac_inliers, 418
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1323
+global_rms_error, 0.00337095
+local_pose, 0.999494, -0.00182081, 0.0326494, -0.00697751
+local_pose, 0.000454997, 0.999122, 0.0422766, -0.00307031
+local_pose, -0.0327022, -0.0422274, 0.998607, -0.00126301
+local_pose, 0, 0, 0, 1
+local_rpy, 0.000455227, 0.0327069, -0.0422611
+local_time_icp, 1842
+local_icp_inliers, 1000
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1323
+local_rms_error, 0.005858
+final_pose, -0.0469052, 0.953715, -0.297128, -0.168227
+final_pose, -0.963363, 0.0354796, 0.265906, 0.197186
+final_pose, 0.264126, 0.298707, 0.917104, -0.015724
+final_pose, 0, 0, 0, 1
+final_rpy, -1.61945, -0.267289, 0.314871
+final_is_valid, 0
+=======================================================
+global_pose, -0.105169, 0.99054, -0.0881404, -0.197604
+global_pose, -0.994453, -0.1046, 0.0110652, 0.226668
+global_pose, 0.00174103, 0.0888152, 0.996046, -0.0261233
+global_pose, 0, 0, 0, 1
+global_rpy, -1.67616, -0.00174103, 0.0889326
+global_time_surface_normals, 10
+global_time_shape_features, 165
+global_time_feature_matches, 2159
+global_time_ransac, 28388
+global_ransac_iterations, 705
+global_ransac_inliers, 467
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1338
+global_rms_error, 0.00320183
+local_pose, 0.982318, -0.177215, 0.0608523, 0.0339966
+local_pose, 0.174397, 0.983456, 0.0490086, 0.034403
+local_pose, -0.0685324, -0.03751, 0.996955, 0.000522202
+local_pose, 0, 0, 0, 1
+local_rpy, 0.175705, 0.0685854, -0.0376068
+local_time_icp, 1867
+local_icp_inliers, 1188
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1338
+local_rms_error, 0.00500413
+final_pose, 0.0730285, 0.996967, -0.0279311, -0.201872
+final_pose, -0.996256, 0.0742303, 0.0443255, 0.221579
+final_pose, 0.0462451, 0.0245842, 0.998639, -0.0204815
+final_pose, 0, 0, 0, 1
+final_rpy, -1.49762, -0.0462611, 0.0246127
+final_is_valid, 1
+=======================================================
+global_pose, -0.0976571, 0.963319, -0.24996, -0.175604
+global_pose, -0.914977, 0.0118985, 0.403329, 0.18396
+global_pose, 0.391509, 0.268096, 0.880253, -0.00524992
+global_pose, 0, 0, 0, 1
+global_rpy, -1.67713, -0.402271, 0.295641
+global_time_surface_normals, 8
+global_time_shape_features, 157
+global_time_feature_matches, 1440
+global_time_ransac, 28328
+global_ransac_iterations, 363
+global_ransac_inliers, 464
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 903
+global_rms_error, 0.00347385
+local_pose, 0.961223, -0.0782281, 0.26447, -0.0161631
+local_pose, 0.165431, 0.930804, -0.32595, 0.0769207
+local_pose, -0.220674, 0.357067, 0.907654, -0.120694
+local_pose, 0, 0, 0, 1
+local_rpy, 0.170436, 0.222502, 0.374799
+local_time_icp, 1862
+local_icp_inliers, 1198
+local_object_cloud_size, 2277
+local_scene_cloud_size, 903
+local_rms_error, 0.0049689
+final_pose, 0.081249, 0.995936, -0.0390187, -0.200737
+final_pose, -0.995433, 0.0830527, 0.0471512, 0.220812
+final_pose, 0.0501976, 0.0350069, 0.998141, -0.0210217
+final_pose, 0, 0, 0, 1
+final_rpy, -1.48936, -0.0502179, 0.0350577
+final_is_valid, 1
+=======================================================
+global_pose, -0.418936, -0.903052, -0.0948166, -0.103963
+global_pose, 0.888089, -0.429258, 0.164421, 0.239118
+global_pose, -0.189181, -0.015324, 0.981822, -0.0151376
+global_pose, 0, 0, 0, 1
+global_rpy, 2.01157, 0.190328, -0.0156064
+global_time_surface_normals, 12
+global_time_shape_features, 190
+global_time_feature_matches, 3004
+global_time_ransac, 30179
+global_ransac_iterations, 260
+global_ransac_inliers, 437
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1434
+global_rms_error, 0.00327686
+local_pose, 0.998587, -0.0521884, 0.0108174, 0.00899387
+local_pose, 0.052863, 0.995738, -0.0755744, 0.0174177
+local_pose, -0.00682692, 0.0760445, 0.997079, -0.014808
+local_pose, 0, 0, 0, 1
+local_rpy, 0.0528885, 0.00682699, 0.0761199
+local_time_icp, 1904
+local_icp_inliers, 957
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1434
+local_rms_error, 0.00561275
+final_pose, -0.466738, -0.879539, -0.0926427, -0.107465
+final_pose, 0.876455, -0.474009, 0.0845069, 0.251165
+final_pose, -0.118234, -0.0417568, 0.992105, -0.011008
+final_pose, 0, 0, 0, 1
+final_rpy, 2.06013, 0.118512, -0.0420643
+final_is_valid, 1
+=======================================================
+global_pose, -0.804075, 0.132292, 0.579623, -0.408631
+global_pose, 0.502503, 0.672256, 0.543656, 0.173318
+global_pose, -0.317734, 0.728402, -0.607021, 0.0862187
+global_pose, 0, 0, 0, 1
+global_rpy, 2.58303, 0.323339, 2.26555
+global_time_surface_normals, 14
+global_time_shape_features, 188
+global_time_feature_matches, 2724
+global_time_ransac, 27671
+global_ransac_iterations, 2205
+global_ransac_inliers, 408
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1508
+global_rms_error, 0.00327308
+local_pose, 0.959754, 0.0392247, 0.27815, -0.0366824
+local_pose, -0.0655223, 0.994161, 0.0858948, -0.0307356
+local_pose, -0.273165, -0.100657, 0.9567, -0.0635155
+local_pose, 0, 0, 0, 1
+local_rpy, -0.0681641, 0.276678, -0.104827
+local_time_icp, 1890
+local_icp_inliers, 950
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1508
+local_rms_error, 0.00539259
+final_pose, -0.840381, 0.355942, 0.408778, -0.398088
+final_pose, 0.524962, 0.722229, 0.450363, 0.17575
+final_pose, -0.134912, 0.593058, -0.793793, 0.113148
+final_pose, 0, 0, 0, 1
+final_rpy, 2.58323, 0.135323, 2.49994
+final_is_valid, 0
+=======================================================
+global_pose, -0.642916, 0.738288, 0.203938, -0.196604
+global_pose, -0.56443, -0.636659, 0.525436, 0.206583
+global_pose, 0.517762, 0.222703, 0.82603, 0.00479139
+global_pose, 0, 0, 0, 1
+global_rpy, -2.42111, -0.544233, 0.263345
+global_time_surface_normals, 10
+global_time_shape_features, 169
+global_time_feature_matches, 2183
+global_time_ransac, 30770
+global_ransac_iterations, 419
+global_ransac_inliers, 400
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1416
+global_rms_error, 0.00326053
+local_pose, 0.968371, -0.175694, 0.177264, 0.0260428
+local_pose, 0.187694, 0.980784, -0.053311, 0.0355951
+local_pose, -0.164496, 0.0848904, 0.982723, -0.0423816
+local_pose, 0, 0, 0, 1
+local_rpy, 0.191451, 0.165247, 0.086169
+local_time_icp, 1863
+local_icp_inliers, 904
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1416
+local_rms_error, 0.00540914
+final_pose, -0.431634, 0.86627, 0.251597, -0.199789
+final_pose, -0.701858, -0.497725, 0.509581, 0.201052
+final_pose, 0.566659, 0.0433633, 0.822816, 0.0122046
+final_pose, 0, 0, 0, 1
+final_rpy, -2.12216, -0.602442, 0.0526524
+final_is_valid, 0
+=======================================================
+global_pose, -0.142615, -0.876324, 0.460128, -0.175328
+global_pose, 0.597271, 0.294505, 0.746013, 0.146125
+global_pose, -0.789259, 0.381213, 0.481402, 0.0349709
+global_pose, 0, 0, 0, 1
+global_rpy, 1.80519, 0.909601, 0.669771
+global_time_surface_normals, 11
+global_time_shape_features, 164
+global_time_feature_matches, 2133
+global_time_ransac, 32235
+global_ransac_iterations, 3163
+global_ransac_inliers, 381
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1363
+global_rms_error, 0.00328296
+local_pose, 0.93981, -0.315108, -0.132239, 0.0880584
+local_pose, 0.30453, 0.947842, -0.0943349, 0.0700922
+local_pose, 0.155077, 0.0483778, 0.986734, 0.0129935
+local_pose, 0, 0, 0, 1
+local_rpy, 0.313357, -0.155703, 0.048989
+local_time_icp, 1805
+local_icp_inliers, 882
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1363
+local_rms_error, 0.00555939
+final_pose, -0.217865, -0.96679, 0.133698, -0.127386
+final_pose, 0.597143, -0.0236842, 0.801812, 0.151904
+final_pose, -0.772011, 0.254506, 0.582461, 0.0273804
+final_pose, 0, 0, 0, 1
+final_rpy, 1.92063, 0.881977, 0.411948
+final_is_valid, 0
+=======================================================
+global_pose, -0.280851, 0.936781, 0.208721, -0.226122
+global_pose, -0.958839, -0.28335, -0.0184663, 0.238434
+global_pose, 0.041842, -0.205316, 0.977801, -0.00180086
+global_pose, 0, 0, 0, 1
+global_rpy, -1.85573, -0.0418542, -0.20697
+global_time_surface_normals, 13
+global_time_shape_features, 187
+global_time_feature_matches, 2510
+global_time_ransac, 31891
+global_ransac_iterations, 1396
+global_ransac_inliers, 413
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1248
+global_rms_error, 0.00324674
+local_pose, 0.904683, -0.345625, -0.249182, 0.0868093
+local_pose, 0.351008, 0.93609, -0.0239157, 0.0790916
+local_pose, 0.241516, -0.0658325, 0.968161, 0.050874
+local_pose, 0, 0, 0, 1
+local_rpy, 0.37011, -0.243928, -0.067893
+local_time_icp, 1850
+local_icp_inliers, 1194
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1248
+local_rms_error, 0.0049535
+final_pose, 0.0668917, 0.996583, -0.0484418, -0.19972
+final_pose, -0.997141, 0.068487, 0.0325916, 0.22296
+final_pose, 0.0358026, 0.0461221, 0.998294, -0.0211783
+final_pose, 0, 0, 0, 1
+final_rpy, -1.50381, -0.0358103, 0.0461682
+final_is_valid, 1
+=======================================================
+global_pose, -0.668084, -0.323946, -0.669868, -0.365845
+global_pose, 0.669993, -0.653519, -0.352169, 0.245442
+global_pose, -0.323687, -0.684085, 0.653647, 0.0212913
+global_pose, 0, 0, 0, 1
+global_rpy, 2.35477, 0.329624, -0.808148
+global_time_surface_normals, 10
+global_time_shape_features, 139
+global_time_feature_matches, 1685
+global_time_ransac, 29416
+global_ransac_iterations, 2702
+global_ransac_inliers, 366
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1127
+global_rms_error, 0.00319646
+local_pose, 0.990139, -0.105201, -0.0926691, 0.0251191
+local_pose, 0.101033, 0.993713, -0.0486204, 0.0557016
+local_pose, 0.0972047, 0.0387779, 0.99451, 0.0369587
+local_pose, 0, 0, 0, 1
+local_rpy, 0.101687, -0.0973583, 0.0389722
+local_time_icp, 1770
+local_icp_inliers, 790
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1127
+local_rms_error, 0.0056337
+final_pose, -0.701984, -0.188607, -0.686786, -0.364912
+final_pose, 0.61402, -0.648879, -0.449414, 0.261603
+final_pose, -0.36087, -0.737161, 0.571288, 0.032089
+final_pose, 0, 0, 0, 1
+final_rpy, 2.42294, 0.3692, -0.911496
+final_is_valid, 0
+=======================================================
+global_pose, 0.937609, -0.148348, -0.314455, -0.354439
+global_pose, -0.0195382, 0.8805, -0.473644, 0.272351
+global_pose, 0.347142, 0.450237, 0.822666, -0.0246742
+global_pose, 0, 0, 0, 1
+global_rpy, -0.0208353, -0.354522, 0.50076
+global_time_surface_normals, 10
+global_time_shape_features, 156
+global_time_feature_matches, 1895
+global_time_ransac, 28736
+global_ransac_iterations, 2623
+global_ransac_inliers, 401
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1239
+global_rms_error, 0.00340277
+local_pose, 0.98726, -0.105775, 0.119112, 0.0196245
+local_pose, 0.0891069, 0.986514, 0.137459, 0.0365437
+local_pose, -0.132025, -0.125093, 0.98334, -0.0045457
+local_pose, 0, 0, 0, 1
+local_rpy, 0.0900129, 0.132409, -0.126533
+local_time_icp, 1778
+local_icp_inliers, 859
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1239
+local_rms_error, 0.00551962
+final_pose, 0.969079, -0.185964, -0.16236, -0.362046
+final_pose, 0.111991, 0.917296, -0.382194, 0.270247
+final_pose, 0.220015, 0.352177, 0.909726, -0.0160834
+final_pose, 0, 0, 0, 1
+final_rpy, 0.115053, -0.221826, 0.369358
+final_is_valid, 0
+=======================================================
+global_pose, -0.198729, 0.244784, 0.948993, -0.418033
+global_pose, -0.686286, -0.726027, 0.0435565, 0.412503
+global_pose, 0.699656, -0.642624, 0.312275, 0.0578756
+global_pose, 0, 0, 0, 1
+global_rpy, -1.85266, -0.774916, -1.11846
+global_time_surface_normals, 10
+global_time_shape_features, 142
+global_time_feature_matches, 1618
+global_time_ransac, 29334
+global_ransac_iterations, 2538
+global_ransac_inliers, 366
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1061
+global_rms_error, 0.00313073
+local_pose, 0.99602, -0.0460269, -0.0762716, 0.0129551
+local_pose, 0.0449962, 0.998897, -0.0151651, 0.0123843
+local_pose, 0.07691, 0.0116774, 0.996991, 0.0242877
+local_pose, 0, 0, 0, 1
+local_rpy, 0.0451453, -0.0769844, 0.0117121
+local_time_icp, 1759
+local_icp_inliers, 693
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1061
+local_rms_error, 0.00532626
+final_pose, -0.219715, 0.326241, 0.919393, -0.426814
+final_pose, -0.705081, -0.704466, 0.0814738, 0.404745
+final_pose, 0.674252, -0.630342, 0.384831, 0.0546552
+final_pose, 0, 0, 0, 1
+final_rpy, -1.87288, -0.739932, -1.02268
+final_is_valid, 0
+=======================================================
+global_pose, -0.711565, -0.318468, -0.626302, -0.377916
+global_pose, 0.702536, -0.336344, -0.62715, 0.350193
+global_pose, -0.0109251, -0.886257, 0.463066, 0.0563232
+global_pose, 0, 0, 0, 1
+global_rpy, 2.36258, 0.0109253, -1.08931
+global_time_surface_normals, 8
+global_time_shape_features, 141
+global_time_feature_matches, 1661
+global_time_ransac, 32368
+global_ransac_iterations, 877
+global_ransac_inliers, 354
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1066
+global_rms_error, 0.0033788
+local_pose, 0.993899, -0.0720348, -0.0838669, 0.0217633
+local_pose, 0.0722551, 0.997404, -0.000354669, 0.0352432
+local_pose, 0.083665, -0.00572031, 0.996494, 0.0359539
+local_pose, 0, 0, 0, 1
+local_rpy, 0.0725709, -0.0837615, -0.00574037
+local_time_icp, 1725
+local_icp_inliers, 728
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1066
+local_rms_error, 0.0053645
+final_pose, -0.756915, -0.217969, -0.61614, -0.383797
+final_pose, 0.649301, -0.358167, -0.67094, 0.357201
+final_pose, -0.0744386, -0.90787, 0.41263, 0.0584581
+final_pose, 0, 0, 0, 1
+final_rpy, 2.43257, 0.0745062, -1.1442
+final_is_valid, 0
+=======================================================
+global_pose, 0.964125, 0.222865, -0.144207, -0.354713
+global_pose, -0.260473, 0.689547, -0.675781, 0.154591
+global_pose, -0.0511703, 0.689098, 0.722859, -0.0228233
+global_pose, 0, 0, 0, 1
+global_rpy, -0.263866, 0.0511926, 0.761492
+global_time_surface_normals, 11
+global_time_shape_features, 178
+global_time_feature_matches, 2055
+global_time_ransac, 32911
+global_ransac_iterations, 775
+global_ransac_inliers, 344
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1110
+global_rms_error, 0.00330716
+local_pose, 0.998708, 0.0255856, -0.0443426, -0.00352432
+local_pose, -0.0157996, 0.977891, 0.208584, -0.0246127
+local_pose, 0.0487162, -0.207602, 0.977007, 0.0515744
+local_pose, 0, 0, 0, 1
+local_rpy, -0.0158187, -0.0487351, -0.209373
+local_time_icp, 1746
+local_icp_inliers, 742
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1110
+local_rms_error, 0.00553728
+final_pose, 0.958483, 0.209663, -0.193365, -0.352811
+final_pose, -0.28062, 0.814515, -0.507785, 0.127404
+final_pose, 0.0510494, 0.54096, 0.839506, -0.0200978
+final_pose, 0, 0, 0, 1
+final_rpy, -0.284815, -0.0510712, 0.572413
+final_is_valid, 0
+=======================================================
+global_pose, -0.975601, 0.204357, 0.0802547, -0.378223
+global_pose, 0.214593, 0.964823, 0.151876, 0.152421
+global_pose, -0.0463945, 0.165393, -0.985136, 0.145056
+global_pose, 0, 0, 0, 1
+global_rpy, 2.92508, 0.0464112, 2.97526
+global_time_surface_normals, 10
+global_time_shape_features, 173
+global_time_feature_matches, 2490
+global_time_ransac, 32068
+global_ransac_iterations, 1866
+global_ransac_inliers, 403
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1210
+global_rms_error, 0.0033202
+local_pose, 0.956969, 0.070608, -0.281477, -0.0252951
+local_pose, -0.0404666, 0.992945, 0.111496, -0.0226507
+local_pose, 0.287359, -0.0953059, 0.953085, 0.126164
+local_pose, 0, 0, 0, 1
+local_rpy, -0.0422611, -0.291464, -0.0996659
+local_time_icp, 1991
+local_icp_inliers, 1060
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1210
+local_rms_error, 0.00583902
+final_pose, -0.905409, 0.217133, 0.364818, -0.41731
+final_pose, 0.247386, 0.968187, 0.0377188, 0.160173
+final_pose, -0.345018, 0.124404, -0.930331, 0.141202
+final_pose, 0, 0, 0, 1
+final_rpy, 2.87487, 0.352252, 3.00866
+final_is_valid, 0
+=======================================================
+global_pose, -0.404789, -0.462133, -0.789036, -0.213608
+global_pose, 0.688774, -0.721655, 0.0693155, 0.113096
+global_pose, -0.601445, -0.51541, 0.610424, 0.0327636
+global_pose, 0, 0, 0, 1
+global_rpy, 2.10212, 0.645308, -0.701203
+global_time_surface_normals, 13
+global_time_shape_features, 177
+global_time_feature_matches, 2487
+global_time_ransac, 32196
+global_ransac_iterations, 2324
+global_ransac_inliers, 428
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1291
+global_rms_error, 0.00325427
+local_pose, 0.932573, -0.33162, 0.14268, 0.00443634
+local_pose, 0.348901, 0.929406, -0.120344, 0.128234
+local_pose, -0.0926931, 0.162003, 0.982437, -0.037844
+local_pose, 0, 0, 0, 1
+local_rpy, 0.358005, 0.0928254, 0.163429
+local_time_icp, 2090
+local_icp_inliers, 997
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1291
+local_rms_error, 0.00586685
+final_pose, -0.691721, -0.265196, -0.671725, -0.227599
+final_pose, 0.5713, -0.769923, -0.284334, 0.154875
+final_pose, -0.441777, -0.580432, 0.684071, 0.0324661
+final_pose, 0, 0, 0, 1
+final_rpy, 2.45125, 0.457574, -0.703621
+final_is_valid, 0
+=======================================================
+global_pose, -0.40943, -0.807883, -0.423901, -0.147415
+global_pose, 0.901485, -0.429703, -0.0517708, 0.415022
+global_pose, -0.140327, -0.403337, 0.904227, 0.00248373
+global_pose, 0, 0, 0, 1
+global_rpy, 1.99712, 0.140792, -0.41957
+global_time_surface_normals, 11
+global_time_shape_features, 152
+global_time_feature_matches, 1904
+global_time_ransac, 28617
+global_ransac_iterations, 293
+global_ransac_inliers, 393
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1150
+global_rms_error, 0.00330387
+local_pose, 0.980717, 0.017745, -0.194627, 0.00676363
+local_pose, -0.0203174, 0.999745, -0.011162, -0.00781604
+local_pose, 0.194373, 0.0148964, 0.980813, 0.0381358
+local_pose, 0, 0, 0, 1
+local_rpy, -0.0207139, -0.195619, 0.0151866
+local_time_icp, 1771
+local_icp_inliers, 920
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1150
+local_rms_error, 0.00594579
+final_pose, -0.358227, -0.721429, -0.592633, -0.130928
+final_pose, 0.91114, -0.408677, -0.053238, 0.410068
+final_pose, -0.203788, -0.55903, 0.803712, 0.0181006
+final_pose, 0, 0, 0, 1
+final_rpy, 1.9454, 0.205226, -0.60774
+final_is_valid, 0
+=======================================================
+global_pose, -0.688127, 0.723423, 0.0560399, -0.193221
+global_pose, -0.724325, -0.680314, -0.111922, 0.233115
+global_pose, -0.0428425, -0.117608, 0.992136, -0.00676939
+global_pose, 0, 0, 0, 1
+global_rpy, -2.33057, 0.0428557, -0.11799
+global_time_surface_normals, 10
+global_time_shape_features, 164
+global_time_feature_matches, 1240
+global_time_ransac, 29970
+global_ransac_iterations, 3169
+global_ransac_inliers, 309
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 631
+global_rms_error, 0.00338608
+local_pose, 0.99454, -0.0495212, -0.0921892, 0.000476335
+local_pose, 0.063738, 0.98537, 0.158251, 0.00886425
+local_pose, 0.0830054, -0.163249, 0.983125, 0.0397581
+local_pose, 0, 0, 0, 1
+local_rpy, 0.0640004, -0.0830979, -0.16455
+local_time_icp, 1961
+local_icp_inliers, 1013
+local_object_cloud_size, 2277
+local_scene_cloud_size, 631
+local_rms_error, 0.00538818
+final_pose, -0.64455, 0.764005, -0.0301878, -0.20261
+final_pose, -0.764367, -0.642863, 0.0502936, 0.225182
+final_pose, 0.0190077, 0.0554855, 0.998316, -0.0209914
+final_pose, 0, 0, 0, 1
+final_rpy, -2.27136, -0.0190081, 0.055522
+final_is_valid, 1
+=======================================================
+global_pose, -0.163604, 0.901682, 0.400256, -0.208336
+global_pose, 0.92755, 0.278772, -0.248873, 0.187902
+global_pose, -0.335984, 0.33054, -0.881962, 0.128689
+global_pose, 0, 0, 0, 1
+global_rpy, 1.74538, 0.34265, 2.78302
+global_time_surface_normals, 7
+global_time_shape_features, 146
+global_time_feature_matches, 1525
+global_time_ransac, 29061
+global_ransac_iterations, 2294
+global_ransac_inliers, 334
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 721
+global_rms_error, 0.00313331
+local_pose, 0.997532, 0.0702389, -0.00181962, -0.0143862
+local_pose, -0.0701832, 0.995029, -0.071073, -0.000334484
+local_pose, -0.00318445, 0.0710323, 0.997501, -0.0119891
+local_pose, 0, 0, 0, 1
+local_rpy, -0.0702411, 0.00318435, 0.0710902
+local_time_icp, 1695
+local_icp_inliers, 609
+local_object_cloud_size, 2277
+local_scene_cloud_size, 721
+local_rms_error, 0.00547076
+final_pose, -0.0974384, 0.918435, 0.383392, -0.209244
+final_pose, 0.958301, 0.19061, -0.213043, 0.192109
+final_pose, -0.268738, 0.346645, -0.898712, 0.130389
+final_pose, 0, 0, 0, 1
+final_rpy, 1.67213, 0.272073, 2.77346
+final_is_valid, 0
+=======================================================
+global_pose, -0.436856, 0.873399, 0.215244, -0.202715
+global_pose, 0.818178, 0.485244, -0.308419, 0.400704
+global_pose, -0.373819, 0.0413734, -0.926578, 0.142499
+global_pose, 0, 0, 0, 1
+global_rpy, 2.06122, 0.383123, 3.09697
+global_time_surface_normals, 9
+global_time_shape_features, 152
+global_time_feature_matches, 2315
+global_time_ransac, 29693
+global_ransac_iterations, 663
+global_ransac_inliers, 470
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1302
+global_rms_error, 0.00328167
+local_pose, 0.989745, -0.100172, -0.101995, 0.0394954
+local_pose, 0.0910415, 0.991702, -0.0906455, 0.0201867
+local_pose, 0.110226, 0.0804413, 0.990626, -0.0150409
+local_pose, 0, 0, 0, 1
+local_rpy, 0.0917267, -0.110453, 0.0810247
+local_time_icp, 1874
+local_icp_inliers, 1053
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1302
+local_rms_error, 0.00567857
+final_pose, -0.476207, 0.811615, 0.338439, -0.215814
+final_pose, 0.805502, 0.556983, -0.202273, 0.386194
+final_pose, -0.352652, 0.176291, -0.918977, 0.136011
+final_pose, 0, 0, 0, 1
+final_rpy, 2.10471, 0.360412, 2.95206
+final_is_valid, 0
+=======================================================
+global_pose, 0.868438, -0.290053, -0.402099, -0.313954
+global_pose, 0.183804, 0.941574, -0.282229, 0.175621
+global_pose, 0.460468, 0.171191, 0.871012, -0.0211325
+global_pose, 0, 0, 0, 1
+global_rpy, 0.208571, -0.478522, 0.194069
+global_time_surface_normals, 11
+global_time_shape_features, 177
+global_time_feature_matches, 2645
+global_time_ransac, 33239
+global_ransac_iterations, 2378
+global_ransac_inliers, 334
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1153
+global_rms_error, 0.00330942
+local_pose, 0.99441, 0.105536, -0.00704684, -0.0222441
+local_pose, -0.102177, 0.975703, 0.193918, -0.0476143
+local_pose, 0.0273423, -0.192111, 0.981011, 0.0502292
+local_pose, 0, 0, 0, 1
+local_rpy, -0.102392, -0.0273452, -0.193382
+local_time_icp, 1964
+local_icp_inliers, 734
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1153
+local_rms_error, 0.00589181
+final_pose, 0.879737, -0.190269, -0.435775, -0.31576
+final_pose, 0.179897, 0.98153, -0.0653817, 0.151721
+final_pose, 0.440159, -0.0208771, 0.897698, -0.012825
+final_pose, 0, 0, 0, 1
+final_rpy, 0.201709, -0.455766, -0.0232521
+final_is_valid, 0
+=======================================================
+global_pose, -0.912583, -0.395359, -0.104324, -0.347059
+global_pose, -0.0808105, -0.0757183, 0.993849, 0.220447
+global_pose, -0.400826, 0.9154, 0.0371502, 0.0109727
+global_pose, 0, 0, 0, 1
+global_rpy, -3.05327, 0.412419, 1.53024
+global_time_surface_normals, 9
+global_time_shape_features, 141
+global_time_feature_matches, 1652
+global_time_ransac, 30047
+global_ransac_iterations, 2971
+global_ransac_inliers, 318
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1119
+global_rms_error, 0.00337999
+local_pose, 0.944981, 0.259145, 0.199615, -0.115546
+local_pose, -0.254162, 0.965859, -0.0505931, -0.080122
+local_pose, -0.205917, -0.00292723, 0.978571, -0.0738814
+local_pose, 0, 0, 0, 1
+local_rpy, -0.262742, 0.207399, -0.00299133
+local_time_icp, 1929
+local_icp_inliers, 790
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1119
+local_rms_error, 0.00571822
+final_pose, -0.963326, -0.210501, 0.166382, -0.384192
+final_pose, 0.174171, -0.0189612, 0.984554, 0.220453
+final_pose, -0.204084, 0.977416, 0.0549269, 0.00767599
+final_pose, 0, 0, 0, 1
+final_rpy, 2.96272, 0.205527, 1.51466
+final_is_valid, 0
+=======================================================
+global_pose, -0.072032, 0.775238, -0.627548, -0.366091
+global_pose, -0.945999, -0.252482, -0.203317, 0.2075
+global_pose, -0.316064, 0.579015, 0.751562, -0.0197337
+global_pose, 0, 0, 0, 1
+global_rpy, -1.64679, 0.321578, 0.65644
+global_time_surface_normals, 9
+global_time_shape_features, 144
+global_time_feature_matches, 1787
+global_time_ransac, 26245
+global_ransac_iterations, 653
+global_ransac_inliers, 437
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1187
+global_rms_error, 0.00326018
+local_pose, 0.969185, -0.246118, 0.0127697, 0.0334271
+local_pose, 0.245906, 0.969207, 0.0155052, 0.103952
+local_pose, -0.0162061, -0.0118879, 0.999827, -0.00788546
+local_pose, 0, 0, 0, 1
+local_rpy, 0.248481, 0.0162063, -0.0118894
+local_time_icp, 1706
+local_icp_inliers, 871
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1187
+local_rms_error, 0.00542083
+final_pose, 0.158979, 0.820883, -0.548573, -0.372704
+final_pose, -0.939483, -0.0450941, -0.339721, 0.214733
+final_pose, -0.303596, 0.569353, 0.764019, -0.0241496
+final_pose, 0, 0, 0, 1
+final_rpy, -1.40316, 0.308455, 0.640427
+final_is_valid, 0
+=======================================================
+global_pose, 0.667684, 0.0445254, -0.743111, -0.322459
+global_pose, -0.736174, -0.108886, -0.667976, 0.24953
+global_pose, -0.110656, 0.993056, -0.0399232, 0.024999
+global_pose, 0, 0, 0, 1
+global_rpy, -0.834146, 0.110883, 1.61098
+global_time_surface_normals, 9
+global_time_shape_features, 147
+global_time_feature_matches, 1760
+global_time_ransac, 26185
+global_ransac_iterations, 1144
+global_ransac_inliers, 377
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1195
+global_rms_error, 0.00317634
+local_pose, 0.98765, -0.122044, -0.0982309, 0.0246856
+local_pose, 0.119829, 0.99241, -0.0279661, 0.050214
+local_pose, 0.100908, 0.0158444, 0.99476, 0.0397114
+local_pose, 0, 0, 0, 1
+local_rpy, 0.120737, -0.101081, 0.0159265
+local_time_icp, 1752
+local_icp_inliers, 791
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1195
+local_rms_error, 0.00580979
+final_pose, 0.760153, -0.0402845, -0.64849, -0.3267
+final_pose, -0.647484, -0.130496, -0.750836, 0.258511
+final_pose, -0.0543658, 0.990621, -0.125284, 0.0359943
+final_pose, 0, 0, 0, 1
+final_rpy, -0.705527, 0.0543931, 1.6966
+final_is_valid, 0
+=======================================================
+global_pose, -0.982582, -0.0152612, 0.185204, -0.226813
+global_pose, 0.0268622, -0.997819, 0.060292, 0.22807
+global_pose, 0.18388, 0.0642168, 0.980849, -0.0179721
+global_pose, 0, 0, 0, 1
+global_rpy, 3.11426, -0.184932, 0.0653773
+global_time_surface_normals, 9
+global_time_shape_features, 162
+global_time_feature_matches, 2085
+global_time_ransac, 26775
+global_ransac_iterations, 509
+global_ransac_inliers, 326
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1003
+global_rms_error, 0.00321857
+local_pose, 0.972208, -0.0629137, -0.225317, 0.0340643
+local_pose, 0.0576724, 0.997881, -0.0297921, 0.0144782
+local_pose, 0.22672, 0.0159725, 0.973804, 0.0453769
+local_pose, 0, 0, 0, 1
+local_rpy, 0.0592516, -0.228714, 0.0164007
+local_time_icp, 1810
+local_icp_inliers, 1012
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1003
+local_rms_error, 0.00531905
+final_pose, -0.998395, 0.0334703, -0.0447381, -0.196744
+final_pose, -0.0353408, -0.998498, 0.0416238, 0.22952
+final_pose, -0.0432787, 0.0431368, 0.998108, -0.0199046
+final_pose, 0, 0, 0, 1
+final_rpy, -3.10621, 0.0432932, 0.0431917
+final_is_valid, 1
+=======================================================
+global_pose, -0.958338, -0.0245996, 0.284574, -0.200307
+global_pose, -0.17242, 0.844118, -0.507676, 0.152547
+global_pose, -0.227725, -0.535592, -0.813193, 0.175066
+global_pose, 0, 0, 0, 1
+global_rpy, -2.96358, 0.229741, -2.55918
+global_time_surface_normals, 12
+global_time_shape_features, 169
+global_time_feature_matches, 1899
+global_time_ransac, 26766
+global_ransac_iterations, 2763
+global_ransac_inliers, 310
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1099
+global_rms_error, 0.00308306
+local_pose, 0.96001, 0.278541, -0.029138, -0.0549144
+local_pose, -0.26937, 0.889858, -0.368246, 0.00400912
+local_pose, -0.0766394, 0.361357, 0.929274, -0.0694522
+local_pose, 0, 0, 0, 1
+local_rpy, -0.273557, 0.0767145, 0.370866
+local_time_icp, 1673
+local_icp_inliers, 722
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1099
+local_rms_error, 0.00569501
+final_pose, -0.961405, 0.227112, 0.15548, -0.209821
+final_pose, 0.188578, 0.955002, -0.22896, 0.129243
+final_pose, -0.200478, -0.190798, -0.960941, 0.163708
+final_pose, 0, 0, 0, 1
+final_rpy, 2.9479, 0.201845, -2.94559
+final_is_valid, 0
+=======================================================
+global_pose, 0.0279367, -0.547036, -0.836643, 0.0485652
+global_pose, 0.971247, -0.183108, 0.152156, 0.255979
+global_pose, -0.236431, -0.816837, 0.526191, 0.0552077
+global_pose, 0, 0, 0, 1
+global_rpy, 1.54204, 0.238691, -0.998522
+global_time_surface_normals, 10
+global_time_shape_features, 150
+global_time_feature_matches, 1798
+global_time_ransac, 30508
+global_ransac_iterations, 1317
+global_ransac_inliers, 291
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1117
+global_rms_error, 0.00325709
+local_pose, 0.981967, -0.138837, 0.12849, 0.0259971
+local_pose, 0.152145, 0.983261, -0.100275, 0.0165768
+local_pose, -0.112427, 0.118029, 0.986648, -0.0325726
+local_pose, 0, 0, 0, 1
+local_rpy, 0.153717, 0.112663, 0.11906
+local_time_icp, 1750
+local_icp_inliers, 718
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1117
+local_rms_error, 0.00588391
+final_pose, -0.137791, -0.616705, -0.775071, 0.0452409
+final_pose, 0.982948, -0.181364, -0.0304455, 0.270124
+final_pose, -0.12178, -0.766041, 0.631186, 0.0466507
+final_pose, 0, 0, 0, 1
+final_rpy, 1.71007, 0.12208, -0.881616
+final_is_valid, 0
+=======================================================
+global_pose, -0.984779, 0.0651001, -0.16116, -0.179789
+global_pose, -0.0728617, -0.996427, 0.0427236, 0.210131
+global_pose, -0.157803, 0.0538157, 0.986003, -0.0183786
+global_pose, 0, 0, 0, 1
+global_rpy, -3.06774, 0.158465, 0.0545255
+global_time_surface_normals, 10
+global_time_shape_features, 154
+global_time_feature_matches, 1728
+global_time_ransac, 26455
+global_ransac_iterations, 2298
+global_ransac_inliers, 307
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1096
+global_rms_error, 0.00346798
+local_pose, 0.9927, 0.048729, 0.110444, -0.025426
+local_pose, -0.047369, 0.99878, -0.0149099, 0.0116913
+local_pose, -0.111031, 0.00957138, 0.993763, -0.0239781
+local_pose, 0, 0, 0, 1
+local_rpy, -0.0476811, 0.111262, 0.00963115
+local_time_icp, 1765
+local_icp_inliers, 1001
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1096
+local_rms_error, 0.00536719
+final_pose, -0.998569, 0.0220137, -0.0490029, -0.195693
+final_pose, -0.023772, -0.999097, 0.0356043, 0.230356
+final_pose, -0.0481744, 0.0367147, 0.998156, -0.0202686
+final_pose, 0, 0, 0, 1
+final_rpy, -3.11779, 0.0481934, 0.0367659
+final_is_valid, 1
+=======================================================
+global_pose, 0.943843, 0.33009, 0.0142089, -0.198827
+global_pose, 0.328295, -0.941817, 0.0721382, 0.223132
+global_pose, 0.0371943, -0.0634224, -0.997294, 0.153149
+global_pose, 0, 0, 0, 1
+global_rpy, 0.334739, -0.0372029, -3.07808
+global_time_surface_normals, 12
+global_time_shape_features, 179
+global_time_feature_matches, 2438
+global_time_ransac, 29606
+global_ransac_iterations, 3247
+global_ransac_inliers, 321
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1193
+global_rms_error, 0.00333748
+local_pose, 0.99727, 0.0703435, 0.0225933, -0.0176799
+local_pose, -0.0684831, 0.994838, -0.0746658, -0.00193383
+local_pose, -0.0277298, 0.0729169, 0.996962, -0.0186781
+local_pose, 0, 0, 0, 1
+local_rpy, -0.0685629, 0.0277331, 0.0730091
+local_time_icp, 1710
+local_icp_inliers, 716
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1193
+local_rms_error, 0.00582691
+final_pose, 0.9652, 0.261506, -0.00328758, -0.196808
+final_pose, 0.259186, -0.954825, 0.145257, 0.222227
+final_pose, 0.0348471, -0.141057, -0.989397, 0.155789
+final_pose, 0, 0, 0, 1
+final_rpy, 0.262342, -0.0348538, -2.99998
+final_is_valid, 0
+=======================================================
+global_pose, -0.572321, -0.819669, 0.0243297, -0.196531
+global_pose, 0.819955, -0.571617, 0.030457, 0.220442
+global_pose, -0.0110574, 0.0373805, 0.99924, -0.0256031
+global_pose, 0, 0, 0, 1
+global_rpy, 2.18017, 0.0110576, 0.0373915
+global_time_surface_normals, 9
+global_time_shape_features, 142
+global_time_feature_matches, 1695
+global_time_ransac, 26940
+global_ransac_iterations, 600
+global_ransac_inliers, 487
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1132
+global_rms_error, 0.00316484
+local_pose, 0.974624, -0.217123, -0.0551503, 0.0438006
+local_pose, 0.217987, 0.975931, 0.0102692, 0.056769
+local_pose, 0.0515935, -0.022031, 0.998456, 0.0195175
+local_pose, 0, 0, 0, 1
+local_rpy, 0.220041, -0.0516148, -0.0220615
+local_time_icp, 1822
+local_icp_inliers, 1105
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1132
+local_rms_error, 0.00503255
+final_pose, -0.735218, -0.676819, -0.038009, -0.194194
+final_pose, 0.675348, -0.736151, 0.0452889, 0.228801
+final_pose, -0.0586328, 0.00762647, 0.998281, -0.0210424
+final_pose, 0, 0, 0, 1
+final_rpy, 2.39861, 0.0586646, 0.00763945
+final_is_valid, 1
+=======================================================
+global_pose, -0.806501, -0.546518, -0.225556, -0.190447
+global_pose, 0.588409, -0.779189, -0.215963, 0.254433
+global_pose, -0.0577226, -0.306893, 0.949992, 0.0177672
+global_pose, 0, 0, 0, 1
+global_rpy, 2.51129, 0.0577546, -0.312465
+global_time_surface_normals, 10
+global_time_shape_features, 170
+global_time_feature_matches, 2390
+global_time_ransac, 28213
+global_ransac_iterations, 2770
+global_ransac_inliers, 345
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1282
+global_rms_error, 0.00317847
+local_pose, 0.972077, 0.105485, 0.209647, -0.0392238
+local_pose, -0.15443, 0.960208, 0.232769, -0.0490973
+local_pose, -0.176749, -0.258642, 0.949687, -0.00631821
+local_pose, 0, 0, 0, 1
+local_rpy, -0.15755, 0.177679, -0.265895
+local_time_icp, 1806
+local_icp_inliers, 1082
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1282
+local_rms_error, 0.00498885
+final_pose, -0.734014, -0.67779, -0.0428749, -0.193789
+final_pose, 0.676107, -0.73522, 0.0485914, 0.228757
+final_pose, -0.0644573, 0.00667474, 0.99792, -0.0215904
+final_pose, 0, 0, 0, 1
+final_rpy, 2.39724, 0.0645006, 0.00668855
+final_is_valid, 1
+=======================================================
+global_pose, -0.973349, -0.204306, 0.104171, -0.222132
+global_pose, 0.223723, -0.945769, 0.235518, 0.206789
+global_pose, 0.0504037, 0.252546, 0.966271, -0.0180899
+global_pose, 0, 0, 0, 1
+global_rpy, 2.91567, -0.050425, 0.255643
+global_time_surface_normals, 13
+global_time_shape_features, 162
+global_time_feature_matches, 2053
+global_time_ransac, 29923
+global_ransac_iterations, 1016
+global_ransac_inliers, 390
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1294
+global_rms_error, 0.00340337
+local_pose, 0.85026, 0.464065, -0.248469, -0.105188
+local_pose, -0.500921, 0.85836, -0.110931, -0.0613147
+local_pose, 0.161795, 0.218783, 0.962283, -0.0131379
+local_pose, 0, 0, 0, 1
+local_rpy, -0.532396, -0.162507, 0.223558
+local_time_icp, 1849
+local_icp_inliers, 1092
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1294
+local_rms_error, 0.0050358
+final_pose, -0.736301, -0.675361, -0.0422205, -0.193599
+final_pose, 0.674014, -0.737484, 0.0427877, 0.229462
+final_pose, -0.0600336, 0.003047, 0.998208, -0.0212434
+final_pose, 0, 0, 0, 1
+final_rpy, 2.40033, 0.0600687, 0.00305246
+final_is_valid, 1
+=======================================================
+global_pose, 0.99838, -0.049285, -0.0284235, -0.212963
+global_pose, -0.0530216, -0.987155, -0.150713, 0.246967
+global_pose, -0.0206305, 0.151976, -0.988169, 0.135275
+global_pose, 0, 0, 0, 1
+global_rpy, -0.0530578, 0.020632, 2.98899
+global_time_surface_normals, 8
+global_time_shape_features, 153
+global_time_feature_matches, 2048
+global_time_ransac, 29082
+global_ransac_iterations, 1713
+global_ransac_inliers, 355
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1110
+global_rms_error, 0.00337159
+local_pose, 0.998556, 0.0525167, 0.0111113, -0.0156632
+local_pose, -0.0529505, 0.997651, 0.043377, -0.0119493
+local_pose, -0.0088089, -0.0438972, 0.999008, 0.00848888
+local_pose, 0, 0, 0, 1
+local_rpy, -0.0529775, 0.00880893, -0.0439125
+local_time_icp, 1805
+local_icp_inliers, 876
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1110
+local_rms_error, 0.00574986
+final_pose, 0.993925, -0.0993672, -0.0472772, -0.213846
+final_pose, -0.106657, -0.975635, -0.191718, 0.251582
+final_pose, -0.0270772, 0.195592, -0.980322, 0.134665
+final_pose, 0, 0, 0, 1
+final_rpy, -0.1069, 0.0270802, 2.94466
+final_is_valid, 0
+=======================================================
+global_pose, -0.835775, -0.461307, 0.297786, -0.113278
+global_pose, -0.548953, 0.690722, -0.470694, 0.339062
+global_pose, 0.0114468, -0.556865, -0.830524, 0.154861
+global_pose, 0, 0, 0, 1
+global_rpy, -2.56044, -0.011447, -2.55094
+global_time_surface_normals, 11
+global_time_shape_features, 167
+global_time_feature_matches, 2158
+global_time_ransac, 30072
+global_ransac_iterations, 157
+global_ransac_inliers, 356
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1351
+global_rms_error, 0.00330556
+local_pose, 0.96565, -0.183499, 0.184191, 0.0512121
+local_pose, 0.190445, 0.981526, -0.020595, 0.0267268
+local_pose, -0.177005, 0.0549632, 0.982702, -0.0285405
+local_pose, 0, 0, 0, 1
+local_rpy, 0.19472, 0.177937, 0.0558724
+local_time_icp, 1851
+local_icp_inliers, 857
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1351
+local_rms_error, 0.00596445
+final_pose, -0.704226, -0.674777, 0.220954, -0.0918676
+final_pose, -0.698217, 0.601577, -0.388182, 0.334762
+final_pose, 0.129013, -0.427615, -0.894739, 0.162329
+final_pose, 0, 0, 0, 1
+final_rpy, -2.36048, -0.12937, -2.69576
+final_is_valid, 0
+=======================================================
+global_pose, -0.881841, -0.0267408, -0.470788, -0.345987
+global_pose, -0.142737, -0.936415, 0.320553, 0.132743
+global_pose, -0.449424, 0.349875, 0.821952, -0.00651031
+global_pose, 0, 0, 0, 1
+global_rpy, -2.98112, 0.46612, 0.402433
+global_time_surface_normals, 10
+global_time_shape_features, 167
+global_time_feature_matches, 2156
+global_time_ransac, 30281
+global_ransac_iterations, 2
+global_ransac_inliers, 368
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1302
+global_rms_error, 0.0032191
+local_pose, 0.994446, 0.0238317, 0.102847, -0.0202251
+local_pose, -0.0234559, 0.99974, -0.00482748, -0.014339
+local_pose, -0.102928, 0.00239709, 0.994699, -0.0441
+local_pose, 0, 0, 0, 1
+local_rpy, -0.0235825, 0.103109, 0.00240986
+local_time_icp, 1829
+local_icp_inliers, 823
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1302
+local_rms_error, 0.0056663
+final_pose, -0.926567, -0.012925, -0.375998, -0.361797
+final_pose, -0.119846, -0.937233, 0.327544, 0.126516
+final_pose, -0.356618, 0.348529, 0.866821, -0.0146457
+final_pose, 0, 0, 0, 1
+final_rpy, -3.01296, 0.36464, 0.382295
+final_is_valid, 0
+=======================================================
+global_pose, 0.704444, 0.707603, -0.0552848, -0.355598
+global_pose, -0.709327, 0.699159, -0.0896243, 0.0130067
+global_pose, -0.0247656, 0.10235, 0.99444, -0.000485882
+global_pose, 0, 0, 0, 1
+global_rpy, -0.788852, 0.0247682, 0.102562
+global_time_surface_normals, 11
+global_time_shape_features, 160
+global_time_feature_matches, 2259
+global_time_ransac, 27960
+global_ransac_iterations, 1199
+global_ransac_inliers, 395
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1396
+global_rms_error, 0.00325998
+local_pose, 0.998027, -0.0625834, 0.00275068, -0.0011817
+local_pose, 0.0624695, 0.997569, 0.0307898, 0.020149
+local_pose, -0.00467584, -0.0305563, 0.999525, -0.000378589
+local_pose, 0, 0, 0, 1
+local_rpy, 0.0625115, 0.00467584, -0.0305613
+local_time_icp, 1755
+local_icp_inliers, 818
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1396
+local_rms_error, 0.00556248
+final_pose, 0.747378, 0.662732, -0.0468313, -0.356893
+final_pose, -0.664359, 0.744814, -0.0622413, 0.0108951
+final_pose, -0.00637331, 0.0776295, 0.996966, 0.000401041
+final_pose, 0, 0, 0, 1
+final_rpy, -0.726659, 0.00637333, 0.077709
+final_is_valid, 1
+=======================================================
+global_pose, 0.999485, -0.0284794, -0.0147828, -0.221754
+global_pose, -0.0287507, -0.999416, -0.018473, 0.242832
+global_pose, -0.0142481, 0.0188885, -0.99972, 0.149637
+global_pose, 0, 0, 0, 1
+global_rpy, -0.0287576, 0.0142486, 3.1227
+global_time_surface_normals, 10
+global_time_shape_features, 157
+global_time_feature_matches, 1949
+global_time_ransac, 29135
+global_ransac_iterations, 1131
+global_ransac_inliers, 386
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1203
+global_rms_error, 0.00320759
+local_pose, 0.996883, 0.0739467, -0.0282602, -0.0103641
+local_pose, -0.0670905, 0.978638, 0.194372, -0.0301022
+local_pose, 0.0420276, -0.191865, 0.98051, 0.0467935
+local_pose, 0, 0, 0, 1
+local_rpy, -0.0671989, -0.0420404, -0.193237
+local_time_icp, 1802
+local_icp_inliers, 915
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1203
+local_rms_error, 0.00566881
+final_pose, 0.994646, -0.102828, 0.0121496, -0.217699
+final_pose, -0.0979619, -0.972484, -0.211404, 0.251505
+final_pose, 0.0335519, 0.209076, -0.977313, 0.137603
+final_pose, 0, 0, 0, 1
+final_rpy, -0.0981726, -0.0335585, 2.93084
+final_is_valid, 0
+=======================================================
+global_pose, -0.907943, -0.396481, 0.135805, -0.221082
+global_pose, 0.41417, -0.898386, 0.146169, 0.22947
+global_pose, 0.0640517, 0.188959, 0.979894, -0.0284115
+global_pose, 0, 0, 0, 1
+global_rpy, 2.71363, -0.0640956, 0.190498
+global_time_surface_normals, 12
+global_time_shape_features, 163
+global_time_feature_matches, 2119
+global_time_ransac, 28505
+global_ransac_iterations, 3166
+global_ransac_inliers, 376
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1312
+global_rms_error, 0.00338116
+local_pose, 0.930503, 0.302671, -0.206343, -0.0641883
+local_pose, -0.318122, 0.946985, -0.0452326, -0.0605277
+local_pose, 0.181726, 0.107745, 0.977479, 0.0206888
+local_pose, 0, 0, 0, 1
+local_rpy, -0.329425, -0.182732, 0.109785
+local_time_icp, 1865
+local_icp_inliers, 1074
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1312
+local_rms_error, 0.00505805
+final_pose, -0.732702, -0.679832, -0.031587, -0.194589
+final_pose, 0.678153, -0.733176, 0.0508942, 0.228393
+final_pose, -0.0577624, 0.0158562, 0.998253, -0.0225348
+final_pose, 0, 0, 0, 1
+final_rpy, 2.39484, 0.0577918, 0.0158826
+final_is_valid, 1
+=======================================================
+global_pose, -0.765016, -0.64366, -0.021245, -0.201081
+global_pose, 0.643884, -0.765105, -0.00535293, 0.231418
+global_pose, -0.0128092, -0.0177744, 0.99976, -0.0283331
+global_pose, 0, 0, 0, 1
+global_rpy, 2.44196, 0.0128096, -0.0177768
+global_time_surface_normals, 8
+global_time_shape_features, 144
+global_time_feature_matches, 1047
+global_time_ransac, 28475
+global_ransac_iterations, 2634
+global_ransac_inliers, 456
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 648
+global_rms_error, 0.00336438
+local_pose, 0.998739, 0.0464272, -0.0199019, -0.00421158
+local_pose, -0.0453696, 0.997656, 0.0515504, -0.00972924
+local_pose, 0.0222457, -0.0505855, 0.998478, 0.0228515
+local_pose, 0, 0, 0, 1
+local_rpy, -0.0453956, -0.0222474, -0.0506194
+local_time_icp, 2021
+local_icp_inliers, 1089
+local_object_cloud_size, 2277
+local_scene_cloud_size, 648
+local_rms_error, 0.00510516
+final_pose, -0.733903, -0.678017, -0.0413639, -0.193731
+final_pose, 0.676422, -0.735025, 0.0471615, 0.228809
+final_pose, -0.0623792, 0.00663724, 0.998036, -0.0216181
+final_pose, 0, 0, 0, 1
+final_rpy, 2.39693, 0.0624194, 0.0066502
+final_is_valid, 1
+=======================================================
+global_pose, 0.0222526, -0.990666, -0.134485, -0.172388
+global_pose, 0.990407, 0.00349402, 0.13814, 0.212001
+global_pose, -0.136381, -0.136268, 0.98124, -0.0193066
+global_pose, 0, 0, 0, 1
+global_rpy, 1.54833, 0.136807, -0.137991
+global_time_surface_normals, 10
+global_time_shape_features, 148
+global_time_feature_matches, 2014
+global_time_ransac, 27652
+global_ransac_iterations, 2634
+global_ransac_inliers, 468
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1357
+global_rms_error, 0.00319254
+local_pose, 0.992466, -0.0711997, 0.099612, -0.00242
+local_pose, 0.0770722, 0.995412, -0.0562998, 0.0259295
+local_pose, -0.0951488, 0.0635549, 0.993422, -0.0331936
+local_pose, 0, 0, 0, 1
+local_rpy, 0.0775018, 0.095294, 0.0638887
+local_time_icp, 1828
+local_icp_inliers, 1174
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1357
+local_rms_error, 0.00518375
+final_pose, -0.0620169, -0.997025, -0.0455637, -0.190526
+final_pose, 0.995256, -0.065203, 0.0718974, 0.224759
+final_pose, -0.0746555, -0.0408893, 0.99636, -0.0224969
+final_pose, 0, 0, 0, 1
+final_rpy, 1.63303, 0.0747258, -0.0410157
+final_is_valid, 1
+=======================================================
+global_pose, -0.252071, -0.863803, 0.436238, -0.224764
+global_pose, -0.962916, 0.2687, -0.0243435, 0.194798
+global_pose, -0.0961893, -0.426197, -0.899502, 0.169358
+global_pose, 0, 0, 0, 1
+global_rpy, -1.82683, 0.0963382, -2.69911
+global_time_surface_normals, 12
+global_time_shape_features, 155
+global_time_feature_matches, 2034
+global_time_ransac, 28158
+global_ransac_iterations, 1420
+global_ransac_inliers, 432
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1238
+global_rms_error, 0.00331295
+local_pose, 0.981623, 0.148701, -0.119725, -0.0338436
+local_pose, -0.135535, 0.984496, 0.111584, -0.0329037
+local_pose, 0.134455, -0.0933059, 0.98654, 0.0505947
+local_pose, 0, 0, 0, 1
+local_rpy, -0.137205, -0.13486, -0.0942984
+local_time_icp, 1793
+local_icp_inliers, 978
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1238
+local_rms_error, 0.0059144
+final_pose, -0.37911, -0.756947, 0.532295, -0.245787
+final_pose, -0.924556, 0.334053, -0.183462, 0.208235
+final_pose, -0.038941, -0.561674, -0.826469, 0.169277
+final_pose, 0, 0, 0, 1
+final_rpy, -1.95993, 0.0389499, -2.54468
+final_is_valid, 0
+=======================================================
+global_pose, -0.793024, -0.607615, -0.0437824, -0.371129
+global_pose, 0.606209, -0.794204, 0.0418506, 0.228008
+global_pose, -0.0602013, 0.00664718, 0.998164, -0.0140938
+global_pose, 0, 0, 0, 1
+global_rpy, 2.48892, 0.0602377, 0.00665931
+global_time_surface_normals, 11
+global_time_shape_features, 164
+global_time_feature_matches, 2139
+global_time_ransac, 28738
+global_ransac_iterations, 101
+global_ransac_inliers, 337
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1292
+global_rms_error, 0.0032477
+local_pose, 0.854337, 0.366724, -0.368267, -0.110928
+local_pose, -0.416486, 0.906959, -0.0630405, -0.137188
+local_pose, 0.31088, 0.207236, 0.927593, 0.0837932
+local_pose, 0, 0, 0, 1
+local_rpy, -0.453594, -0.316115, 0.219803
+local_time_icp, 1769
+local_icp_inliers, 862
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1292
+local_rms_error, 0.00573665
+final_pose, -0.433028, -0.812809, -0.389648, -0.339191
+final_pose, 0.883885, -0.467666, -0.00673323, 0.225064
+final_pose, -0.176749, -0.347317, 0.920952, 0.00259475
+final_pose, 0, 0, 0, 1
+final_rpy, 2.02634, 0.177681, -0.360636
+final_is_valid, 0
+=======================================================
+global_pose, 0.176164, -0.983083, -0.0501429, -0.187286
+global_pose, 0.983373, 0.173478, 0.0536962, 0.221572
+global_pose, -0.0440891, -0.0587687, 0.997298, -0.0213272
+global_pose, 0, 0, 0, 1
+global_rpy, 1.39353, 0.0441034, -0.0588599
+global_time_surface_normals, 11
+global_time_shape_features, 160
+global_time_feature_matches, 2026
+global_time_ransac, 28615
+global_ransac_iterations, 184
+global_ransac_inliers, 449
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1239
+global_rms_error, 0.00332006
+local_pose, 0.966843, -0.25495, 0.0163586, 0.0477208
+local_pose, 0.254504, 0.96675, 0.0253615, 0.0603993
+local_pose, -0.0222765, -0.0203582, 0.999545, -0.000805556
+local_pose, 0, 0, 0, 1
+local_rpy, 0.257393, 0.0222783, -0.0203647
+local_time_icp, 1840
+local_icp_inliers, 1179
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1239
+local_rms_error, 0.00521351
+final_pose, -0.081109, -0.995676, -0.0458557, -0.190194
+final_pose, 0.994393, -0.0839798, 0.0644423, 0.226398
+final_pose, -0.0680132, -0.0403741, 0.996868, -0.0224618
+final_pose, 0, 0, 0, 1
+final_rpy, 1.65218, 0.0680657, -0.0404788
+final_is_valid, 1
+=======================================================
+global_pose, -0.518825, -0.831635, -0.198001, -0.185464
+global_pose, 0.843193, -0.535984, 0.0417851, 0.238412
+global_pose, -0.140875, -0.145274, 0.979311, -0.0183434
+global_pose, 0, 0, 0, 1
+global_rpy, 2.1224, 0.141345, -0.147269
+global_time_surface_normals, 8
+global_time_shape_features, 158
+global_time_feature_matches, 1943
+global_time_ransac, 28517
+global_ransac_iterations, 889
+global_ransac_inliers, 396
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1207
+global_rms_error, 0.00336485
+local_pose, 0.880106, 0.460773, 0.114854, -0.135176
+local_pose, -0.456985, 0.887548, -0.0588345, -0.0714248
+local_pose, -0.12904, -0.000707268, 0.991654, -0.0278543
+local_pose, 0, 0, 0, 1
+local_rpy, -0.47892, 0.129399, -0.00071322
+local_time_icp, 1860
+local_icp_inliers, 1175
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1207
+local_rms_error, 0.00506433
+final_pose, -0.0842802, -0.995579, -0.0425299, -0.190656
+final_pose, 0.993758, -0.0871201, 0.0699524, 0.22601
+final_pose, -0.0733467, -0.0363681, 0.996659, -0.022281
+final_pose, 0, 0, 0, 1
+final_rpy, 1.6554, 0.0734115, -0.0364739
+final_is_valid, 1
+=======================================================
+global_pose, -0.312699, -0.838152, -0.446901, -0.133175
+global_pose, -0.924566, 0.37642, -0.0590416, 0.399135
+global_pose, 0.217708, 0.394727, -0.892633, 0.133302
+global_pose, 0, 0, 0, 1
+global_rpy, -1.89693, -0.219466, 2.72524
+global_time_surface_normals, 10
+global_time_shape_features, 166
+global_time_feature_matches, 2364
+global_time_ransac, 30939
+global_ransac_iterations, 3318
+global_ransac_inliers, 419
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1490
+global_rms_error, 0.0032119
+local_pose, 0.996943, -0.0771137, -0.0153495, 0.0278781
+local_pose, 0.0785422, 0.98586, 0.148233, 0.00781489
+local_pose, 0.00370523, -0.148998, 0.988839, 0.0594979
+local_pose, 0, 0, 0, 1
+local_rpy, 0.0786206, -0.0037052, -0.149554
+local_time_icp, 1808
+local_icp_inliers, 907
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1490
+local_rms_error, 0.00565142
+final_pose, -0.243788, -0.870675, -0.42728, -0.137714
+final_pose, -0.903781, 0.363778, -0.225625, 0.410605
+final_pose, 0.351878, 0.33113, -0.875529, 0.131348
+final_pose, 0, 0, 0, 1
+final_rpy, -1.83427, -0.359573, 2.78001
+final_is_valid, 0
+=======================================================
+global_pose, -0.0414125, -0.997188, 0.0624629, -0.207233
+global_pose, 0.996033, -0.036275, 0.0812511, 0.222868
+global_pose, -0.0787567, 0.0655802, 0.994734, -0.0257985
+global_pose, 0, 0, 0, 1
+global_rpy, 1.61235, 0.0788384, 0.0658321
+global_time_surface_normals, 9
+global_time_shape_features, 164
+global_time_feature_matches, 2128
+global_time_ransac, 29141
+global_ransac_iterations, 2231
+global_ransac_inliers, 565
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1340
+global_rms_error, 0.00313365
+local_pose, 0.994241, -0.0371095, -0.100621, 0.0205727
+local_pose, 0.0353692, 0.999179, -0.0190779, 0.0100372
+local_pose, 0.101247, 0.0154109, 0.994742, 0.0217523
+local_pose, 0, 0, 0, 1
+local_rpy, 0.0355591, -0.101421, 0.0154912
+local_time_icp, 1851
+local_icp_inliers, 1152
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1340
+local_rms_error, 0.00496649
+final_pose, -0.0702118, -0.996698, -0.0410031, -0.191141
+final_pose, 0.995254, -0.0727661, 0.0644162, 0.225885
+final_pose, -0.0671857, -0.0362856, 0.997081, -0.0214576
+final_pose, 0, 0, 0, 1
+final_rpy, 1.64123, 0.0672364, -0.0363758
+final_is_valid, 1
+=======================================================
+global_pose, -0.053548, -0.978182, -0.200732, -0.18148
+global_pose, 0.982265, -0.0154261, -0.18686, 0.238391
+global_pose, 0.179686, -0.207178, 0.96166, -0.00529539
+global_pose, 0, 0, 0, 1
+global_rpy, 1.62526, -0.180667, -0.212194
+global_time_surface_normals, 9
+global_time_shape_features, 167
+global_time_feature_matches, 2174
+global_time_ransac, 27375
+global_ransac_iterations, 1429
+global_ransac_inliers, 417
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1318
+global_rms_error, 0.00334057
+local_pose, 0.986991, -0.0435903, 0.155007, -0.000745373
+local_pose, 0.00216473, 0.966193, 0.257928, -0.00302522
+local_pose, -0.161005, -0.25423, 0.953685, 0.0149376
+local_pose, 0, 0, 0, 1
+local_rpy, 0.00219326, 0.161703, -0.260518
+local_time_icp, 1851
+local_icp_inliers, 1145
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1318
+local_rms_error, 0.004955
+final_pose, -0.0678161, -0.996898, -0.040911, -0.191077
+final_pose, 0.995288, -0.070459, 0.0670625, 0.225548
+final_pose, -0.0697354, -0.0361685, 0.996945, -0.0214994
+final_pose, 0, 0, 0, 1
+final_rpy, 1.63883, 0.0697896, -0.0362634
+final_is_valid, 1
+=======================================================
+global_pose, -0.319453, -0.947266, 0.0252397, -0.193463
+global_pose, 0.946685, -0.31786, 0.0524603, 0.23488
+global_pose, -0.0416712, 0.0406526, 0.998304, -0.0138934
+global_pose, 0, 0, 0, 1
+global_rpy, 1.89624, 0.0416833, 0.0406992
+global_time_surface_normals, 10
+global_time_shape_features, 163
+global_time_feature_matches, 2205
+global_time_ransac, 30691
+global_ransac_iterations, 2803
+global_ransac_inliers, 377
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1347
+global_rms_error, 0.00332984
+local_pose, 0.966557, 0.241448, -0.0867414, -0.0611919
+local_pose, -0.240192, 0.970417, 0.0246741, -0.0484295
+local_pose, 0.0901286, -0.00301672, 0.995891, 0.0107312
+local_pose, 0, 0, 0, 1
+local_rpy, -0.243569, -0.0902542, -0.00302916
+local_time_icp, 1846
+local_icp_inliers, 1154
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1347
+local_rms_error, 0.00497362
+final_pose, -0.0765804, -0.99586, -0.0495323, -0.190269
+final_pose, 0.994382, -0.0799281, 0.0694783, 0.225627
+final_pose, -0.0731477, -0.0439312, 0.996318, -0.0212502
+final_pose, 0, 0, 0, 1
+final_rpy, 1.64766, 0.0732157, -0.044065
+final_is_valid, 1
+=======================================================
+global_pose, -0.153968, -0.987769, -0.0246424, -0.201039
+global_pose, 0.969992, -0.155853, 0.18662, 0.21279
+global_pose, -0.188178, 0.0048306, 0.982123, -0.0205774
+global_pose, 0, 0, 0, 1
+global_rpy, 1.72821, 0.189307, 0.00491849
+global_time_surface_normals, 9
+global_time_shape_features, 158
+global_time_feature_matches, 2112
+global_time_ransac, 29308
+global_ransac_iterations, 1666
+global_ransac_inliers, 424
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1276
+global_rms_error, 0.00331595
+local_pose, 0.995369, 0.0855785, -0.0437003, -0.00929951
+local_pose, -0.0900406, 0.989449, -0.113327, -0.00656808
+local_pose, 0.0335407, 0.116742, 0.992593, -0.0190132
+local_pose, 0, 0, 0, 1
+local_rpy, -0.090214, -0.0335471, 0.117075
+local_time_icp, 1849
+local_icp_inliers, 1163
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1276
+local_rms_error, 0.00495581
+final_pose, -0.0620211, -0.996743, -0.0514767, -0.190298
+final_pose, 0.994947, -0.0658164, 0.0755688, 0.22441
+final_pose, -0.0787097, -0.0465302, 0.995808, -0.0213396
+final_pose, 0, 0, 0, 1
+final_rpy, 1.63305, 0.0787914, -0.0466921
+final_is_valid, 1
+=======================================================
+global_pose, 0.935366, -0.345958, 0.0735067, -0.20923
+global_pose, 0.35281, 0.927268, -0.125294, 0.227264
+global_pose, -0.0248139, 0.14313, 0.989392, -0.0250343
+global_pose, 0, 0, 0, 1
+global_rpy, 0.360688, 0.0248164, 0.143668
+global_time_surface_normals, 8
+global_time_shape_features, 140
+global_time_feature_matches, 1428
+global_time_ransac, 27322
+global_ransac_iterations, 675
+global_ransac_inliers, 329
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 934
+global_rms_error, 0.00332955
+local_pose, 0.895441, -0.412958, -0.166417, 0.0864468
+local_pose, 0.434889, 0.891311, 0.128298, 0.11329
+local_pose, 0.0953377, -0.187252, 0.977716, 0.0667952
+local_pose, 0, 0, 0, 1
+local_rpy, 0.452118, -0.0954788, -0.189229
+local_time_icp, 1796
+local_icp_inliers, 998
+local_object_cloud_size, 2277
+local_scene_cloud_size, 934
+local_rms_error, 0.0050247
+final_pose, 0.695999, -0.716528, -0.0470898, -0.190591
+final_pose, 0.71806, 0.694395, 0.0472279, 0.221649
+final_pose, -0.00114965, -0.0666754, 0.997814, -0.0201844
+final_pose, 0, 0, 0, 1
+final_rpy, 0.800998, 0.0011496, -0.0667223
+final_is_valid, 1
+=======================================================
+global_pose, 0.41462, -0.909747, 0.0212383, -0.196743
+global_pose, 0.909877, 0.414829, 0.00636911, 0.232178
+global_pose, -0.0146044, 0.0166835, 0.999754, -0.0203999
+global_pose, 0, 0, 0, 1
+global_rpy, 1.14322, 0.014605, 0.0166861
+global_time_surface_normals, 7
+global_time_shape_features, 146
+global_time_feature_matches, 1489
+global_time_ransac, 28500
+global_ransac_iterations, 2990
+global_ransac_inliers, 352
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 928
+global_rms_error, 0.00333782
+local_pose, 0.945159, 0.319117, -0.0698302, -0.0795318
+local_pose, -0.316921, 0.947596, 0.041134, -0.0588482
+local_pose, 0.0793045, -0.0167527, 0.996717, 0.0193501
+local_pose, 0, 0, 0, 1
+local_rpy, -0.323528, -0.0793873, -0.0168063
+local_time_icp, 1835
+local_icp_inliers, 1023
+local_object_cloud_size, 2277
+local_scene_cloud_size, 928
+local_rms_error, 0.00511273
+final_pose, 0.68326, -0.728642, -0.0477069, -0.189969
+final_pose, 0.730193, 0.682095, 0.0404283, 0.222675
+final_pose, 0.00308183, -0.0624678, 0.998049, -0.020475
+final_pose, 0, 0, 0, 1
+final_rpy, 0.818591, -0.00308182, -0.0625084
+final_is_valid, 1
+=======================================================
+global_pose, -0.940661, 0.210139, -0.266456, -0.430998
+global_pose, -0.174086, -0.972827, -0.152647, 0.207918
+global_pose, -0.291293, -0.0972031, 0.951683, 0.0034638
+global_pose, 0, 0, 0, 1
+global_rpy, -2.9586, 0.295578, -0.101785
+global_time_surface_normals, 11
+global_time_shape_features, 182
+global_time_feature_matches, 2596
+global_time_ransac, 32884
+global_ransac_iterations, 26
+global_ransac_inliers, 399
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1262
+global_rms_error, 0.00320365
+local_pose, 0.983347, 0.122135, -0.134694, -0.0197449
+local_pose, -0.12843, 0.990978, -0.0390712, -0.0568647
+local_pose, 0.128715, 0.0557253, 0.990129, 0.0427488
+local_pose, 0, 0, 0, 1
+local_rpy, -0.12987, -0.129071, 0.0562215
+local_time_icp, 1928
+local_icp_inliers, 895
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1262
+local_rms_error, 0.00564163
+final_pose, -0.907023, 0.100916, -0.408849, -0.418638
+final_pose, -0.040325, -0.987241, -0.154233, 0.204395
+final_pose, -0.419196, -0.123407, 0.899486, 0.00228891
+final_pose, 0, 0, 0, 1
+final_rpy, -3.09716, 0.432552, -0.136346
+final_is_valid, 0
+=======================================================
+global_pose, -0.997247, -0.00811759, -0.0737058, -0.413357
+global_pose, 0.000254542, 0.993609, -0.112876, 0.23646
+global_pose, 0.074151, -0.112584, -0.990872, 0.154013
+global_pose, 0, 0, 0, 1
+global_rpy, 3.14134, -0.0742192, -3.02846
+global_time_surface_normals, 11
+global_time_shape_features, 171
+global_time_feature_matches, 2263
+global_time_ransac, 31039
+global_ransac_iterations, 481
+global_ransac_inliers, 388
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1314
+global_rms_error, 0.0034597
+local_pose, 0.974069, 0.0752319, -0.21342, -0.0253673
+local_pose, -0.138735, 0.943625, -0.300534, -0.0329004
+local_pose, 0.178787, 0.322348, 0.929587, -0.00274243
+local_pose, 0, 0, 0, 1
+local_rpy, -0.141477, -0.179753, 0.333789
+local_time_icp, 1808
+local_icp_inliers, 955
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1314
+local_rms_error, 0.00557632
+final_pose, -0.987194, 0.0908716, 0.131186, -0.443085
+final_pose, 0.116309, 0.972555, 0.201504, 0.20129
+final_pose, -0.109283, 0.21418, -0.970664, 0.142745
+final_pose, 0, 0, 0, 1
+final_rpy, 3.02432, 0.109502, 2.92442
+final_is_valid, 0
+=======================================================
+global_pose, 0.0506248, 0.302562, -0.951784, -0.0242703
+global_pose, -0.892343, 0.441684, 0.0929436, 0.29614
+global_pose, 0.448509, 0.844613, 0.29235, -0.00450394
+global_pose, 0, 0, 0, 1
+global_rpy, -1.51412, -0.465096, 1.23757
+global_time_surface_normals, 12
+global_time_shape_features, 182
+global_time_feature_matches, 2298
+global_time_ransac, 29722
+global_ransac_iterations, 307
+global_ransac_inliers, 431
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1262
+global_rms_error, 0.00325778
+local_pose, 0.995634, -0.093333, 0.00772776, 0.0336713
+local_pose, 0.0935424, 0.995024, -0.0349588, 0.016339
+local_pose, -0.00443291, 0.0355344, 0.999396, -0.00946551
+local_pose, 0, 0, 0, 1
+local_rpy, 0.0936777, 0.00443276, 0.0355409
+local_time_icp, 1775
+local_icp_inliers, 808
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1262
+local_rms_error, 0.00547829
+final_pose, 0.137155, 0.266545, -0.954044, -0.0181674
+final_pose, -0.898847, 0.438262, -0.00677124, 0.308892
+final_pose, 0.416305, 0.858457, 0.299695, -0.00333598
+final_pose, 0, 0, 0, 1
+final_rpy, -1.41937, -0.42936, 1.23492
+final_is_valid, 0
+=======================================================
+global_pose, -0.609274, -0.742679, -0.277872, -0.158809
+global_pose, 0.713286, -0.666395, 0.217119, 0.241695
+global_pose, -0.346422, -0.0659175, 0.93576, -0.00989422
+global_pose, 0, 0, 0, 1
+global_rpy, 2.27771, 0.353754, -0.0703266
+global_time_surface_normals, 8
+global_time_shape_features, 144
+global_time_feature_matches, 1522
+global_time_ransac, 27242
+global_ransac_iterations, 257
+global_ransac_inliers, 294
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 889
+global_rms_error, 0.0033071
+local_pose, 0.922802, 0.37586, -0.0848433, -0.0926246
+local_pose, -0.385195, 0.905259, -0.179342, -0.0426463
+local_pose, 0.00939829, 0.198175, 0.980137, -0.0399981
+local_pose, 0, 0, 0, 1
+local_rpy, -0.395432, -0.00939829, 0.199502
+local_time_icp, 1713
+local_icp_inliers, 750
+local_object_cloud_size, 2277
+local_scene_cloud_size, 889
+local_rms_error, 0.00605508
+final_pose, -0.264752, -0.930224, -0.254208, -0.147491
+final_pose, 0.942526, -0.305362, 0.135762, 0.239097
+final_pose, -0.203911, -0.203651, 0.957589, -0.00329028
+final_pose, 0, 0, 0, 1
+final_rpy, 1.84464, 0.205349, -0.209549
+final_is_valid, 0
+=======================================================
+global_pose, 0.491851, -0.870563, -0.0142677, -0.192981
+global_pose, 0.870431, 0.491253, 0.031958, 0.227878
+global_pose, -0.0208124, -0.0281376, 0.999387, -0.0190182
+global_pose, 0, 0, 0, 1
+global_rpy, 1.05646, 0.0208139, -0.0281474
+global_time_surface_normals, 9
+global_time_shape_features, 157
+global_time_feature_matches, 2232
+global_time_ransac, 30908
+global_ransac_iterations, 2990
+global_ransac_inliers, 398
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1456
+global_rms_error, 0.0033434
+local_pose, 0.969511, 0.240999, -0.0446204, -0.0591756
+local_pose, -0.24088, 0.97051, 0.00839537, -0.0452461
+local_pose, 0.0453376, 0.00260477, 0.998962, 0.00685723
+local_pose, 0, 0, 0, 1
+local_rpy, -0.243524, -0.0453534, 0.00260747
+local_time_icp, 1827
+local_icp_inliers, 988
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1456
+local_rms_error, 0.0049802
+final_pose, 0.687557, -0.724373, -0.0507239, -0.190506
+final_pose, 0.726109, 0.686231, 0.0428426, 0.222237
+final_pose, 0.00377586, -0.0662979, 0.997786, -0.020297
+final_pose, 0, 0, 0, 1
+final_rpy, 0.812663, -0.0037759, -0.0663475
+final_is_valid, 1
+=======================================================
+global_pose, -0.639717, -0.102236, -0.761781, -0.363345
+global_pose, -0.763415, -0.0305257, 0.645187, 0.106448
+global_pose, -0.089215, 0.994292, -0.0585204, 0.0211121
+global_pose, 0, 0, 0, 1
+global_rpy, -2.26826, 0.0893338, 1.62958
+global_time_surface_normals, 9
+global_time_shape_features, 164
+global_time_feature_matches, 1902
+global_time_ransac, 31014
+global_ransac_iterations, 1656
+global_ransac_inliers, 353
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1174
+global_rms_error, 0.00311692
+local_pose, 0.792623, 0.538778, -0.285491, -0.170958
+local_pose, -0.608405, 0.72985, -0.311742, -0.196215
+local_pose, 0.0403994, 0.420786, 0.906292, -0.0534785
+local_pose, 0, 0, 0, 1
+local_rpy, -0.654661, -0.0404092, 0.434677
+local_time_icp, 1806
+local_icp_inliers, 783
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1174
+local_rms_error, 0.00548584
+final_pose, -0.892896, -0.381342, -0.239485, -0.40763
+final_pose, -0.140158, -0.270041, 0.952604, 0.095956
+final_pose, -0.427933, 0.884144, 0.187674, -0.00423185
+final_pose, 0, 0, 0, 1
+final_rpy, -2.98589, 0.442191, 1.36164
+final_is_valid, 0
+=======================================================
+global_pose, -0.395576, 0.275819, -0.876039, -0.39555
+global_pose, 0.368252, -0.826178, -0.426404, 0.354676
+global_pose, -0.841374, -0.491279, 0.225245, 0.0523433
+global_pose, 0, 0, 0, 1
+global_rpy, 2.39195, 0.99982, -1.14091
+global_time_surface_normals, 11
+global_time_shape_features, 178
+global_time_feature_matches, 2512
+global_time_ransac, 32463
+global_ransac_iterations, 2385
+global_ransac_inliers, 378
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1237
+global_rms_error, 0.00334672
+local_pose, 0.981588, -0.137334, 0.132929, 0.0230835
+local_pose, 0.150506, 0.98412, -0.0943996, 0.0770357
+local_pose, -0.117872, 0.112676, 0.986631, -0.081026
+local_pose, 0, 0, 0, 1
+local_rpy, 0.152144, 0.118145, 0.11371
+local_time_icp, 2071
+local_icp_inliers, 765
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1237
+local_rms_error, 0.00543053
+final_pose, -0.550709, 0.318897, -0.771408, -0.406935
+final_pose, 0.382293, -0.725169, -0.572745, 0.361606
+final_pose, -0.742005, -0.610312, 0.277449, 0.0572052
+final_pose, 0, 0, 0, 1
+final_rpy, 2.53478, 0.83604, -1.14412
+final_is_valid, 0
+=======================================================
+global_pose, 0.977111, -0.193471, -0.0884504, -0.0427754
+global_pose, -0.205319, -0.748891, -0.630085, 0.270587
+global_pose, 0.0556633, 0.633823, -0.771473, 0.12195
+global_pose, 0, 0, 0, 1
+global_rpy, -0.207116, -0.0556921, 2.45383
+global_time_surface_normals, 10
+global_time_shape_features, 158
+global_time_feature_matches, 1837
+global_time_ransac, 27783
+global_ransac_iterations, 2219
+global_ransac_inliers, 302
+global_features, 2277
+global_object_cloud_size, 2277
+global_scene_cloud_size, 1156
+global_rms_error, 0.00342271
+local_pose, 0.914216, 0.296242, -0.276528, -0.0304236
+local_pose, -0.337777, 0.934105, -0.115895, 0.00750935
+local_pose, 0.223972, 0.199356, 0.954007, -0.0311156
+local_pose, 0, 0, 0, 1
+local_rpy, -0.353915, -0.225884, 0.206003
+local_time_icp, 1813
+local_icp_inliers, 844
+local_object_cloud_size, 2277
+local_scene_cloud_size, 1156
+local_rms_error, 0.00556038
+final_pose, 0.817074, -0.573997, -0.0541859, -0.0230929
+final_pose, -0.528286, -0.70765, -0.469279, 0.260581
+final_pose, 0.231017, 0.412043, -0.881412, 0.129588
+final_pose, 0, 0, 0, 1
+final_rpy, -0.573952, -0.233119, 2.7043
+final_is_valid, 0
+=======================================================
