@@ -1,0 +1,71 @@
+<WorkCell name="Scene">
+
+  <Frame name="Table" refframe="WORLD" >
+    <RPY>0 0 90</RPY><Pos>0 0 -0.685</Pos>
+  </Frame>
+  <Drawable name="Table" refframe="Table" >
+  <Polytope file="Geometry/Table" />
+  </Drawable>
+	
+  <Frame name="Table2" refframe="WORLD" >
+    <RPY>180 0 90</RPY><Pos> -1.585 1.1365 -0.675</Pos>
+  </Frame>
+  <Drawable name="Table2" refframe="Table2" >
+  <Polytope file="Geometry/Table" />
+  </Drawable>
+
+
+
+
+  <Frame name="UR5e_2" refframe="Table2">
+    <RPY>0 135 -90</RPY><Pos>-0.38 0.685 -0.18</Pos>  
+  </Frame>
+  <Include file="UR5e_2/UR5e.xml" />
+	
+  <Frame name="Gripper2" refframe="UR5e_2.Flange" >
+    <RPY>0 0 90</RPY><Pos>-0.073 0.0225 0</Pos>
+  </Frame>
+  <Drawable name="Gripper2" refframe="Gripper2" >
+   <Polytope file="Geometry/GrasperModel" />
+  </Drawable>
+ <Drawable name="Gripper2ext" refframe="Gripper2" >
+   <RPY>0 0 0</RPY>
+   <Pos>0 0.05 0</Pos>
+   <Polytope file="Geometry/GrasperModel" />
+  </Drawable>
+ <!-- <Drawable name="Gripper2ext2" refframe="Gripper2" >
+   <RPY>0 0 0</RPY>
+   <Pos>0 0.18 0</Pos>
+   <Polytope file="Geometry/GrasperModel" />
+  </Drawable> -->
+  <Frame name="safety2" refframe="Gripper2" >
+    <RPY>0 0 0</RPY><Pos>0.05 0.15 0</Pos>
+  </Frame>
+
+
+  <Frame name="URMount1" refframe="Table">
+    <RPY>0 135 -90</RPY><Pos>-0.38 0.685 -0.18</Pos>   
+  </Frame>
+  <Include file="UR5e_1/UR5e.xml" />
+
+  <Frame name="Gripper1" refframe="UR5e_1.Flange" >
+    <RPY>0 0 90</RPY><Pos>-0.073 0.0225 0</Pos>
+  </Frame>
+  <Drawable name="Gripper1" refframe="Gripper1" >
+   <Polytope file="Geometry/GrasperModel" />
+  </Drawable>
+  <Drawable name="Gripper1ext" refframe="Gripper1" >
+   <RPY>0 0 0</RPY>
+   <Pos>0 0.1 0</Pos>
+   <Polytope file="Geometry/GrasperModel" />
+  </Drawable> 
+ <!-- <Drawable name="Gripper1ext2" refframe="Gripper1" >
+   <RPY>0 0 0</RPY>
+   <Pos>0 0.18 0</Pos>
+   <Polytope file="Geometry/GrasperModel" />
+  </Drawable>-->
+  <Frame name="safety1" refframe="Gripper1" >
+    <RPY>0 0 0</RPY><Pos>0.05 0.15 0</Pos>
+  </Frame>
+
+</WorkCell>
